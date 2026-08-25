@@ -1,0 +1,599 @@
+---
+import Icon from "@/components/Icon.astro";
+import logo from "@/assets/logo.svg";
+import plus from "@/assets/icons/plus.svg";
+import phoneIcon from "@/assets/icon-phone.svg";
+import { SITE_NAME } from "@/consts.ts";
+import { mainNav, contact } from "@/data/site.ts";
+
+interface Props {
+  /**
+   * Fix the nav over the page rather than letting it stick in flow, so the
+   * first section starts underneath it. Give that section
+   * `paddingTop="navoverlap"` to clear the bar.
+   */
+  overlap?: boolean;
+}
+
+const { overlap = false } = Astro.props;
+
+/**
+ * The nav points at sections of the home page, so on any other route the
+ * links have to reach back to "/" first. Nothing is marked current: which
+ * section you are looking at is a scroll position, and the scroll spy below
+ * sets it at runtime.
+ */
+const onHome = Astro.url.pathname.replace(/\/+$/, "") === "";
+const resolve = (href: string) => (onHome ? href : `/${href}`);
+---
+
+<header class:list={["nav_wrap", overlap && "overlap"]} data-nav>
+  <div class="nav_inner">
+    <a class="nav_logo" href="/" aria-label={SITE_NAME}>
+      <Icon src={logo} variant="full-width" />
+    </a>
+
+    <button
+      class="nav_toggle"
+      type="button"
+      aria-label="Menu"
+      aria-expanded="false"
+      aria-controls="nav-menu"
+    >
+      <span class="nav_toggle_icon"></span>
+    </button>
+
+    {
+      /* Booking stays reachable in the bar at every width — the design keeps
+         it beside the burger on mobile. It jumps to the first registration
+         form rather than opening a dialog. */
+    }
+    <a class="nav_cta" href={resolve("#objednani")}>
+      <span>Objednat se</span>
+      <Icon src={plus} variant="small" />
+    </a>
+
+    {
+      /* The mobile board keeps the handset in the bar beside booking, so it
+         lives here rather than inside the panel that the burger opens. */
+    }
+    <a
+      class="nav_phone"
+      href={contact.phoneHref}
+      aria-label={`Zavolat na ${contact.phone}`}
+    >
+      <span class="nav_phone_number">{contact.phone}</span>
+      <span class="nav_phone_icon">
+        <Icon src={phoneIcon} variant="small" />
+      </span>
+    </a>
+
+    <div class="nav_lang" role="group" aria-label="Jazyk">
+      <span class="nav_lang_item" aria-current="true">CZ</span>
+      <span class="nav_lang_item nav_lang_item--pending" aria-disabled="true"
+        >EN</span
+      >
+    </div>
+
+    <nav class="nav_menu" id="nav-menu" aria-label="Hlavní navigace">
+      <div class="nav_menu_inner">
+        <ul class="nav_links">
+          {
+            mainNav.map((item) => (
+              <li>
+                <a
+                  class="nav_link"
+                  href={resolve(item.href)}
+                  data-section={item.href.replace("#", "")}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+{
+  /* Without scripting the button can't do anything, so show the links instead. */
+}
+<noscript>
+  <style>
+    .nav_toggle {
+      display: none;
+    }
+    .nav_menu {
+      grid-template-rows: 1fr;
+      visibility: visible;
+    }
+    .nav_menu_inner {
+      opacity: 1;
+    }
+  </style>
+</noscript>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const toggle = nav?.querySelector<HTMLButtonElement>(".nav_toggle");
+
+  if (nav && toggle) {
+    const setOpen = (open: boolean) => {
+      nav.toggleAttribute("data-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && nav.hasAttribute("data-open")) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    /* A click on the toggle lands inside the nav, so it stays its own job. */
+    document.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!nav.hasAttribute("data-open") || !(target instanceof Node)) return;
+      if (!nav.contains(target)) setOpen(false);
+    });
+
+    /* Matches the breakpoint below, where every link is shown anyway. */
+    window
+      .matchMedia("(width >= 64rem)")
+      .addEventListener("change", (event) => {
+        if (event.matches) setOpen(false);
+      });
+  }
+
+  /* Once the page moves the bar stops sitting on the cream page and starts
+     covering content, so it turns plain white to read as a surface. */
+  const bar = document.querySelector("[data-nav]");
+  if (bar) {
+    let scrolled = false;
+    const syncBar = () => {
+      const now = window.scrollY > 4;
+      if (now === scrolled) return;
+      scrolled = now;
+      bar.classList.toggle("is-scrolled", now);
+    };
+    /* No rAF hop here: reading scrollY in the handler forces no layout, and
+       on a slow phone frame production stalls long enough that a throttled
+       version lags the scroll by about a second. */
+    addEventListener("scroll", syncBar, { passive: true });
+    syncBar();
+  }
+
+  /* Scroll spy — the nav points at sections, so "current" is whichever one
+     owns the top of the viewport. */
+  const links = [
+    ...document.querySelectorAll<HTMLAnchorElement>("[data-section]"),
+  ];
+  const sections = links
+    .map((link) => document.getElementById(link.dataset.section!))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (sections.length) {
+    const mark = () => {
+      const line = window.scrollY + window.innerHeight * 0.3;
+      let current: string | null = null;
+      for (const section of sections) {
+        if (section.offsetTop <= line) current = section.id;
+      }
+      for (const link of links) {
+        if (link.dataset.section === current)
+          link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      }
+    };
+    let queued = false;
+    addEventListener(
+      "scroll",
+      () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          mark();
+        });
+      },
+      { passive: true },
+    );
+    mark();
+  }
+</script>
+
+<style is:global>
+  @layer components {
+    .nav_wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: center;
+      padding-inline: var(--site-margin);
+      /* The design's bar rect is fully transparent — the cream page shows
+         through. Painting it cream keeps that appearance while still masking
+         whatever scrolls underneath a sticky bar. */
+      background-color: var(--cream);
+      color: var(--text);
+      transition: background-color 275ms var(--ease-out);
+
+      &.is-scrolled,
+      &[data-open] {
+        background-color: var(--light-100);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+
+      &.overlap {
+        position: fixed;
+        inset-inline: 0;
+      }
+    }
+
+    .nav_inner {
+      width: 100%;
+      max-width: var(--max-width-main);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      /* 7px between the handset, booking and the burger on the mobile board. */
+      gap: 0 0.4375rem;
+      /* Half of --space-6: the design's 40px left the phone, the booking
+         button and the language too far apart. */
+      @media (width >= 64rem) {
+        gap: 0 calc(var(--space-6) / 2);
+      }
+    }
+
+    .nav_logo {
+      min-height: var(--nav-height);
+    }
+
+    /* The logo is a wordmark, so it is sized by width and keeps its ratio. */
+    .nav_logo {
+      display: flex;
+      align-items: center;
+      width: 6rem;
+      margin-right: auto;
+      color: inherit;
+      transition: opacity 250ms;
+
+      /* Steps up as soon as the bar has room, so the smallest phones still
+         fit logo · booking · burger on one row. */
+      @media (width >= 22.5rem) {
+        width: 7.5rem;
+      }
+      @media (width >= 30rem) {
+        width: 9.5rem;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+    }
+
+    /* Bar order, narrow: logo · booking · language · burger, with the link
+       panel dropping onto its own full-width row underneath. */
+    .nav_phone {
+      order: 2;
+    }
+    .nav_cta {
+      order: 3;
+    }
+    .nav_toggle {
+      order: 5;
+    }
+    .nav_menu {
+      order: 6;
+    }
+
+    .nav_toggle {
+      /* 15% down from 24/8, so the glyph carries about the same weight as
+         the 16px handset beside it rather than out-measuring it. */
+      --_icon-width: 1.275rem;
+      --_bar-gap: 0.425rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--control-height);
+      height: var(--control-height);
+      min-height: 0;
+      color: inherit;
+      background-color: var(--light-100);
+      border: 0;
+      border-radius: var(--radius-button);
+      transition: opacity 250ms;
+      @media (hover: hover) {
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+    }
+
+    .nav_wrap.is-scrolled .nav_toggle,
+    .nav_wrap[data-open] .nav_toggle {
+      background-color: var(--cream);
+    }
+
+    .nav_toggle_icon {
+      position: relative;
+      display: block;
+      width: var(--_icon-width);
+      height: calc(var(--_bar-gap) + 0.125rem);
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        height: 0.125rem;
+        background-color: currentcolor;
+        transition: transform 250ms;
+      }
+      &::before {
+        top: 0;
+      }
+      &::after {
+        top: var(--_bar-gap);
+      }
+    }
+
+    .nav_wrap[data-open] .nav_toggle_icon {
+      &::before {
+        transform: translateY(calc(var(--_bar-gap) / 2)) rotate(45deg);
+      }
+      &::after {
+        transform: translateY(calc(var(--_bar-gap) / -2)) rotate(-45deg);
+      }
+    }
+
+    /* A 0fr → 1fr row is what slides, so the panel animates to the height its
+       content asks for and back down to nothing. */
+    .nav_menu {
+      flex-basis: 100%;
+      display: grid;
+      grid-template-rows: 0fr;
+      visibility: hidden;
+      transition:
+        grid-template-rows 312.5ms ease,
+        visibility 312.5ms;
+    }
+
+    .nav_menu_inner {
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 312.5ms ease;
+    }
+
+    .nav_wrap[data-open] .nav_menu {
+      grid-template-rows: 1fr;
+      visibility: visible;
+    }
+
+    .nav_wrap[data-open] .nav_menu_inner {
+      opacity: 1;
+    }
+
+    /* 30px links on a 49px pitch, the first one 80px down the sheet and the
+       last leaving the 327px the board draws. */
+    .nav_links {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 1.90625rem 0 3.59375rem;
+      list-style: none;
+      font-size: 1.875rem;
+      line-height: 1.2;
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .nav_link {
+      display: block;
+      padding-block: 0.40625rem;
+      color: inherit;
+      text-decoration: none;
+      transition: opacity 250ms;
+      @media (hover: hover) {
+        &:hover {
+          opacity: 0.6;
+        }
+      }
+    }
+
+    /* The number reads as plain text with the handset in its own outlined
+       box beside it, the way the design draws it. */
+    /* Number then handset, as the design lays it out. The number is set in
+       the medium weight, a step lighter than the navigation links. */
+    .nav_phone {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: inherit;
+      font-size: var(--text-ui);
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* 39.9 x 39.9 with a 9px radius in the design. */
+    .nav_phone_icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: var(--control-height);
+      height: var(--control-height);
+      border: var(--border-pill) solid var(--text);
+      border-radius: var(--radius-button);
+      transition:
+        background-color 275ms var(--ease-out),
+        color 275ms var(--ease-out);
+    }
+
+    @media (hover: hover) {
+      .nav_phone:hover .nav_phone_icon,
+      .nav_phone:focus-visible .nav_phone_icon {
+        background-color: var(--text);
+        color: var(--cream);
+      }
+    }
+
+    /* 39.9 tall with a 9px radius, as in the design. The width follows the
+       label instead of the design's 189.7px, which left a wide gulf between
+       the text and the plus. */
+    .nav_cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      height: var(--control-height);
+      /* Roomier only from the desktop bar; at 320px the wider pill pushes the
+         row onto a second line. */
+      padding-inline: var(--space-3);
+
+      @media (width >= 64rem) {
+        padding-inline: var(--space-4);
+      }
+      background-color: var(--brand-500);
+      border: var(--border-pill) solid transparent;
+      border-radius: var(--radius-button);
+      color: var(--brand-text);
+      font-size: var(--text-nav-cta);
+      font-weight: var(--primary-bold);
+      text-decoration: none;
+
+      /* The mobile board draws the pill as a bare label — 114x29 leaves no
+         room for the plus, so it only joins from the desktop bar. */
+      .icon {
+        display: none;
+      }
+      @media (width >= 64rem) {
+        .icon {
+          display: block;
+        }
+      }
+      transition:
+        background-color 275ms var(--ease-out),
+        color 275ms var(--ease-out);
+
+      @media (hover: hover) {
+        &:hover,
+        &:focus-visible {
+          background-color: var(--text);
+          color: var(--cream);
+        }
+      }
+    }
+
+    /* Plain text, not a control. The mobile board stacks CZ over EN against
+       the right edge of the open panel, 12px in and level with the first two
+       links; the desktop bar carries CZ alone. */
+    .nav_lang {
+      position: absolute;
+      inset-block-start: 5.4375rem;
+      inset-inline-end: var(--site-margin);
+      display: none;
+      flex-direction: column;
+      gap: 1.125rem;
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      line-height: 1.5;
+    }
+
+    .nav_wrap[data-open] .nav_lang {
+      display: flex;
+    }
+
+    /* There is no English site yet, so EN is shown but not offered as a
+       destination. Give it an href once the translation exists. */
+    .nav_lang_item--pending {
+      opacity: 0.45;
+    }
+
+    @media (width >= 64rem) {
+      .nav_lang {
+        position: static;
+        display: inline;
+        order: 4;
+      }
+      .nav_lang_item--pending {
+        display: none;
+      }
+    }
+
+    /* The number only appears once the bar is wide enough for it: the mobile
+       board draws the handset alone, and between 64 and 80rem the number is
+       what tips the single row over. Bounded so source order cannot flip it. */
+    @media (width < 80rem) {
+      .nav_phone_number {
+        display: none;
+      }
+    }
+
+    /* Wide enough for the links, phone and CTA to share the bar. */
+    @media (width >= 64rem) {
+      .nav_toggle {
+        display: none;
+      }
+
+      /* Wide: the panel becomes the middle of the bar, ahead of booking. */
+      .nav_menu {
+        order: 1;
+        flex-basis: auto;
+        flex-grow: 1;
+        display: block;
+        visibility: visible;
+      }
+
+      .nav_menu_inner {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--space-6);
+        min-height: var(--nav-height);
+        overflow: visible;
+        opacity: 1;
+      }
+
+      .nav_links {
+        flex-direction: row;
+        align-items: center;
+        padding: 0;
+        gap: var(--space-6);
+        line-height: normal;
+        font-size: var(--text-ui);
+        letter-spacing: var(--letter-spacing-normal);
+      }
+
+      /* The design underlines the section you are in, drawn at the bar's
+         bottom edge rather than under the word. */
+      .nav_link {
+        position: relative;
+        padding-block: calc((var(--nav-height) - 1lh) / 2);
+        &[aria-current]::after {
+          content: "";
+          position: absolute;
+          inset-inline: 0;
+          bottom: 0;
+          height: 0.125rem;
+          background-color: var(--text);
+        }
+      }
+    }
+  }
+</style>

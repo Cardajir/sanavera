@@ -1,0 +1,315 @@
+---
+import Heading from "@/components/Heading.astro";
+import Paragraph from "@/components/Paragraph.astro";
+import Icon from "@/components/Icon.astro";
+import plus from "@/assets/icons/plus.svg";
+import { booking, contact } from "@/data/site.ts";
+
+interface Props {
+  /** Drop the peach panel when the form already sits on a brand surface. */
+  bare?: boolean;
+  headingTag?: "h1" | "h2";
+  /**
+   * The page carries this form twice, so every id it mints has to be scoped
+   * or the labels all point at the first copy's fields.
+   */
+  formId: string;
+}
+
+const { bare = false, headingTag = "h2", formId } = Astro.props;
+---
+
+<div class:list={["booking", !bare && "booking--panel"]}>
+  <div class="booking_intro">
+    <Heading tag={headingTag} variant="display">{booking.heading}</Heading>
+    <Paragraph maxWidth={64}>{booking.text}</Paragraph>
+  </div>
+
+  {
+    /* EmailJS sends from the browser, so there is nothing to post to. The
+       controller intercepts submit; without scripting the form cannot send
+       and the fallback below is what the visitor gets. */
+  }
+  <form class="booking_form" id={formId} data-booking-form novalidate={false}>
+    <input type="hidden" name="zdroj" value={formId} />
+    <div class="booking_field">
+      <label class="sr-only" for={`${formId}-first`}>Jméno</label>
+      <input
+        id={`${formId}-first`}
+        name="jmeno"
+        type="text"
+        autocomplete="given-name"
+        required
+        placeholder="Jméno"
+      />
+    </div>
+
+    <div class="booking_field">
+      <label class="sr-only" for={`${formId}-last`}>Příjmení</label>
+      <input
+        id={`${formId}-last`}
+        name="prijmeni"
+        type="text"
+        autocomplete="family-name"
+        required
+        placeholder="Příjmení"
+      />
+    </div>
+
+    <div class="booking_field">
+      <label class="sr-only" for={`${formId}-email`}>E-mail</label>
+      <input
+        id={`${formId}-email`}
+        name="email"
+        type="email"
+        autocomplete="email"
+        required
+        placeholder="E-mail"
+      />
+    </div>
+
+    <div class="booking_field">
+      <label class="sr-only" for={`${formId}-phone`}>Telefon</label>
+      <input
+        id={`${formId}-phone`}
+        name="telefon"
+        type="tel"
+        autocomplete="tel"
+        required
+        placeholder="Telefon"
+      />
+    </div>
+
+    <div class="booking_field booking_field--wide">
+      <label class="sr-only" for={`${formId}-note`}>
+        {booking.requestLabel}
+      </label>
+      <textarea
+        id={`${formId}-note`}
+        name="pozadavek"
+        rows="4"
+        placeholder={booking.requestLabel}></textarea>
+    </div>
+
+    <div class="booking_consent">
+      <input
+        id={`${formId}-consent`}
+        name="souhlas"
+        type="checkbox"
+        value="Ano"
+        required
+      />
+      <label for={`${formId}-consent`}>
+        {booking.consentBefore}{" "}
+        <a href="/ochrana-osobnich-udaju">{booking.consentLink}</a>
+      </label>
+    </div>
+
+    <div class="booking_submit">
+      <button class="booking_button" type="submit">
+        <span>{booking.submit}</span>
+        <Icon src={plus} variant="small" />
+      </button>
+    </div>
+
+    <p
+      class="booking_status"
+      data-booking-status
+      role="status"
+      aria-live="polite"
+    >
+    </p>
+  </form>
+
+  <noscript>
+    <p class="booking_status booking_status--error">
+      {booking.failed}{" "}
+      <a href={contact.phoneHref}>{contact.phone}</a>.
+    </p>
+  </noscript>
+</div>
+
+<style is:global>
+  @layer components {
+    /* The section container aligns its children to the start rather than
+       stretching them, so the panel has to claim the width itself. */
+    .booking {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-7);
+      width: 100%;
+    }
+
+    .booking--panel {
+      background-color: var(--brand-500);
+      color: var(--brand-text);
+      border-radius: var(--radius-main);
+      /* 17px of inset on the mobile board, 12 on the desktop one — on wide
+         screens the form is centred well inside this anyway. */
+      padding: var(--space-8) clamp(0.75rem, 1.1429rem - 0.3274vw, 1.0625rem);
+      justify-content: center;
+
+      /* 1843 x 925 at the design width only. */
+      @media (width >= 64rem) {
+        min-height: 57.8125rem;
+      }
+    }
+
+    .booking_intro {
+      max-width: 48.9375rem;
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    /* Two even columns on desktop; the note and the actions span both. */
+    /* The form column is 783px wide in the design: two 385.5px fields with
+       the same 12px gutter the card grids use. */
+    .booking_form {
+      display: grid;
+      gap: var(--site-gutter);
+      width: 100%;
+      max-width: 48.9375rem;
+      margin-inline: auto;
+
+      @media (width >= 40rem) {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .booking_field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .booking_field--wide,
+    .booking_consent,
+    .booking_submit {
+      @media (width >= 40rem) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* The design puts the field name inside the box, so it is a placeholder
+       rather than a caption — set in running copy, at full strength, since it
+       is the only thing naming the field on screen. */
+    .booking ::placeholder {
+      color: var(--text);
+      opacity: 1;
+      font-family: inherit;
+      font-size: var(--text-main);
+      font-weight: var(--primary-bold);
+    }
+
+    .booking textarea::placeholder {
+      font-weight: var(--primary-regular);
+    }
+
+    .booking
+      :is(
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea
+      ) {
+      width: 100%;
+      padding: var(--space-3);
+      background-color: var(--light-100);
+      border: 0.0625rem solid
+        color-mix(in lab, var(--dark-900) 25%, transparent);
+      border-radius: var(--radius-input);
+      color: var(--dark-900);
+      font-size: var(--text-main);
+      /* Fields are 75.3px tall in the design. */
+      min-height: 4.70625rem;
+
+      /* No detached focus ring on a field — the border carries the state
+         instead, so keyboard focus stays visible without the outline. */
+      &:focus-visible {
+        outline: none;
+        border-color: var(--dark-900);
+      }
+    }
+
+    /* The note field is 783 x 192. */
+    .booking textarea {
+      resize: vertical;
+      min-height: 12rem;
+    }
+
+    .booking_consent {
+      display: flex;
+      align-items: center;
+      text-align: left;
+      /* 23px between the box and the sentence in the design. */
+      gap: 1.4375rem;
+      font-size: var(--text-small);
+
+      /* The design draws a 36px white rounded square, not a native tick box. */
+      & input[type="checkbox"] {
+        appearance: none;
+        flex-shrink: 0;
+        display: grid;
+        place-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        margin: 0;
+        background-color: var(--light-100);
+        border: 0;
+        border-radius: clamp(0.3125rem, 0.2723rem + 0.1637vw, 0.46875rem);
+        cursor: pointer;
+      }
+    }
+
+    /* Written out rather than nested twice: a `&` inside an already-nested
+       rule comes through the bundler unresolved. */
+    .booking_consent input[type="checkbox"]::before {
+      content: "";
+      width: 1.0625rem;
+      height: 0.5625rem;
+      border-inline-start: 0.1875rem solid var(--text);
+      border-block-end: 0.1875rem solid var(--text);
+      transform: translateY(-0.125rem) rotate(-45deg);
+      opacity: 0;
+      transition: opacity 187.5ms;
+    }
+
+    .booking_consent input[type="checkbox"]:checked::before {
+      opacity: 1;
+    }
+
+    .booking_consent {
+      & a {
+        color: inherit;
+      }
+    }
+
+    .booking_submit {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .booking_button {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-5);
+      padding: 0.6875rem var(--space-4);
+      background-color: var(--dark-900);
+      border: 0;
+      border-radius: var(--radius-button);
+      min-height: 3.34375rem;
+      color: var(--light-100);
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      transition:
+        background-color 250ms,
+        color 250ms;
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--light-100);
+          color: var(--dark-900);
+        }
+      }
+    }
+  }
+</style>

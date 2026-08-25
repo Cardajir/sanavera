@@ -1,0 +1,138 @@
+---
+/**
+ * Site-wide entrance animation: the hero plays on load, everything below
+ * reveals as it scrolls into view, and groups of sibling cards stagger.
+ *
+ * The order matters. `gsap.from()` only applies its start state once the
+ * module has run, which is after the first paint — so the page painted
+ * finished, then jumped back to hidden and animated in. That is the flash.
+ *
+ * Instead the start state is set in CSS before anything paints, under a
+ * `.motion` class the inline head script adds. Once this module has written
+ * every start state as an inline style, it drops the class and animates *to*
+ * the resting state. The head script also carries a failsafe: if this module
+ * never arrives, the class comes off anyway and the page is simply static.
+ *
+ * The selector list below is mirrored in the `.motion` block in site.css.
+ * Change one, change the other.
+ */
+---
+
+<script>
+  import { gsap, onReveal, reduced, EASE, DUR } from "@/scripts/motion.ts";
+
+  const root = document.documentElement;
+  const pick = (selector: string) => [...document.querySelectorAll(selector)];
+
+  /* `.hero_head_text` is shared by the hero and the two section headers below
+     it, so the hero has to be pinned to its own section — otherwise the
+     Technologie and Služby headings animate on load, off-screen, instead of
+     revealing when you reach them. */
+  const heroSection = document.querySelector(".hero_media")?.closest("section");
+
+  /** Openers, minus the ones that belong to a group that animates as a unit. */
+  const openers = pick(
+    "main :is(.section_label, .heading, .booking_intro)",
+  ).filter(
+    (el) =>
+      !el.closest("dialog, [data-slider], .values, .services") &&
+      !(heroSection && heroSection.contains(el)),
+  );
+
+  const groups = [
+    ".values",
+    ".services",
+    "[data-slider-track]",
+    ".footer_grid",
+    ".footer_place",
+  ].flatMap((selector) =>
+    pick(selector)
+      .map((group) => ({ group, children: [...group.children] }))
+      .filter((entry) => entry.children.length),
+  );
+
+  const hero = heroSection
+    ? [...heroSection.querySelectorAll(".hero_media > *, .hero_head_text > *")]
+    : [];
+  const disc = pick(".round_cta");
+  const blocks = pick(".doctor, .microscope, .booking--panel");
+  const photos = pick(
+    ".doctor_photo, .microscope_photo, .footer_map_image, .footer_town",
+  );
+
+  if (reduced) {
+    /* Nothing to stage — let the CSS start state go and leave the page be. */
+    root.classList.remove("motion");
+  } else {
+    /* 1. Write every start state as an inline style, so the elements stay put
+          when the class that was holding them comes off. */
+    gsap.set([...openers, ...groups.flatMap((g) => g.children)], {
+      opacity: 0,
+    });
+    /* Shift only: see the note on .motion in site.css. */
+    gsap.set(hero, { y: 40 });
+    gsap.set(openers, { y: 32 });
+    gsap.set(
+      groups.flatMap((g) => g.children),
+      { y: 44 },
+    );
+    gsap.set(disc, { opacity: 0, scale: 0.8 });
+    gsap.set(blocks, { opacity: 0, y: 56 });
+    gsap.set(photos, { scale: 1.06 });
+
+    /* 2. CSS is no longer what hides anything. */
+    root.classList.remove("motion");
+
+    /* 3. Play. */
+    const settle = { opacity: 1, y: 0, ease: EASE, clearProps: "all" } as const;
+
+    if (hero.length) {
+      gsap.to(hero, {
+        y: 0,
+        duration: DUR.slow,
+        ease: EASE,
+        stagger: 0.1125,
+        clearProps: "all",
+      });
+    }
+
+    /* The floating disc arrives after the hero has settled. */
+    if (disc.length) {
+      gsap.to(disc, {
+        opacity: 1,
+        scale: 1,
+        duration: DUR.base,
+        ease: "back.out(1.6)",
+        delay: 0.5,
+        clearProps: "all",
+      });
+    }
+
+    for (const el of openers) {
+      onReveal(el, () => gsap.to(el, { ...settle, duration: DUR.base }));
+    }
+
+    for (const { group, children } of groups) {
+      onReveal(group, () =>
+        gsap.to(children, { ...settle, duration: DUR.base, stagger: 0.1 }),
+      );
+    }
+
+    for (const el of blocks) {
+      onReveal(el, () => gsap.to(el, { ...settle, duration: DUR.slow }));
+    }
+
+    /* Images inside the big blocks ease their scale back to rest, which reads
+       as the photo settling rather than sliding. */
+    for (const el of photos) {
+      onReveal(el, () =>
+        gsap.to(el, {
+          scale: 1,
+          duration: 1.375,
+          ease: EASE,
+          clearProps: "all",
+        }),
+      );
+    }
+  }
+</script>

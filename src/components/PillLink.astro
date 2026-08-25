@@ -1,0 +1,76 @@
+---
+import Icon from "@/components/Icon.astro";
+import plus from "@/assets/icons/plus.svg";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * The outlined pill with a plus sign that the design uses for every
+ * "read more" affordance — "To mě zajímá", "mapa", "Poznejte nástroje blíž".
+ */
+interface Props extends Omit<HTMLAttributes<"a">, "href"> {
+  href: string;
+  /** Filled navy instead of outlined, for the primary action in a form. */
+  variant?: "outline" | "solid";
+}
+
+const { href, variant = "outline", class: className, ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={["pill", variant === "solid" && "pill--solid", className]}
+  {...rest}
+>
+  <span class="pill_text"><slot /></span>
+  <Icon src={plus} variant="small" />
+</a>
+
+<style is:global>
+  @layer components {
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-5);
+      /* Every pill in the design is 53.5px tall. */
+      min-height: 3.34375rem;
+      padding: 0 var(--space-4);
+      border: 0.09375rem solid var(--text);
+      border-radius: var(--radius-button);
+      color: var(--text);
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-normal);
+      text-decoration: none;
+      transition:
+        background-color 250ms,
+        color 250ms,
+        border-color 250ms;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--text);
+          border-color: var(--text);
+          color: var(--background-2);
+        }
+      }
+    }
+
+    .pill--solid {
+      background-color: var(--text);
+      color: var(--background-2);
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--brand-500);
+          border-color: var(--brand-500);
+          color: var(--brand-text);
+        }
+      }
+    }
+
+    /* The plus is the affordance, not decoration, so it never shrinks. */
+    .pill .icon {
+      flex-shrink: 0;
+    }
+  }
+</style>

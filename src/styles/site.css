@@ -1,0 +1,130 @@
+/* Project-wide pieces shared by more than one component. Component-specific
+   rules stay in their own .astro file. */
+
+/* A multi-line postal address or opening-hours block. Written as one <p> with
+   <br> so Lumos's leading-trim runs once for the block instead of collapsing
+   the space between separate short paragraphs. */
+.address {
+  font-size: var(--text-main);
+  font-weight: var(--primary-regular);
+  line-height: var(--line-height-large);
+}
+
+.address strong,
+.address b {
+  font-weight: var(--primary-bold);
+}
+
+/* Same block, in the bold weight the design uses for hours, parking and
+   the social links. */
+.address--bold {
+  font-weight: var(--primary-bold);
+}
+
+/* The design sets addresses, hours and legal lines at 21 design px. */
+.address--small {
+  font-size: var(--text-ui);
+}
+
+/* Links inside these blocks inherit colour and only underline on hover. */
+.address a {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .address a:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ---------------------------------------------------------------- glass ---
+   Frosted panels. XD marks these as a background blur with the fill fully
+   transparent (blur 21.45 design px = 16.15 CSS). A thin tint alone left the
+   backdrop too busy to sit text on, so the pane carries a little more veil
+   and a wider blur — enough to quiet what is behind without hiding it. The
+   rest is edge work: a bright hairline, an inset top highlight and a diagonal
+   sheen, plus saturation to put back the colour blurring drains. */
+/* The css.glass recipe. Radius is left to each panel, which takes it from
+   the design's own corner sizes rather than a fixed 16px. */
+.glass {
+  background: rgb(255 255 255 / 0.27);
+  box-shadow: 0 0.25rem 1.875rem rgb(0 0 0 / 0.1);
+  -webkit-backdrop-filter: blur(5.5px);
+  backdrop-filter: blur(5.5px);
+}
+
+/* Without backdrop-filter there is no frost to fall back on, so the panels
+   become solid rather than unreadably transparent. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--light-100);
+  }
+}
+
+/* ------------------------------------------------------------ plus turns ---
+   Every plus-marked control turns its icon a quarter on hover. The glyph is
+   four-fold symmetric, so a quarter turn is the largest rotation that still
+   reads as movement, and the overshoot easing gives it a flick. */
+@media (prefers-reduced-motion: no-preference) {
+  .pill .icon,
+  .nav_cta .icon,
+  .booking_button .icon {
+    transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@media (hover: hover) {
+  .pill:hover .icon,
+  .pill:focus-visible .icon,
+  .nav_cta:hover .icon,
+  .nav_cta:focus-visible .icon,
+  .booking_button:hover .icon,
+  .booking_button:focus-visible .icon {
+    transform: rotate(90deg);
+  }
+}
+
+/* ---------------------------------------------------------------- nav ---
+   The bar is fixed, so it takes no space in the flow. Reserve its height
+   here rather than on each page's first section: one place to be right, and
+   a new page cannot forget it. */
+.under-nav {
+  padding-block-start: var(--nav-height);
+}
+
+/* ------------------------------------------------------------- motion ---
+   The entrance start state, held from before the first paint until
+   Motion.astro has written the same values as inline styles and dropped the
+   class. Mirrors the selector list in Motion.astro — change one, change the
+   other. Only ever present when the visitor has not asked for reduced
+   motion, and removed by a failsafe timeout if the script never arrives. */
+.motion .round_cta,
+.motion main :is(.section_label, .heading, .booking_intro),
+.motion :is(.values, .services, [data-slider-track], .footer_grid, .footer_place) > *,
+.motion :is(.doctor, .microscope, .booking--panel) {
+  opacity: 0;
+}
+
+/* The hero is the one thing on screen at load, so it only ever shifts — it
+   never fades. Hiding it would leave the page blank for as long as the motion
+   chunk takes to arrive, which on a phone is over a second. */
+.motion :is(.hero_media, .hero_head_text) > * {
+  translate: 0 2.5rem;
+}
+
+/* Below the desktop breakpoint the hero leads with the headline instead of
+   the photographs, so it needs the mobile board's 35px under the bar rather
+   than the 10px that suits a photograph running to the edge. Unlayered on
+   purpose: Lumos's padding utilities would otherwise win. */
+.hero_section {
+  /* 10px under the bar at the design width, where the photographs lead. */
+  padding-top: 0.625rem;
+}
+
+/* Below the desktop breakpoint the hero leads with the headline instead, so
+   it takes the mobile board's 35px rather than sitting on the bar. */
+@media (width < 64rem) {
+  .hero_section {
+    padding-top: 2.1875rem;
+  }
+}

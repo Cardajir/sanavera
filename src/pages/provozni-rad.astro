@@ -1,0 +1,21 @@
+---
+import LegalLayout from "@/layouts/LegalLayout.astro";
+import { contact } from "@/data/site.ts";
+---
+
+<LegalLayout
+  title="Provozní řád"
+  description="Provozní řád stomatologické ordinace Sanavera ve Veselí nad Moravou."
+>
+  <p>
+    <strong>Provozovatel:</strong><br />
+    {contact.operator.name}, {contact.operator.lines.join(" ")}<br />
+    <strong>Místo poskytování péče:</strong><br />
+    {contact.clinic.street}, {contact.clinic.city}
+  </p>
+
+  <p>
+    Znění provozního řádu schváleného orgánem ochrany veřejného zdraví doplní
+    provozovatel.
+  </p>
+</LegalLayout>

@@ -1,0 +1,272 @@
+---
+import Icon from "@/components/Icon.astro";
+import close from "@/assets/icons/close.svg";
+import SectionLabel from "@/components/SectionLabel.astro";
+
+interface Props {
+  /**
+   * Group name; triggers reference it via data-modal-open. The element id is
+   * prefixed because the same names are also section anchors on the page, and
+   * two elements sharing an id would make getElementById ambiguous.
+   */
+  id: string;
+  /** Accessible name for the dialog. */
+  label: string;
+  /** Uppercase label above the sidebar list. */
+  sidebarLabel?: string;
+  /** Panel keys and their sidebar labels, in order. */
+  items: readonly { key: string; label: string }[];
+}
+
+const { id, label, sidebarLabel, items } = Astro.props;
+---
+
+<dialog class="modal" id={`modal-${id}`} data-modal={id} aria-label={label}>
+  <div class="modal_shell" data-modal-shell>
+    <button
+      class="modal_close"
+      type="button"
+      data-modal-close
+      aria-label="Zavřít"
+    >
+      <Icon src={close} variant="medium" />
+    </button>
+
+    <div class="modal_body">
+      {
+        items.length > 1 && (
+          <div class="modal_aside">
+            <SectionLabel class="modal_side_label">{sidebarLabel}</SectionLabel>
+            <nav class="modal_side" aria-label={sidebarLabel ?? label}>
+              <ul class="modal_side_list">
+                {items.map((item) => (
+                  <li>
+                    <button
+                      type="button"
+                      class="modal_side_link"
+                      data-modal-panel={item.key}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        )
+      }
+
+      <div class="modal_panels">
+        <slot />
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style is:global>
+  @layer components {
+    /* The sheet stops short of the top so the navigation stays visible above
+       it — 77px down at the design width, six pixels clear of the bar — and
+       runs off the bottom of the viewport. It slides up from below on open. */
+    .modal {
+      position: fixed;
+      /* The same 5px strip of page above the sheet at every width, measured
+         off the bar's own height so the two can never overlap. */
+      inset: calc(var(--nav-height) + 0.3125rem) 0 0 0;
+      width: 100%;
+      max-width: none;
+      max-height: none;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background-color: var(--light-100);
+      color: var(--text);
+      border-start-start-radius: var(--radius-main);
+      border-start-end-radius: var(--radius-main);
+      overflow: hidden;
+
+      /* No dimming in the design: the sheet itself covers the page and the
+         bar above it reads as normal. A click up there lands on the backdrop
+         and closes the sheet. */
+      &::backdrop {
+        background-color: transparent;
+      }
+    }
+
+    /* The dialog box does not scroll — the shell inside does, so the close
+       button can stay pinned while the copy runs long. */
+    .modal_shell {
+      position: relative;
+      height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-block: 2.625rem var(--section-space-small);
+      padding-inline: 1.6875rem;
+
+      @media (width >= 64rem) {
+        /* Content sits on the inner column plus the card inset: 206px in. */
+        padding-inline: calc(var(--narrow-lead) + 2.1875rem);
+        /* Puts the sidebar label and the title on the design's top line. */
+        padding-block-start: 8rem;
+      }
+    }
+
+    /* Cream disc: 50px hard against the sheet's top edge on the mobile
+       board, 75.3px and 7px down on the desktop one. */
+    .modal_close {
+      position: absolute;
+      z-index: 2;
+      inset-block-start: clamp(0rem, -0.1122rem + 0.4585vw, 0.4375rem);
+      inset-inline-end: clamp(2.3125rem, 1.74rem + 2.3314vw, 4.54rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
+      height: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
+      background-color: var(--cream);
+      border: 0;
+      border-radius: var(--radius-round);
+      color: var(--text);
+      transition:
+        background-color 250ms,
+        color 250ms;
+
+      @media (hover: hover) {
+        &:hover {
+          background-color: var(--text);
+          color: var(--cream);
+        }
+      }
+    }
+
+    /* Phone: label, article, then the index of the other panels — the aside
+       dissolves so its two halves can sit on either side of the article.
+       Desktop: the aside is a real left column beside the article. */
+    .modal_body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+
+      /* 438px sidebar plus the 12px gutter puts the main column at x656. */
+      @media (width >= 64rem) {
+        display: grid;
+        gap: var(--space-7) var(--site-gutter);
+        grid-template-columns: 27.375rem minmax(0, 1fr);
+      }
+    }
+
+    .modal_aside {
+      display: contents;
+
+      @media (width >= 64rem) {
+        display: flex;
+        flex-direction: column;
+        /* The design drops the list a long way below its label: 98px. */
+        gap: 6.125rem;
+      }
+    }
+
+    .modal_side_label {
+      order: 0;
+    }
+
+    .modal_panels {
+      order: 1;
+      /* The outgoing panel is positioned against this while topics cross. */
+      position: relative;
+    }
+
+    /* On a phone the list is not a sidebar at all — it follows the article as
+       a "what else we do" index, with its label left behind at the top. */
+    .modal_side {
+      order: 2;
+      margin-block-start: var(--space-3);
+
+      @media (width >= 64rem) {
+        margin-block-start: 0;
+        position: sticky;
+        top: 0;
+        align-self: start;
+      }
+    }
+
+    .modal_side_list {
+      display: flex;
+      flex-direction: column;
+      /* 40px between single-line entries; 26 on the mobile board. */
+      gap: clamp(0.5rem, 0.0972rem + 1.0249vw, 1.1875rem);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .modal_side_link {
+      display: block;
+      border: 0;
+      color: var(--text);
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      text-align: left;
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+      /* 277.8px in the design, which is what makes the longer entries wrap
+         onto a second line. */
+      max-width: 17.3625rem;
+      transition: color 250ms;
+
+      @media (width < 64rem) {
+        max-width: none;
+      }
+
+      &[aria-current="true"] {
+        color: var(--brand-ink);
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          color: var(--brand-ink);
+        }
+      }
+    }
+
+    .modal_panels {
+      min-width: 0;
+    }
+
+    /* Panels are swapped with the `hidden` attribute, which also takes them
+       out of the accessibility tree. */
+    .modal_panel[hidden] {
+      display: none;
+    }
+
+    .modal_panel {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* The pattern layer gives every .heading a top margin. The panel title is
+       the first thing in the sheet, so it starts on the sidebar's line. */
+    .modal_panel > .heading:first-child {
+      margin-top: 0;
+    }
+
+    /* A lead paragraph carrying heading weight, set clear of the title. */
+    .modal_lead {
+      margin-top: 2.25rem;
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    /* And the body copy clear of the lead. */
+    .modal_panel .rich-text {
+      margin-top: var(--space-8);
+    }
+
+    /* The design's measure for both is 713px. */
+    .modal_lead,
+    .modal_panel .rich-text {
+      max-width: 44.5625rem;
+    }
+  }
+</style>

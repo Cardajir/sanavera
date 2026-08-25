@@ -1,0 +1,27 @@
+---
+import Icon from "@/components/Icon.astro";
+import plus from "@/assets/icons/plus.svg";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * Same pill as PillLink, but a real button — used wherever the affordance
+ * opens a dialog rather than navigating.
+ */
+interface Props extends HTMLAttributes<"button"> {
+  /** Dialog id to open, optionally with a panel: "sluzby:preventivni-pece". */
+  opens: string;
+  variant?: "outline" | "solid";
+}
+
+const { opens, variant = "outline", class: className, ...rest } = Astro.props;
+---
+
+<button
+  type="button"
+  data-modal-open={opens}
+  class:list={["pill", variant === "solid" && "pill--solid", className]}
+  {...rest}
+>
+  <span class="pill_text"><slot /></span>
+  <Icon src={plus} variant="small" />
+</button>

@@ -1,0 +1,115 @@
+---
+/**
+ * Click stepping and mouse dragging for every [data-slider] on the page.
+ *
+ * This lives in its own component rather than inside Slider.astro because
+ * Astro silently drops that component's <script> (its styles and markup are
+ * emitted, the script never is). A script-only component is hoisted reliably,
+ * the same way ModalController is. Render it once per page.
+ */
+---
+
+<script>
+  /** Movement past this many pixels counts as a drag, not a click. */
+  const DRAG_THRESHOLD = 6;
+
+  for (const el of document.querySelectorAll("[data-slider]")) {
+    const slider = el as HTMLElement;
+    const track = slider.querySelector("[data-slider-track]") as HTMLElement;
+    const prev = slider.querySelector(
+      "[data-slider-prev]",
+    ) as HTMLButtonElement;
+    const next = slider.querySelector(
+      "[data-slider-next]",
+    ) as HTMLButtonElement;
+    if (!track || !prev || !next) continue;
+
+    /* One slide plus the gap, measured rather than assumed, so the step stays
+       right across breakpoints and for tracks with uneven slide widths. */
+    const step = () => {
+      const items = track.children;
+      if (items.length < 2) return track.clientWidth;
+      const a = items[0].getBoundingClientRect();
+      const b = items[1].getBoundingClientRect();
+      return Math.round(b.left - a.left) || Math.round(a.width);
+    };
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth - 1;
+
+    const sync = () => {
+      const max = maxScroll();
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= max;
+      /* Nothing to page through: hide the controls entirely. */
+      slider.toggleAttribute("data-static", max <= 1);
+    };
+
+    prev.addEventListener("click", () =>
+      track.scrollBy({ left: -step(), behavior: "smooth" }),
+    );
+    next.addEventListener("click", () =>
+      track.scrollBy({ left: step(), behavior: "smooth" }),
+    );
+
+    /* ---- drag to scroll -------------------------------------------------
+       Mouse only: touch already pans the track natively, and hijacking it
+       would break that. Snapping is switched off for the duration so the
+       track follows the pointer instead of fighting it. */
+    let dragging = false;
+    let startX = 0;
+    let startScroll = 0;
+    let travelled = 0;
+
+    track.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      if (maxScroll() <= 1) return;
+      dragging = true;
+      travelled = 0;
+      startX = event.clientX;
+      startScroll = track.scrollLeft;
+      track.classList.add("is-dragging");
+    });
+
+    track.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      const dx = event.clientX - startX;
+      travelled = Math.max(travelled, Math.abs(dx));
+      track.scrollLeft = startScroll - dx;
+    });
+
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove("is-dragging");
+
+      /* Re-enabling mandatory snapping settles the track on a slide. */
+      if (travelled > DRAG_THRESHOLD) {
+        /* Swallow the click this drag is about to produce, so releasing over
+           a link or button inside a slide does not follow it. */
+        track.addEventListener(
+          "click",
+          (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          },
+          { capture: true, once: true },
+        );
+      }
+      sync();
+    };
+
+    track.addEventListener("pointerup", endDrag);
+    track.addEventListener("pointercancel", endDrag);
+    track.addEventListener("pointerleave", endDrag);
+
+    /* Dragging an image or a text selection out of the track would cancel the
+       gesture halfway through. */
+    track.addEventListener("dragstart", (event) => {
+      if (dragging) event.preventDefault();
+    });
+
+    track.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    sync();
+  }
+</script>

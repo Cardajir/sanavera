@@ -1,0 +1,133 @@
+---
+/**
+ * Sends both registration forms through EmailJS.
+ *
+ * EmailJS is a browser SDK: the request goes straight from the visitor's page
+ * to EmailJS, which relays it to the practice's Gmail account. That suits a
+ * static build — there is no origin here that could accept a POST — but it
+ * also means the three ids below ship inside the page. That is by design;
+ * what protects the account is the domain allowlist in the EmailJS dashboard,
+ * not secrecy. See .env.example.
+ *
+ * Script-only on purpose: Astro drops the <script> from components that also
+ * render markup, so the behaviour lives apart from BookingForm.astro.
+ */
+import { missingEmailjsKeys } from "@/utils/emailjs.ts";
+
+/* Warn once at build time rather than letting a silent misconfiguration ship. */
+const missing = missingEmailjsKeys();
+if (missing.length) {
+  console.warn(
+    `[booking] EmailJS is not configured (${missing.join(", ")}) — the ` +
+      "registration forms will fall back to the phone number. Fill these in " +
+      "in .env from https://dashboard.emailjs.com.",
+  );
+}
+---
+
+<script>
+  import emailjs from "@emailjs/browser";
+  import { booking, contact } from "@/data/site.ts";
+  import { emailjsConfig as config, emailjsReady } from "@/utils/emailjs.ts";
+
+  const forms = [
+    ...document.querySelectorAll<HTMLFormElement>("[data-booking-form]"),
+  ];
+
+  if (forms.length) {
+    if (config.publicKey) emailjs.init({ publicKey: config.publicKey });
+
+    const ready = emailjsReady();
+
+    for (const form of forms) {
+      const status = form.querySelector<HTMLElement>("[data-booking-status]");
+      const button = form.querySelector<HTMLButtonElement>(
+        "button[type=submit]",
+      );
+      const label = button?.querySelector("span");
+      const idle = label?.textContent ?? booking.submit;
+
+      const say = (text: string, kind: "" | "ok" | "error") => {
+        if (!status) return;
+        status.textContent = text;
+        status.classList.toggle("booking_status--ok", kind === "ok");
+        status.classList.toggle("booking_status--error", kind === "error");
+      };
+
+      /** The phone number is the way out whenever the send does not land. */
+      const fallback = () => {
+        if (!status) return;
+        status.textContent = "";
+        status.classList.remove("booking_status--ok");
+        status.classList.add("booking_status--error");
+        status.append(`${booking.failed} `);
+        const tel = document.createElement("a");
+        tel.href = contact.phoneHref;
+        tel.textContent = contact.phone;
+        status.append(tel, ".");
+      };
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+
+        if (!ready) {
+          fallback();
+          return;
+        }
+
+        if (button) {
+          button.disabled = true;
+          if (label) label.textContent = booking.sending;
+        }
+        say(booking.sending, "");
+
+        try {
+          await emailjs.sendForm(config.serviceId, config.templateId, form, {
+            /* One send per ten seconds is plenty for a booking form and
+               stops a double-click becoming two enquiries. */
+            limitRate: { throttle: 10_000 },
+          });
+          form.reset();
+          say(booking.sent, "ok");
+        } catch (error) {
+          console.error("[booking] EmailJS send failed", error);
+          fallback();
+        } finally {
+          if (button) {
+            button.disabled = false;
+            if (label) label.textContent = idle;
+          }
+        }
+      });
+    }
+  }
+</script>
+
+<style is:global>
+  @layer components {
+    .booking_status {
+      margin: 0;
+      min-height: 1lh;
+      font-size: var(--text-small);
+      font-weight: var(--primary-bold);
+      color: var(--text);
+
+      &:empty {
+        display: none;
+      }
+
+      @media (width >= 40rem) {
+        grid-column: 1 / -1;
+      }
+
+      & a {
+        color: inherit;
+      }
+    }
+
+    /* No colour shift for the failed state: --brand-ink manages only 3.2:1 on
+       the peach panel. The two messages read completely differently and the
+       live region announces them, so the wording carries the distinction. */
+  }
+</style>

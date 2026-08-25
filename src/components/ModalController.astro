@@ -1,0 +1,311 @@
+---
+/**
+ * Wires every dialog on the page: opening from a trigger, switching panels
+ * from the sidebar, closing, and keeping the URL hash in step so a detail view
+ * can be linked to and survives a reload or a back/forward step.
+ *
+ * Dialogs are addressed by their `data-modal` group name rather than by id,
+ * because the same names are section anchors on the page.
+ */
+---
+
+<script>
+  import { gsap, reduced, EASE, DUR } from "@/scripts/motion.ts";
+
+  type Target = { group: string; panel: string | null };
+
+  const dialogFor = (group: string) =>
+    document.querySelector<HTMLDialogElement>(`dialog[data-modal="${group}"]`);
+
+  const parse = (value: string): Target => {
+    const [group, panel] = value.split(":");
+    return { group, panel: panel ?? null };
+  };
+
+  /**
+   * "#sluzby/proteticke-osetreni". The slash keeps a panel hash distinct from
+   * the plain "#sluzby" section anchor, so linking to a modal never also
+   * scrolls the page to a section of the same name.
+   */
+  const toHash = (t: Target) => `#${t.group}/${t.panel ?? ""}`;
+
+  const fromHash = (hash: string): Target | null => {
+    const raw = hash.replace(/^#/, "");
+    if (!raw.includes("/")) return null;
+    const [group, panel] = raw.split("/");
+    if (!dialogFor(group)) return null;
+    return { group, panel: panel || null };
+  };
+
+  const panelsOf = (dialog: HTMLDialogElement) => [
+    ...dialog.querySelectorAll<HTMLElement>("[data-panel]"),
+  ];
+
+  /* Switching topics inside an open sheet: the outgoing panel is lifted out
+     of flow so the incoming one can claim its space at once, then the two
+     cross in the direction you moved through the list. Kept short — this is
+     a change of subject, not an entrance. */
+  const swapPanels = (
+    panels: HTMLElement[],
+    from: HTMLElement,
+    to: HTMLElement,
+    dir: number,
+  ) => {
+    /* Anything still mid-exit from an earlier click is settled outright:
+       killing a tween skips its onComplete, so the panel it was hiding would
+       otherwise stay on screen. */
+    for (const p of panels) {
+      if (p === from || p === to) continue;
+      gsap.killTweensOf(p);
+      gsap.set(p, { clearProps: "all" });
+      p.hidden = true;
+    }
+    gsap.killTweensOf([from, to, ...from.children, ...to.children]);
+
+    gsap.set(from, { position: "absolute", top: 0, left: 0, right: 0 });
+    gsap.to(from, {
+      autoAlpha: 0,
+      y: dir * -16,
+      duration: 0.16,
+      ease: "power2.in",
+      onComplete: () => {
+        gsap.set(from, { clearProps: "all" });
+        from.hidden = true;
+      },
+    });
+
+    to.hidden = false;
+    gsap.fromTo(
+      to,
+      { autoAlpha: 0, y: dir * 24 },
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.3,
+        ease: "power3.out",
+        clearProps: "all",
+      },
+    );
+    gsap.from([...to.children].slice(0, 6), {
+      y: 14,
+      opacity: 0,
+      duration: 0.28,
+      ease: "power3.out",
+      stagger: 0.045,
+      delay: 0.05,
+      clearProps: "all",
+    });
+  };
+
+  /* Which panel a dialog is logically showing. Derived from `hidden` this
+     would pick up whichever one is still fading out. */
+  const currentPanel = new WeakMap<HTMLDialogElement, HTMLElement>();
+
+  const showPanel = (dialog: HTMLDialogElement, panel: string | null) => {
+    const panels = panelsOf(dialog);
+    if (!panels.length) return null;
+    const active = panels.find((p) => p.dataset.panel === panel) ?? panels[0];
+
+    /* Only cross-fade when the sheet is already up and the topic really
+       changed; on the way in the sheet's own entrance carries it. */
+    const current = currentPanel.get(dialog) ?? panels.find((p) => !p.hidden);
+    if (!reduced && dialog.open && current && current !== active) {
+      swapPanels(
+        panels,
+        current,
+        active,
+        panels.indexOf(active) > panels.indexOf(current) ? 1 : -1,
+      );
+    } else {
+      for (const p of panels) {
+        gsap.killTweensOf(p);
+        gsap.set(p, { clearProps: "all" });
+        p.hidden = p !== active;
+      }
+    }
+    currentPanel.set(dialog, active);
+    for (const b of dialog.querySelectorAll<HTMLButtonElement>(
+      "[data-modal-panel]",
+    )) {
+      b.setAttribute(
+        "aria-current",
+        String(b.dataset.modalPanel === active.dataset.panel),
+      );
+    }
+    dialog.querySelector(".modal_shell")?.scrollTo({ top: 0 });
+    return active;
+  };
+
+  let restoreFocus: HTMLElement | null = null;
+
+  /** Only panelled dialogs get a shareable hash; the booking form does not. */
+  const isLinkable = (dialog: HTMLDialogElement) =>
+    dialog.querySelectorAll("[data-modal-panel]").length > 0;
+
+  const open = (t: Target, writeHash = true) => {
+    const dialog = dialogFor(t.group);
+    if (!dialog) return;
+
+    for (const other of document.querySelectorAll<HTMLDialogElement>(
+      "dialog[open]",
+    )) {
+      if (other !== dialog) other.close();
+    }
+
+    const active = showPanel(dialog, t.panel);
+
+    if (!dialog.open) {
+      restoreFocus = document.activeElement as HTMLElement;
+      /* Off-screen before it is shown, or the sheet paints in place for a
+         frame and then jumps down to start its rise. */
+      if (!reduced) gsap.set(dialog, { yPercent: 100 });
+      dialog.showModal();
+      slideIn(dialog);
+      /* showModal would land on the close button; start on the title so a
+         screen reader announces what just opened. */
+      const heading = (active ?? dialog).querySelector<HTMLElement>("h2");
+      if (heading) {
+        heading.tabIndex = -1;
+        heading.focus({ preventScroll: true });
+      }
+    }
+
+    if (writeHash && isLinkable(dialog)) {
+      history.replaceState(
+        null,
+        "",
+        toHash({ group: t.group, panel: active?.dataset.panel ?? null }),
+      );
+    }
+  };
+
+  const clearHash = () => {
+    if (location.hash.includes("/")) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+  };
+
+  /* ---- open / close motion ---------------------------------------------
+     The sheet rises from below the fold and drops back the same way. On
+     close the dialog stays open until the tween finishes, otherwise the
+     element leaves the top layer and the exit would never be seen. */
+  const slideIn = (dialog: HTMLDialogElement) => {
+    const shell = dialog.querySelector<HTMLElement>("[data-modal-shell]");
+    if (reduced) return;
+    gsap.killTweensOf(dialog);
+    gsap.fromTo(
+      dialog,
+      { yPercent: 100 },
+      { yPercent: 0, duration: DUR.slow, ease: EASE, clearProps: "transform" },
+    );
+    if (shell) {
+      gsap.from(shell.querySelectorAll(":scope > *"), {
+        y: 28,
+        opacity: 0,
+        duration: DUR.base,
+        ease: EASE,
+        stagger: 0.0875,
+        delay: 0.18,
+      });
+    }
+  };
+
+  let closing = false;
+
+  const dismiss = (dialog: HTMLDialogElement) => {
+    if (reduced) {
+      dialog.close();
+      return;
+    }
+    if (closing) return;
+    closing = true;
+    gsap.killTweensOf(dialog);
+    gsap.to(dialog, {
+      yPercent: 100,
+      duration: DUR.fast,
+      ease: "power2.in",
+      onComplete: () => {
+        gsap.set(dialog, { clearProps: "transform" });
+        closing = false;
+        dialog.close();
+      },
+    });
+  };
+
+  const closeAll = () => {
+    for (const d of document.querySelectorAll<HTMLDialogElement>(
+      "dialog[open]",
+    ))
+      dismiss(d);
+  };
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const trigger = target.closest<HTMLElement>("[data-modal-open]");
+    if (trigger) {
+      event.preventDefault();
+      open(parse(trigger.dataset.modalOpen!));
+      return;
+    }
+
+    if (target.closest("[data-modal-close]")) {
+      closeAll();
+      return;
+    }
+
+    const panelButton = target.closest<HTMLButtonElement>("[data-modal-panel]");
+    if (panelButton) {
+      const dialog = panelButton.closest<HTMLDialogElement>("dialog");
+      if (!dialog) return;
+      showPanel(dialog, panelButton.dataset.modalPanel!);
+      history.replaceState(
+        null,
+        "",
+        toHash({
+          group: dialog.dataset.modal!,
+          panel: panelButton.dataset.modalPanel!,
+        }),
+      );
+    }
+  });
+
+  for (const dialog of document.querySelectorAll<HTMLDialogElement>(
+    "dialog[data-modal]",
+  )) {
+    /* Escape closes a dialog natively and instantly. Cancel that and play the
+       exit, which then closes it for real. */
+    dialog.addEventListener("cancel", (event) => {
+      if (reduced || closing) return;
+      event.preventDefault();
+      dismiss(dialog);
+    });
+
+    /* The sheet covers everything below the bar, so the only backdrop left is
+       the strip the navigation sits in; a click up there dismisses. */
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dismiss(dialog);
+    });
+
+    /* Escape closes natively; drop the hash and hand focus back. Deferred by
+       a microtask because opening one dialog closes the previous one first —
+       a hand-over must not clear the hash or pull focus out of the new
+       dialog, so both only happen once nothing is left open. */
+    dialog.addEventListener("close", () => {
+      queueMicrotask(() => {
+        if (document.querySelector("dialog[open]")) return;
+        clearHash();
+        restoreFocus?.focus({ preventScroll: true });
+        restoreFocus = null;
+      });
+    });
+  }
+
+  const openFromHash = () => {
+    const t = fromHash(location.hash);
+    if (t) open(t, false);
+  };
+  openFromHash();
+  window.addEventListener("hashchange", openFromHash);
+</script>

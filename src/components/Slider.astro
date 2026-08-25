@@ -1,0 +1,159 @@
+---
+import Icon from "@/components/Icon.astro";
+import arrow from "@/assets/icons/slider-arrow.svg";
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * Horizontal card track with the two arrow pills the design puts under it.
+ * The track is a real scroll container, so the wheel, touch and keyboard all
+ * work on their own; SliderController adds click stepping and mouse dragging.
+ */
+interface Props extends HTMLAttributes<"div"> {
+  label: string;
+  /** Slide width at the design width. */
+  itemWidth?: string;
+}
+
+const { label, itemWidth = "24rem", class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["slider", className]} data-slider {...rest}>
+  <ul
+    class="slider_track"
+    data-slider-track
+    tabindex="0"
+    role="group"
+    aria-label={label}
+    style={`--_item: ${itemWidth};`}
+  >
+    <slot />
+  </ul>
+
+  <div class="slider_controls">
+    <button
+      class="slider_button"
+      type="button"
+      data-slider-prev
+      aria-label="Předchozí"
+    >
+      <Icon src={arrow} variant="full-width" />
+    </button>
+    <button
+      class="slider_button"
+      type="button"
+      data-slider-next
+      aria-label="Další"
+    >
+      <Icon src={arrow} variant="full-width" />
+    </button>
+  </div>
+</div>
+
+<style is:global>
+  @layer components {
+    /* The sliders share the card grids' inset column. */
+    .slider {
+      /* The section container start-aligns its children, so the slider has to
+         ask to fill the row — without this it sizes to the track's intrinsic
+         scroll width and the bleed below computes off the wrong base. */
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      margin-inline: var(--narrow-inset);
+    }
+
+    /* The track itself spans the whole viewport, so slides scrolled past stay
+       visible in the left gutter and the next one is cut off by the right
+       page edge — both as the design shows. The leading padding is what puts
+       the first slide on the column, and `scroll-padding` makes snapping
+       respect it. `overflow-x: clip` on the body absorbs the overshoot. */
+    .slider_track {
+      display: flex;
+      gap: var(--site-gutter);
+      margin: 0;
+      /* Exactly the distance from each viewport edge to the column. */
+      margin-inline: calc(var(--narrow-lead) * -1);
+      padding: 0 var(--site-margin) var(--space-2) var(--narrow-lead);
+      scroll-padding-inline-start: var(--narrow-lead);
+      list-style: none;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      cursor: grab;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      > * {
+        /* 316px at 393, the width the mobile board draws, leaving the next
+           slide peeking past the right edge. */
+        flex: 0 0 min(calc(100vw - 4.8125rem), var(--_item));
+        scroll-snap-align: start;
+      }
+
+      @media (width >= 48rem) {
+        > * {
+          flex-basis: var(--_item);
+        }
+      }
+    }
+
+    /* While a drag is in flight, snapping would fight the pointer and the
+       text inside the slides would start selecting. */
+    .slider_track.is-dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+      user-select: none;
+    }
+
+    .slider_controls {
+      display: flex;
+      gap: var(--site-gutter);
+    }
+
+    [data-static] .slider_controls {
+      display: none;
+    }
+
+    /* 105 x 53 design px with a 1.5px stroke and a fully rounded end. */
+    .slider_button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 4.9411rem;
+      height: 2.4941rem;
+      border: var(--border-pill) solid var(--text);
+      border-radius: var(--radius-round);
+      color: var(--text);
+      transition:
+        background-color 250ms,
+        color 250ms,
+        opacity 250ms;
+
+      &:disabled {
+        opacity: 0.3;
+      }
+
+      @media (hover: hover) {
+        &:not(:disabled):hover {
+          background-color: var(--text);
+          color: var(--cream);
+        }
+      }
+    }
+
+    /* The glyph is 33.6 x 19.8 design px inside that pill. */
+    .slider_button .icon {
+      width: 1.5806rem;
+      height: auto;
+    }
+
+    /* The artwork points right; the previous button mirrors it. */
+    [data-slider-prev] .icon {
+      transform: scaleX(-1);
+    }
+  }
+</style>

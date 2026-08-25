@@ -1,0 +1,45 @@
+---
+import Icon from "@/components/Icon.astro";
+import star from "@/assets/icons/star.svg";
+
+interface Props {
+  /** Out of five. */
+  rating?: number;
+}
+
+const { rating = 5 } = Astro.props;
+---
+
+<p class="stars" aria-label={`Hodnocení ${rating} z 5`}>
+  {
+    Array.from({ length: 5 }, (_, i) => (
+      <Icon
+        src={star}
+        variant="small"
+        class:list={[i >= rating && "is-empty"]}
+      />
+    ))
+  }
+</p>
+
+<style is:global>
+  @layer components {
+    .stars {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      gap: 0.125rem;
+      color: var(--text);
+    }
+
+    /* 20.9 design px across. */
+    .stars .icon {
+      width: 0.98rem;
+      height: auto;
+    }
+
+    .stars .is-empty {
+      opacity: 0.2;
+    }
+  }
+</style>

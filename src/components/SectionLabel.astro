@@ -1,0 +1,25 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * The small uppercase label that opens every section in the design —
+ * "STOMATOLOGIE SANAVERA", "TECHNOLOGIE", "POSKYTOVANÉ SLUŽBY".
+ */
+interface Props extends HTMLAttributes<"p"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<p class:list={["section_label", className]} {...rest}><slot /></p>
+
+<style is:global>
+  @layer components {
+    .section_label {
+      font-size: var(--text-small);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+      color: var(--text);
+    }
+  }
+</style>

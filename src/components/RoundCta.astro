@@ -1,0 +1,67 @@
+---
+interface Props {
+  /** In-page anchor, e.g. "#objednani". */
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<a class="round_cta" href={href}>
+  <span>Chci se<br />objednat</span>
+</a>
+
+<style is:global>
+  @layer components {
+    /* The white disc floats over the page rather than sitting in the hero, so
+       booking stays reachable from any scroll position. It jumps to the first
+       registration form. Below the desktop breakpoint the nav already carries
+       "Objednat se" and the mobile design has no disc, so it stays hidden. */
+    .round_cta {
+      display: none;
+    }
+
+    @media (width >= 64rem) {
+      .round_cta {
+        position: fixed;
+        z-index: 40;
+        inset-block-end: var(--site-margin);
+        inset-inline-end: var(--site-margin);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* 223 x 223 in the design. */
+        width: 13.9375rem;
+        height: 13.9375rem;
+        background-color: var(--light-100);
+        border: 0;
+        border-radius: var(--radius-round);
+        box-shadow: 0 0.25rem 1.875rem rgb(0 0 0 / 0.1);
+        color: var(--text);
+        font-size: var(--h4);
+        font-weight: var(--primary-bold);
+        line-height: var(--line-height-medium);
+        letter-spacing: var(--letter-spacing-tight);
+        text-align: center;
+        text-decoration: none;
+        /* No ring and no shadow of its own — .glass carries both. */
+        transition:
+          background-color 250ms,
+          color 250ms;
+
+        @media (hover: hover) {
+          &:hover {
+            background-color: var(--brand-500);
+            color: var(--brand-text);
+          }
+        }
+      }
+    }
+
+    /* A dialog is modal, so the floating button must not sit over its
+       backdrop competing for the click. */
+    body:has(dialog[open]) .round_cta {
+      display: none;
+    }
+  }
+</style>

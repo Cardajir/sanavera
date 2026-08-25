@@ -1,0 +1,22 @@
+---
+import LegalLayout from "@/layouts/LegalLayout.astro";
+import { contact } from "@/data/site.ts";
+---
+
+<LegalLayout
+  title="Informace o ochranně osobních údajů"
+  description="Informace o zpracování osobních údajů pacientů Sanavera s.r.o."
+>
+  <p>
+    <strong>Správce osobních údajů:</strong><br />
+    {contact.operator.name}, {contact.operator.lines.join(" ")}<br />
+    {contact.operator.ico}<br />
+    Kontaktní e-mail: <a href={contact.emailHref}>{contact.email}</a>
+  </p>
+
+  <p>
+    Úplné znění informace o zpracování osobních údajů podle nařízení GDPR doplní
+    provozovatel. Text musí schválit odpovědná osoba – nelze jej generovat
+    automaticky.
+  </p>
+</LegalLayout>

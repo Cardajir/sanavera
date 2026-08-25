@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import Heading from "@/components/Heading.astro";
+import Paragraph from "@/components/Paragraph.astro";
+import ContentWrapper from "@/components/ContentWrapper.astro";
+import PillLink from "@/components/PillLink.astro";
+---
+
+<Layout
+  title="Stránka nenalezena"
+  description="Požadovaná stránka neexistuje."
+  overlap={true}
+>
+  <Section paddingTop="navoverlap" paddingBottom="navoverlap" class="flex-grow">
+    <ContentWrapper centered={true}>
+      <Heading variant="h1" tag="h1" maxWidth={20}>
+        Tuto stránku jsme nenašli
+      </Heading>
+      <Paragraph variant="large" maxWidth={44}>
+        Stránka mohla být přesunuta nebo je odkaz, který vás sem přivedl, už
+        neaktuální.
+      </Paragraph>
+      <PillLink href="/">Zpět na úvod</PillLink>
+    </ContentWrapper>
+  </Section>
+</Layout>

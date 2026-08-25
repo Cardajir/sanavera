@@ -1,0 +1,31 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import Heading from "@/components/Heading.astro";
+import RichText from "@/components/RichText.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+
+/**
+ * The footer's mandatory-disclosure documents. These stay real routes rather
+ * than modals: they are linked from elsewhere and need to be printable and
+ * indexable on their own.
+ */
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <Section paddingTop="small" paddingBottom="small" gap="6">
+    <div class="hero_head_text">
+      <SectionLabel>Povinné údaje</SectionLabel>
+      <Heading tag="h1" variant="h1" maxWidth={30}>{title}</Heading>
+    </div>
+    <RichText maxWidth={80}>
+      <slot />
+    </RichText>
+  </Section>
+</Layout>

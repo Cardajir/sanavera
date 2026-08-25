@@ -1,0 +1,63 @@
+---
+import "@/styles/global.css";
+import BaseHead from "@/components/BaseHead.astro";
+import SkipLink from "@/components/SkipLink.astro";
+import Nav from "@/components/Nav.astro";
+import Footer from "@/components/Footer.astro";
+import Motion from "@/components/Motion.astro";
+import type { SeoProps } from "@/types.ts";
+
+type Props = SeoProps & {
+  /** Theme for the whole page. `inherit` leaves the root defaults in place. */
+  theme?: "inherit" | "light" | "dark" | "brand";
+  /**
+   * Fix the nav over the page rather than letting it sit in flow.
+   *
+   * On by default here. In flow the bar is part of the layout, so opening the
+   * mobile panel makes it 327px tall and shoves the whole page down; fixed, it
+   * sits above everything and changes nothing beneath it.
+   *
+   * Lumos clears the bar by giving the first section `paddingTop="navoverlap"`.
+   * This site reserves the same space once on `main` instead, so every page's
+   * own section padding keeps its meaning and no page can forget to opt in.
+   */
+  overlap?: boolean;
+};
+
+const { theme = "inherit", overlap = true, ...seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang="cs" class:list={[theme !== "inherit" && `theme-${theme}`]}>
+  <head>
+    <BaseHead {...seo} />
+    {
+      /* Inline and render-blocking on purpose: the entrance animations need
+         their start state in place before anything paints, or the page shows
+         finished for a frame and then jumps back. Motion.astro takes over as
+         soon as it loads; the timeout is the failsafe for when it never does,
+         so a broken or blocked script leaves a static page, not a blank one. */
+    }
+    <script is:inline>
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("motion");
+        setTimeout(function () {
+          document.documentElement.classList.remove("motion");
+        }, 2500);
+      }
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <SkipLink />
+    <Nav overlap={overlap} />
+    {
+      /* `tabindex` so the jump moves focus here, not just the scroll position */
+    }
+    <main id="main" tabindex="-1" class:list={[overlap && "under-nav"]}>
+      <slot />
+    </main>
+    <Footer />
+    <Motion />
+  </body>
+</html>

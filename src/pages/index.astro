@@ -1,0 +1,852 @@
+---
+import Layout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/Section.astro";
+import Heading from "@/components/Heading.astro";
+import Paragraph from "@/components/Paragraph.astro";
+import RichText from "@/components/RichText.astro";
+import Img from "@/components/Img.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+import PillLink from "@/components/PillLink.astro";
+import PillButton from "@/components/PillButton.astro";
+import RoundCta from "@/components/RoundCta.astro";
+import Slider from "@/components/Slider.astro";
+import Stars from "@/components/Stars.astro";
+import BookingForm from "@/components/BookingForm.astro";
+import Modal from "@/components/Modal.astro";
+import ModalController from "@/components/ModalController.astro";
+import BookingFormController from "@/components/BookingFormController.astro";
+import SliderController from "@/components/SliderController.astro";
+import { getCollection, render } from "astro:content";
+import { image } from "@/utils/images.ts";
+import {
+  hero,
+  values,
+  doctor,
+  comfort,
+  comfortItems,
+  services,
+  reviews,
+  reviewSource,
+  contact,
+} from "@/data/site.ts";
+import { aboutNav, insurance } from "@/data/about.ts";
+
+const sluzby = (await getCollection("sluzby")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const technologie = (await getCollection("technologie")).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+/** Modal bodies come from the same Markdown the collections hold. */
+const sluzbyPanels = await Promise.all(
+  sluzby.map(async (entry) => ({
+    entry,
+    Content: (await render(entry)).Content,
+  })),
+);
+const techPanels = await Promise.all(
+  technologie.map(async (entry) => ({
+    entry,
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<Layout>
+  {/* ============================================================== HERO */}
+  {
+    /* paddingTop is left at the default so Section emits no padding utility —
+       the hero's own top gap is bespoke and set in site.css, and a utility
+       would outrank it. */
+  }
+  <Section paddingBottom="medium" gap="8" class="hero_section">
+    <div class="hero_media">
+      <Img
+        src={image("hero")}
+        alt="Ošetření pacientky v ordinaci Sanavera"
+        variant="full-width"
+        loading="eager"
+        fetchPriority="high"
+        class="hero_photo"
+      />
+      <div class="hero_map">
+        <iframe
+          class="hero_map_image"
+          src="https://snazzymaps.com/embed/808711"
+          title={`Mapa – ${contact.clinic.street}, ${contact.clinic.city}`}
+          loading="lazy"></iframe>
+        <div class="hero_map_card glass">
+          <p class="address address--small">
+            {contact.clinic.name}<br />
+            {contact.clinic.street}<br />
+            {contact.clinic.city}
+          </p>
+          <PillLink href={contact.mapHref} rel="noopener">mapa</PillLink>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero_head_text">
+      <SectionLabel>{hero.eyebrow}</SectionLabel>
+      <Heading tag="h1" variant="display" maxWidth={30}>{hero.heading}</Heading>
+    </div>
+  </Section>
+
+  {/* =========================================================== RECENZE */}
+  <Section paddingTop="small" paddingBottom="8">
+    <Slider label="Recenze pacientů" itemWidth="32.375rem">
+      {
+        reviews.map((review) => (
+          <li class="review_card">
+            <div class="review_card_head">
+              <Heading tag="h2" variant="h2">
+                {review.author}
+              </Heading>
+              <Stars />
+            </div>
+            <blockquote class="review_card_quote">
+              <p>{review.text}</p>
+            </blockquote>
+            <p class="review_card_source">{reviewSource}</p>
+          </li>
+        ))
+      }
+    </Slider>
+  </Section>
+
+  {/* ========================================================== KDO JSME */}
+  <Section paddingTop="small" paddingBottom="small" id="kdo-jsme">
+    <div class="doctor">
+      <Img
+        src={image("doctor")}
+        alt={doctor.name}
+        variant="constrained"
+        width={900}
+        class="doctor_photo"
+      />
+      <div class="doctor_card">
+        <Heading tag="h2" variant="h2">{doctor.heading}</Heading>
+        {doctor.bio.map((para) => <Paragraph>{para}</Paragraph>)}
+        <p class="doctor_insurance">{doctor.insuranceLine}</p>
+        <p class="doctor_name">{doctor.name}</p>
+        <PillButton opens="kdo-jsme:vedouci-lekar">{doctor.cta}</PillButton>
+      </div>
+    </div>
+  </Section>
+
+  <Section paddingTop="small" paddingBottom="medium">
+    <Heading tag="h2" variant="display" maxWidth={44}>{hero.claim}</Heading>
+  </Section>
+
+  <Section paddingTop="8" paddingBottom="small">
+    <div class="values">
+      {
+        values.map((card) => (
+          <article class="value_card">
+            <Heading tag="h3" variant="h2">
+              {card.heading}
+            </Heading>
+            <Paragraph>{card.text}</Paragraph>
+            {card.opens && (
+              <PillButton opens={card.opens} class="value_card_link">
+                To mě zajímá
+              </PillButton>
+            )}
+          </article>
+        ))
+      }
+    </div>
+  </Section>
+
+  {/* ========================================================= OBJEDNÁNÍ */}
+  <Section paddingTop="1" paddingBottom="medium" id="objednani">
+    <BookingForm formId="booking-objednani" />
+  </Section>
+
+  {/* ======================================================= TECHNOLOGIE */}
+  <Section paddingTop="medium" paddingBottom="8" gap="large" id="technologie">
+    <div class="hero_head_text">
+      <SectionLabel>{comfort.eyebrow}</SectionLabel>
+      <Heading tag="h2" variant="display">
+        {comfort.heading}
+      </Heading>
+    </div>
+
+    <Slider label="Vybavení pro váš komfort" itemWidth="32.375rem">
+      {
+        comfortItems.map((item, i) => (
+          <>
+            <li class="comfort_card">
+              <Heading tag="h3" variant="h3">
+                {item.heading}
+              </Heading>
+              <div class="comfort_card_visual">
+                <Img
+                  src={image(item.image)}
+                  alt={item.product}
+                  variant="constrained"
+                  width={520}
+                  transparent
+                />
+              </div>
+              <div class="comfort_card_body">
+                <p class="comfort_card_product">{item.product}</p>
+                <Paragraph>{item.text}</Paragraph>
+              </div>
+            </li>
+            {/* The design slots a wide photo in as the second slide. */}
+            {i === 0 && (
+              <li class="comfort_photo">
+                <Img
+                  src={image("vr-patient")}
+                  alt="Pacientka s VR brýlemi během ošetření"
+                  variant="constrained"
+                  width={1000}
+                  class="comfort_photo_image"
+                />
+              </li>
+            )}
+          </>
+        ))
+      }
+    </Slider>
+
+    <div class="microscope">
+      <Img
+        src={image("microscope-room")}
+        alt="Ošetření pod chirurgickým mikroskopem"
+        variant="full-width"
+        class="microscope_photo"
+      />
+      <div class="microscope_card">
+        <p class="microscope_label">{comfort.microscopeLabel}</p>
+        <PillButton opens="technologie:chirurgicky-mikroskop">
+          To mě zajímá
+        </PillButton>
+      </div>
+    </div>
+  </Section>
+
+  {/* ============================================================ SLUŽBY */}
+  <Section paddingTop="medium" paddingBottom="medium" gap="large" id="sluzby">
+    <div class="hero_head_text">
+      <SectionLabel>{services.eyebrow}</SectionLabel>
+      <Heading tag="h2" variant="display">
+        {services.heading}
+      </Heading>
+    </div>
+
+    <ul class="services">
+      {
+        sluzby.map((entry, i) => (
+          <li class="service_card">
+            <p class="service_card_number">{String(i + 1).padStart(2, "0")}</p>
+            <Heading tag="h3" variant="h2">
+              {entry.data.title}
+            </Heading>
+            <Paragraph>{entry.data.lead}</Paragraph>
+            <PillButton opens={`sluzby:${entry.id}`} class="service_card_link">
+              To mě zajímá
+            </PillButton>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {/* ============================================================ MODALS */}
+  <Modal
+    id="sluzby"
+    label="Poskytované služby"
+    sidebarLabel={services.eyebrow}
+    items={sluzby.map((e) => ({ key: e.id, label: e.data.title }))}
+  >
+    {
+      sluzbyPanels.map(({ entry, Content }) => (
+        <article class="modal_panel" data-panel={entry.id} hidden>
+          <Heading tag="h2" variant="h1">
+            {entry.data.title}
+          </Heading>
+          <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+            {entry.data.lead}
+          </Paragraph>
+          <RichText maxWidth={72}>
+            <Content />
+          </RichText>
+        </article>
+      ))
+    }
+  </Modal>
+
+  <Modal
+    id="technologie"
+    label="Vybavení ordinace"
+    sidebarLabel="Vybavení ordinace"
+    items={technologie.map((e) => ({ key: e.id, label: e.data.navLabel }))}
+  >
+    {
+      techPanels.map(({ entry, Content }) => (
+        <article class="modal_panel" data-panel={entry.id} hidden>
+          <Heading tag="h2" variant="h1">
+            {entry.data.title}
+          </Heading>
+          <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+            {entry.data.lead}
+          </Paragraph>
+          <RichText maxWidth={72}>
+            <Content />
+          </RichText>
+          <div class="tech_gallery">
+            {entry.data.images.map((name) => (
+              <Img
+                src={image(name)}
+                alt={entry.data.title}
+                variant="constrained"
+                width={700}
+                transparent
+                class="tech_gallery_item"
+              />
+            ))}
+          </div>
+        </article>
+      ))
+    }
+  </Modal>
+
+  <Modal
+    id="kdo-jsme"
+    label="Kdo jsme"
+    sidebarLabel="Kdo jsme"
+    items={aboutNav.map((item) => ({ key: item.key, label: item.label }))}
+  >
+    <article class="modal_panel" data-panel="vedouci-lekar" hidden>
+      <Heading tag="h2" variant="h1">{doctor.name}</Heading>
+      <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+        {doctor.heading}
+      </Paragraph>
+      <RichText maxWidth={72}>
+        {doctor.bio.map((para) => <p>{para}</p>)}
+      </RichText>
+      <div class="tech_gallery">
+        <Img
+          src={image("doctor")}
+          alt={doctor.name}
+          variant="constrained"
+          width={900}
+          class="about_portrait_image"
+        />
+      </div>
+    </article>
+
+    <article
+      class="modal_panel"
+      data-panel="nejsme-smluvnim-poskytovatelem"
+      hidden
+    >
+      <Heading tag="h2" variant="h1">{insurance.title}</Heading>
+      <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+        {insurance.lead}
+      </Paragraph>
+      <RichText maxWidth={72}>
+        {
+          insurance.reasons.map((reason) => (
+            <>
+              <h3>{reason.heading}</h3>
+              <p>{reason.text}</p>
+            </>
+          ))
+        }
+      </RichText>
+    </article>
+  </Modal>
+
+  <RoundCta href="#objednani" />
+
+  <ModalController />
+  <BookingFormController />
+  <SliderController />
+</Layout>
+
+<style is:global>
+  @layer components {
+    /* Anchored sections have to clear the sticky bar when jumped to. */
+    [id="kdo-jsme"],
+    [id="technologie"],
+    [id="sluzby"],
+    [id="objednani"] {
+      scroll-margin-top: calc(var(--nav-height) + var(--space-4));
+    }
+
+    /* ---------------------------------------------------------- hero */
+
+    /* Wide photo with the map beside it, then the headline underneath —
+       the order the design uses. */
+    .hero_media {
+      display: grid;
+      gap: var(--site-gutter);
+      grid-template-columns: 1fr;
+      width: 100%;
+
+      /* The design's own 1313 : 519 split rather than a rounded 5 : 2, so
+         both halves land on the same height as well as the same widths. */
+      @media (width >= 48rem) {
+        grid-template-columns: minmax(0, 1313fr) minmax(0, 519fr);
+      }
+    }
+
+    .hero_photo {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-main);
+      object-fit: cover;
+
+      /* 1313 x 672 in the design. */
+      @media (width >= 48rem) {
+        aspect-ratio: 1313 / 672;
+      }
+    }
+
+    .hero_map {
+      position: relative;
+      border-radius: var(--radius-main);
+      overflow: clip;
+      background-color: var(--sand);
+      aspect-ratio: 368 / 378;
+
+      /* 519 x 672 in the design. Side by side the photograph sets the row
+         height and this stretches to it — its own ratio would round to a
+         few pixels taller and break the shared baseline. */
+      @media (width >= 48rem) {
+        aspect-ratio: auto;
+      }
+    }
+
+    .hero_map_image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .hero_map_card {
+      position: absolute;
+      inset-block-end: var(--space-3);
+      inset-inline: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--panel-inset);
+      border-radius: var(--radius-small);
+    }
+
+    /* Headline on the left, the round booking disc on the right. */
+    .hero_head_text {
+      display: flex;
+      flex-direction: column;
+      /* 43-51px from the label's top to the heading's in the design. The
+         pattern layer gives the heading its own top margin, which stacked on
+         the flex gap and pushed the pair 27px apart too far. */
+      gap: 2.3125rem;
+
+      > .heading {
+        margin-top: 0;
+        /* 1151px at the design width, 332 on the mobile board. */
+        max-width: clamp(20.75rem, 7.576rem + 53.635vw, 71.9375rem);
+      }
+      width: 100%;
+      min-width: 0;
+
+      /* The mobile board opens with the headline and drops the eyebrow, so
+         the photographs follow the sentence instead of leading it. */
+      @media (width < 64rem) {
+        order: -1;
+
+        .section_label {
+          display: none;
+        }
+      }
+    }
+
+    /* -------------------------------------------------------- kdo jsme */
+
+    .doctor {
+      display: grid;
+      gap: var(--space-7) var(--site-gutter);
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      width: 100%;
+      /* The photograph eases down from scale 1.06, so it has to be clipped to
+         its frame — unclipped it spills past the viewport and adds horizontal
+         scroll until the reveal fires. */
+      overflow: clip;
+
+      @media (width >= 48rem) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    .doctor_photo {
+      width: 100%;
+      height: 100%;
+      min-height: 18rem;
+      border-radius: var(--radius-main);
+      object-fit: cover;
+
+      /* 916 x 852 in the design; the portrait sets the row height so the
+         card beside it stretches to match. */
+      @media (width >= 48rem) {
+        aspect-ratio: 916 / 852;
+        height: auto;
+        min-height: 0;
+      }
+    }
+
+    .doctor_card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.125rem;
+      padding: clamp(1.6875rem, 0.8834rem + 3.2744vw, 4.8125rem)
+        clamp(1.5rem, 1.0174rem + 1.9646vw, 3.375rem)
+        clamp(2rem, 1.7588rem + 0.9823vw, 2.9375rem);
+      background-color: var(--light-100);
+      border-radius: var(--radius-main);
+
+      /* The card's own padding already sets the title 77px down; the pattern
+         layer's heading margin was adding to it. */
+      > .heading {
+        margin-top: 0;
+      }
+    }
+
+    /* The name sits well clear of the copy above it — 608px into the card at
+       the design width. */
+    .doctor_card > .doctor_name {
+      margin-block-start: clamp(2.5rem, 0.28rem + 9.0373vw, 11.125rem);
+    }
+
+    /* 26 design px, in the regular weight — a pull-quote, not a heading. */
+    /* The design drops the CTA a long way clear of the name. */
+    .doctor_card > .pill {
+      margin-block-start: clamp(1.5rem, 0.4173rem + 4.4074vw, 5.75rem);
+    }
+
+    .doctor_insurance {
+      font-size: 1.225rem;
+      font-weight: var(--primary-regular);
+      line-height: var(--line-height-large);
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    .doctor_name {
+      margin-top: auto;
+      padding-bottom: var(--space-2);
+      font-size: var(--h3);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-tight);
+    }
+
+    /* The design lays cards out as three 518px columns with a 12px gutter,
+       inset from the content column rather than filling it. */
+    .values,
+    .services {
+      /* Same reason as .slider: the container start-aligns its children. */
+      align-self: stretch;
+      display: grid;
+      gap: var(--site-gutter);
+      grid-template-columns: 1fr;
+      margin: 0;
+      margin-inline: var(--narrow-inset);
+      padding: 0;
+      list-style: none;
+
+      @media (width >= 40rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (width >= 64rem) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* Two 316px cards side by side running off the right edge, rather than
+       the full-width stack a one-column grid would give. */
+    @media (width < 40rem) {
+      .values {
+        display: flex;
+        margin-inline: calc(var(--site-margin) * -1);
+        padding-inline: var(--site-margin);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        /* Without this the snapport starts at the border edge and mandatory
+           snapping scrolls the leading inset straight back off. */
+        scroll-padding-inline-start: var(--site-margin);
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        > * {
+          flex: 0 0 calc(100vw - 4.8125rem);
+          scroll-snap-align: start;
+        }
+      }
+    }
+
+    .value_card,
+    .service_card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      /* 47/48 design px inset = 35px, on a 518x546 card. */
+      padding: var(--card-padding);
+      background-color: var(--sand);
+      border-radius: var(--radius-main);
+      transition: background-color 250ms;
+    }
+
+    /* 546px tall at the design width; content-height on narrow screens. */
+    @media (width >= 64rem) {
+      .value_card,
+      .service_card,
+      .review_card {
+        min-height: 34.125rem;
+      }
+
+      .comfort_card {
+        min-height: 39rem;
+      }
+    }
+
+    /* Both components ship a peach hover state in the design. */
+    @media (hover: hover) {
+      .value_card:hover,
+      .service_card:hover {
+        background-color: var(--brand-500);
+      }
+    }
+
+    .service_card_number {
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-normal);
+    }
+
+    .value_card_link {
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* Centred on the map, sitting on its point like a real marker. */
+    /* ------------------------------------------------------ technologie */
+
+    .comfort_card {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--light-100);
+      border-radius: var(--radius-main);
+      padding: var(--card-padding) 2.875rem;
+      height: 100%;
+
+      > .heading {
+        margin-top: 0;
+      }
+    }
+
+    /* A fixed picture area keeps the product shots optically aligned across
+       the row even though their aspect ratios differ, and reserves the space
+       before the file arrives. */
+    .comfort_card_visual {
+      height: 15.25rem;
+      /* 115px under the title, and the body sits at the card's foot. */
+      margin-block: 5.3125rem auto;
+      & .image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .comfort_card_body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    /* The model name, in the label weight but keeping its own casing. */
+    .comfort_card_product {
+      font-size: var(--text-small);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-label);
+    }
+
+    /* The photo slide is wider than a card, as in the design. */
+    /* No explicit height: an auto height lets the flex row stretch this
+       slide to match the cards beside it instead of the image's own ratio. */
+    .comfort_photo {
+      border-radius: var(--radius-main);
+      overflow: clip;
+
+      /* 783 x 624 — wider than the cards it sits between. */
+      @media (width >= 48rem) {
+        flex-basis: 48.9375rem;
+      }
+    }
+
+    .comfort_photo_image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 1843 x 922 at a 15px corner in the design — the smaller of the two
+       radii, with the card on top carrying the larger. */
+    .microscope {
+      position: relative;
+      width: 100%;
+      /* Deep enough on a phone for the label card that sits on it; the wide
+         crop only starts once there is room for it. */
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-small);
+      overflow: clip;
+
+      /* 320px under the slider in the design, where the section's own gap
+         gives 195. */
+      @media (width >= 48rem) {
+        margin-block-start: 2.6875rem;
+        aspect-ratio: auto;
+      }
+    }
+
+    .microscope_photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      /* 1843 x 922 in the design, once the block is no longer ratio-bound. */
+      @media (width >= 48rem) {
+        aspect-ratio: 1843 / 922;
+      }
+    }
+
+    /* 550 x 92 in the design: the label ranged left, the pill beside it,
+       19px of inset all round bar a wider 34px lead. */
+    .microscope_card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-3);
+      /* Over the photograph at every width. 39px in from its left edge and
+         43px up from its foot at the design width, tapering to 14 on a phone. */
+      position: absolute;
+      inset-block-end: clamp(0.875rem, 0.4086rem + 1.8992vw, 2.6875rem);
+      inset-inline-start: clamp(0.875rem, 0.4731rem + 1.6372vw, 2.4375rem);
+      inset-inline-end: clamp(0.875rem, 0.4731rem + 1.6372vw, 2.4375rem);
+      /* 550px in the design; narrower screens are bounded by the insets. */
+      max-width: 34.375rem;
+      margin: 0;
+      padding: 1.1875rem 1.1875rem 1.1875rem 2.125rem;
+      background-color: var(--light-100);
+      border-radius: var(--radius-main);
+
+      @media (width >= 48rem) {
+        flex-direction: row;
+        align-items: center;
+        gap: 1.4375rem;
+      }
+    }
+
+    .microscope_label {
+      @media (width >= 48rem) {
+        width: 17.1875rem;
+      }
+      font-size: var(--text-small);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-label);
+      text-transform: uppercase;
+    }
+
+    /* ---------------------------------------------------------- recenze */
+
+    .review_card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      height: 100%;
+      padding: var(--card-padding);
+      /* The mobile board draws these white; the desktop board sand. */
+      background-color: var(--light-100);
+      border-radius: var(--radius-main);
+
+      @media (width >= 64rem) {
+        background-color: var(--sand);
+      }
+    }
+
+    /* The design sets the name and the rating on the same line. The pattern
+       layer gives every .heading a top margin, and a centred flex item
+       centres its margin box, which dropped the name below the stars. */
+    .review_card_head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+
+    .review_card_head .heading {
+      margin-top: 0;
+    }
+
+    /* The quote takes the slack so the source line settles on the card floor
+       and stays level across a row of uneven reviews. */
+    .review_card_quote {
+      flex-grow: 1;
+      margin: 0;
+      font-size: var(--text-main);
+    }
+
+    .review_card_source {
+      font-size: var(--text-main);
+      font-weight: var(--primary-bold);
+    }
+
+    /* ----------------------------------------------------------- služby */
+
+    .service_card_link {
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* ----------------------------------------------------- modal extras */
+
+    .tech_gallery {
+      display: grid;
+      gap: var(--site-gutter);
+      grid-template-columns: 1fr;
+      margin-top: var(--space-7);
+
+      @media (width >= 40rem) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .tech_gallery_item {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      padding: var(--space-5);
+      border-radius: var(--radius-main);
+      /* Wins over Img's own `transparent` rule, which is what clears the
+         skeleton tint these product shots would otherwise sit on. */
+      background-color: var(--light-100);
+    }
+
+    .about_portrait_image {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: var(--radius-main);
+      object-fit: cover;
+    }
+  }
+</style>

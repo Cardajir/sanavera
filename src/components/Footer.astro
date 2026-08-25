@@ -1,0 +1,302 @@
+---
+import Img from "@/components/Img.astro";
+import Heading from "@/components/Heading.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+import PillLink from "@/components/PillLink.astro";
+import BookingForm from "@/components/BookingForm.astro";
+import { contact, legalNav } from "@/data/site.ts";
+import { image } from "@/utils/images.ts";
+---
+
+<footer class="footer_wrap" id="kontakt">
+  <div class="footer_inner">
+    <div class="footer_col">
+      <SectionLabel>Kontakt</SectionLabel>
+      <p class="address footer_lead">
+        <a href={contact.phoneHref}>{contact.phone}</a><br />
+        <a href={contact.emailHref}>{contact.email}</a>
+      </p>
+    </div>
+
+    <div class="footer_grid footer_grid--details">
+      <div class="footer_col">
+        <SectionLabel>Ordinační doba</SectionLabel>
+        <dl class="footer_hours">
+          {
+            contact.hours.map((row) => (
+              <div class="footer_hours_row">
+                <dt>{row.days}</dt>
+                <dd>{row.time}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <div class="footer_col">
+        <SectionLabel>Parkování</SectionLabel>
+        <p class="address address--bold address--small">
+          {contact.parking[0]}<br />
+          {contact.parking[1]}
+        </p>
+      </div>
+
+      <div class="footer_col">
+        <SectionLabel>Sledujte nás</SectionLabel>
+        <p class="address address--bold address--small">
+          <span class="footer_line_key">Ig / fb:</span>
+          <a href={contact.social.instagram} rel="noopener">
+            {contact.social.handle}
+          </a><br />
+          <span class="footer_line_key">Znamylekar:</span>
+          <a href={contact.social.znamylekar} rel="noopener">
+            Přejít na znamylekar.cz
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer_place">
+      <div class="footer_map">
+        <iframe
+          class="footer_map_image"
+          src="https://snazzymaps.com/embed/808711"
+          title={`Mapa – ${contact.clinic.street}, ${contact.clinic.city}`}
+          loading="lazy"></iframe>
+        <div class="footer_map_card glass">
+          <Heading tag="h2" variant="h5">Kde nás najdete?</Heading>
+          <p class="address address--small">
+            {contact.clinic.street}<br />
+            {contact.clinic.city}
+          </p>
+          <PillLink href={contact.mapHref} rel="noopener">mapa</PillLink>
+        </div>
+      </div>
+
+      <Img
+        src={image("veseli")}
+        alt="Veselí nad Moravou"
+        variant="constrained"
+        width={700}
+        class="footer_town"
+      />
+    </div>
+
+    <div class="footer_grid footer_grid--legal">
+      <div class="footer_col">
+        <SectionLabel>Provozovatel</SectionLabel>
+        <p class="address address--bold address--small">
+          {contact.operator.name}<br />
+          {contact.operator.lines[0]}<br />
+          {contact.operator.lines[1]}
+        </p>
+      </div>
+
+      <div class="footer_col">
+        <SectionLabel aria-hidden="true">&nbsp;</SectionLabel>
+        <p class="address address--bold address--small">
+          {contact.operator.ico}<br />
+          {contact.operator.register[0]}<br />
+          {contact.operator.register[1]}
+        </p>
+      </div>
+
+      <div class="footer_col">
+        <SectionLabel>Povinné údaje</SectionLabel>
+        <ul class="footer_legal">
+          {
+            legalNav.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    {
+      /* The design closes the page with the registration form, after the
+         mandatory-disclosure block — not with a logo or copyright bar. */
+    }
+    <BookingForm formId="booking-paticka" />
+  </div>
+</footer>
+
+<style is:global>
+  @layer components {
+    .footer_wrap {
+      scroll-margin-top: calc(var(--nav-height) + var(--space-4));
+      display: flex;
+      justify-content: center;
+      /* 273px from the last service card to KONTAKT in the design. */
+      padding: var(--section-space-large) var(--site-margin) var(--space-7);
+      background-color: var(--cream);
+      color: var(--text);
+    }
+
+    .footer_inner {
+      width: 100%;
+      max-width: var(--max-width-main);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-7);
+    }
+
+    /* The design leaves far more air under the phone and e-mail than between
+       the blocks that follow. */
+    .footer_grid--details {
+      margin-block-start: 4.125rem;
+    }
+
+    .footer_grid {
+      display: grid;
+      /* A generous row gap: at two columns the rows carry wrapped values and
+         a tighter one leaves them looking collided. */
+      gap: var(--space-8) var(--site-gutter);
+      grid-template-columns: 1fr;
+
+      @media (width >= 30rem) {
+        grid-template-columns: 1fr 1fr;
+      }
+      @media (width >= 64rem) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .footer_grid--details,
+    .footer_grid--legal {
+      @media (width >= 64rem) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .footer_col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    /* The label sits tight above its block, unlike a normal paragraph. */
+    .footer_col .section_label {
+      margin-bottom: var(--space-3);
+    }
+
+    .footer_lead {
+      font-size: var(--h1);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-tight);
+      line-height: var(--line-height-large);
+    }
+
+    .footer_legal {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      & a {
+        color: inherit;
+      }
+    }
+
+    /* The value column starts 146px in on the mobile board, 132 on the
+       desktop one. */
+    .footer_line_key {
+      display: inline-block;
+      min-width: clamp(8.25rem, 9.35rem - 0.9168vw, 9.125rem);
+    }
+
+    .footer_hours_row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-4);
+      max-width: 18rem;
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      & dd {
+        margin: 0;
+      }
+    }
+
+    /* Wide map with the town photo beside it, as the design pairs them. */
+    .footer_place {
+      display: grid;
+      gap: var(--site-gutter);
+      grid-template-columns: 1fr;
+      /* Same as .doctor: the town photograph eases down from scale 1.06. */
+      overflow: clip;
+
+      /* The design's own 1313 : 519 split rather than a rounded 5 : 2. */
+      @media (width >= 48rem) {
+        grid-template-columns: minmax(0, 1313fr) minmax(0, 519fr);
+      }
+    }
+
+    /* 519 x 672 in the design. Beside the map it stretches to the map's
+       height instead of keeping its own, which rounds a few pixels taller. */
+    .footer_town {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 519 / 672;
+      border-radius: var(--radius-main);
+      object-fit: cover;
+
+      @media (width >= 48rem) {
+        aspect-ratio: auto;
+      }
+    }
+
+    /* The map is a rounded panel with the address card floating over its
+       top-left corner. */
+    .footer_map {
+      position: relative;
+      /* The mobile board crops this tall — 368 x 520 — and only the desktop
+         board runs it wide at 1313 x 672. On a phone the wide crop is too
+         short for the address card that sits on it. The width is pinned or
+         the grid track reads the ratio backwards and sizes from height. */
+      width: 100%;
+      min-width: 0;
+      aspect-ratio: 368 / 520;
+
+      @media (width >= 48rem) {
+        aspect-ratio: 1313 / 672;
+      }
+      border-radius: var(--radius-main);
+      overflow: clip;
+      background-color: var(--sand);
+    }
+
+    .footer_map_image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .footer_map_card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+      /* Over the map at every width, not just from 40rem — below that the
+         card used to drop out of the corner and sit under the map as its own
+         block. 14px in on a phone, 22 at the design width. */
+      position: absolute;
+      inset-block-end: clamp(0.875rem, 0.7464rem + 0.5239vw, 1.375rem);
+      inset-inline: clamp(0.875rem, 0.7464rem + 0.5239vw, 1.375rem);
+      /* 364 x 247 in the design; on a phone the insets decide the width. */
+      max-width: 22.75rem;
+      margin: 0;
+      padding: var(--panel-inset);
+      border-radius: var(--radius-small);
+    }
+
+    .footer_map_card .pill {
+      margin-top: var(--space-3);
+    }
+  }
+</style>
