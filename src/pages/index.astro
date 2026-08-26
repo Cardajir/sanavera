@@ -174,7 +174,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   </Section>
 
   {/* ======================================================= TECHNOLOGIE */}
-  <Section paddingTop="medium" paddingBottom="8" gap="large" id="technologie">
+  <Section paddingTop="medium" paddingBottom="7" gap="large" id="technologie">
     <div class="hero_head_text">
       <SectionLabel>{comfort.eyebrow}</SectionLabel>
       <Heading tag="h2" variant="display">
@@ -236,7 +236,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   </Section>
 
   {/* ============================================================ SLUŽBY */}
-  <Section paddingTop="medium" paddingBottom="medium" gap="large" id="sluzby">
+  <Section paddingTop="large" paddingBottom="medium" gap="large" id="sluzby">
     <div class="hero_head_text">
       <SectionLabel>{services.eyebrow}</SectionLabel>
       <Heading tag="h2" variant="display">
@@ -335,10 +335,10 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       grid-template-columns: 1fr;
       width: 100%;
 
-      /* The design's own 1313 : 519 split rather than a rounded 5 : 2, so
-         both halves land on the same height as well as the same widths. */
+      /* The design's own 1181 : 650 split rather than a rounded ratio, so both
+         halves land on the same height as well as the same widths. */
       @media (width >= 48rem) {
-        grid-template-columns: minmax(0, 1313fr) minmax(0, 519fr);
+        grid-template-columns: minmax(0, 1181fr) minmax(0, 650fr);
       }
     }
 
@@ -348,9 +348,9 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       border-radius: var(--radius-main);
       object-fit: cover;
 
-      /* 1313 x 672 in the design. */
+      /* 1181 x 672 in the design. */
       @media (width >= 48rem) {
-        aspect-ratio: 1313 / 672;
+        aspect-ratio: 1181 / 672;
       }
     }
 
@@ -361,7 +361,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       background-color: var(--sand);
       aspect-ratio: 368 / 378;
 
-      /* 519 x 672 in the design. Side by side the photograph sets the row
+      /* 650 x 672 in the design. Side by side the photograph sets the row
          height and this stretches to it — its own ratio would round to a
          few pixels taller and break the shared baseline. */
       @media (width >= 48rem) {
@@ -376,16 +376,29 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       border: 0;
     }
 
+    /* 611 x 108 in the design, 17px in from the map's edges. */
     .hero_map_card {
       position: absolute;
       inset-block-end: var(--space-3);
       inset-inline: var(--space-3);
+      max-width: 38.1875rem;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: var(--space-3);
       padding: var(--panel-inset);
       border-radius: var(--radius-small);
+
+      /* The mobile board stacks the address over the button; the desktop one
+         sets them side by side in a 108px-tall bar. That only happens once the
+         panel is wide enough to hold both — below 80rem it is not, and the
+         row would push the button out of the card. */
+      @media (width >= 80rem) {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 6.75rem;
+      }
     }
 
     /* Headline on the left, the round booking disc on the right. */
@@ -649,7 +662,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       object-fit: cover;
     }
 
-    /* 1843 x 922 at a 15px corner in the design — the smaller of the two
+    /* 1843 x 1028 at a 15px corner in the design — the smaller of the two
        radii, with the card on top carrying the larger. */
     .microscope {
       position: relative;
@@ -660,10 +673,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       border-radius: var(--radius-small);
       overflow: clip;
 
-      /* 320px under the slider in the design, where the section's own gap
-         gives 195. */
+      /* 247px under the comfort cards in the design. The slider box carries
+         its own trailing padding on top of the section gap, so the photograph
+         is pulled back up to land on the design's figure. */
       @media (width >= 48rem) {
-        margin-block-start: 2.6875rem;
+        margin-block-start: -2.25rem;
         aspect-ratio: auto;
       }
     }
@@ -673,9 +687,9 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       height: 100%;
       object-fit: cover;
 
-      /* 1843 x 922 in the design, once the block is no longer ratio-bound. */
+      /* 1843 x 1028 in the design, once the block is no longer ratio-bound. */
       @media (width >= 48rem) {
-        aspect-ratio: 1843 / 922;
+        aspect-ratio: 1843 / 1028;
       }
     }
 
