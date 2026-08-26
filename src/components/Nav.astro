@@ -470,6 +470,7 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
         padding-inline: var(--space-4);
       }
       background-color: var(--brand-500);
+      background-image: var(--brand-wash);
       border: var(--border-pill) solid transparent;
       border-radius: var(--radius-button);
       color: var(--brand-text);
@@ -495,6 +496,7 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
         &:hover,
         &:focus-visible {
           background-color: var(--text);
+          background-image: none;
           color: var(--cream);
         }
       }

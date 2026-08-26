@@ -9,6 +9,10 @@
   --dark-800: #3d456b;
   --dark-900: #2f375b;
   --brand-500: #ffaf8d;
+  /* The update turns every flat peach surface into a wash towards a soft
+     pink. All four gradient fills in the file run at ~52deg. */
+  --brand-100: #fcd3d8;
+  --brand-wash: linear-gradient(52deg, var(--brand-500), var(--brand-100));
   --brand-text: var(--dark-900);
 
   /* The brand peach is a fill, not an ink: as text on cream it lands at

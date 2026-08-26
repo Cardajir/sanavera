@@ -29,28 +29,35 @@ import {
   reviewSource,
   contact,
 } from "@/data/site.ts";
-import { aboutNav, insurance } from "@/data/about.ts";
 
-const sluzby = (await getCollection("sluzby")).sort(
-  (a, b) => a.data.order - b.data.order,
-);
-const technologie = (await getCollection("technologie")).sort(
-  (a, b) => a.data.order - b.data.order,
+/** The four modals are all panel collections with the same shape. */
+const MODALS = [
+  { id: "tym", label: "Náš tým", collection: "tym" as const },
+  { id: "pristup", label: "Náš přístup", collection: "pristup" as const },
+  {
+    id: "vybaveni",
+    label: "Vybavení ordinace",
+    collection: "vybaveni" as const,
+  },
+  { id: "sluzby", label: "Poskytované služby", collection: "sluzby" as const },
+];
+
+const modals = await Promise.all(
+  MODALS.map(async (modal) => {
+    const entries = (await getCollection(modal.collection)).sort(
+      (a, b) => a.data.order - b.data.order,
+    );
+    const panels = await Promise.all(
+      entries.map(async (entry) => ({
+        entry,
+        Content: (await render(entry)).Content,
+      })),
+    );
+    return { ...modal, entries, panels };
+  }),
 );
 
-/** Modal bodies come from the same Markdown the collections hold. */
-const sluzbyPanels = await Promise.all(
-  sluzby.map(async (entry) => ({
-    entry,
-    Content: (await render(entry)).Content,
-  })),
-);
-const techPanels = await Promise.all(
-  technologie.map(async (entry) => ({
-    entry,
-    Content: (await render(entry)).Content,
-  })),
-);
+const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 ---
 
 <Layout>
@@ -130,7 +137,9 @@ const techPanels = await Promise.all(
         {doctor.bio.map((para) => <Paragraph>{para}</Paragraph>)}
         <p class="doctor_insurance">{doctor.insuranceLine}</p>
         <p class="doctor_name">{doctor.name}</p>
-        <PillButton opens="kdo-jsme:vedouci-lekar">{doctor.cta}</PillButton>
+        <PillButton opens="tym:mddr-veronika-netopilik-kopecna"
+          >{doctor.cta}</PillButton
+        >
       </div>
     </div>
   </Section>
@@ -221,9 +230,7 @@ const techPanels = await Promise.all(
       />
       <div class="microscope_card">
         <p class="microscope_label">{comfort.microscopeLabel}</p>
-        <PillButton opens="technologie:chirurgicky-mikroskop">
-          To mě zajímá
-        </PillButton>
+        <PillButton opens="vybaveni:mikroskop"> To mě zajímá </PillButton>
       </div>
     </div>
   </Section>
@@ -256,110 +263,50 @@ const techPanels = await Promise.all(
   </Section>
 
   {/* ============================================================ MODALS */}
-  <Modal
-    id="sluzby"
-    label="Poskytované služby"
-    sidebarLabel={services.eyebrow}
-    items={sluzby.map((e) => ({ key: e.id, label: e.data.title }))}
-  >
-    {
-      sluzbyPanels.map(({ entry, Content }) => (
-        <article class="modal_panel" data-panel={entry.id} hidden>
-          <Heading tag="h2" variant="h1">
-            {entry.data.title}
-          </Heading>
-          <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-            {entry.data.lead}
-          </Paragraph>
-          <RichText maxWidth={72}>
-            <Content />
-          </RichText>
-        </article>
-      ))
-    }
-  </Modal>
-
-  <Modal
-    id="technologie"
-    label="Vybavení ordinace"
-    sidebarLabel="Vybavení ordinace"
-    items={technologie.map((e) => ({ key: e.id, label: e.data.navLabel }))}
-  >
-    {
-      techPanels.map(({ entry, Content }) => (
-        <article class="modal_panel" data-panel={entry.id} hidden>
-          <Heading tag="h2" variant="h1">
-            {entry.data.title}
-          </Heading>
-          <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-            {entry.data.lead}
-          </Paragraph>
-          <RichText maxWidth={72}>
-            <Content />
-          </RichText>
-          <div class="tech_gallery">
-            {entry.data.images.map((name) => (
-              <Img
-                src={image(name)}
-                alt={entry.data.title}
-                variant="constrained"
-                width={700}
-                transparent
-                class="tech_gallery_item"
-              />
-            ))}
-          </div>
-        </article>
-      ))
-    }
-  </Modal>
-
-  <Modal
-    id="kdo-jsme"
-    label="Kdo jsme"
-    sidebarLabel="Kdo jsme"
-    items={aboutNav.map((item) => ({ key: item.key, label: item.label }))}
-  >
-    <article class="modal_panel" data-panel="vedouci-lekar" hidden>
-      <Heading tag="h2" variant="h1">{doctor.name}</Heading>
-      <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-        {doctor.heading}
-      </Paragraph>
-      <RichText maxWidth={72}>
-        {doctor.bio.map((para) => <p>{para}</p>)}
-      </RichText>
-      <div class="tech_gallery">
-        <Img
-          src={image("doctor")}
-          alt={doctor.name}
-          variant="constrained"
-          width={900}
-          class="about_portrait_image"
-        />
-      </div>
-    </article>
-
-    <article
-      class="modal_panel"
-      data-panel="nejsme-smluvnim-poskytovatelem"
-      hidden
-    >
-      <Heading tag="h2" variant="h1">{insurance.title}</Heading>
-      <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-        {insurance.lead}
-      </Paragraph>
-      <RichText maxWidth={72}>
-        {
-          insurance.reasons.map((reason) => (
-            <>
-              <h3>{reason.heading}</h3>
-              <p>{reason.text}</p>
-            </>
-          ))
-        }
-      </RichText>
-    </article>
-  </Modal>
+  {
+    /* Every modal renders the same way now: the sidebar lists the panels and
+       each panel is a title, a lead and the Markdown body. */
+  }
+  {
+    modals.map((modal) => (
+      <Modal
+        id={modal.id}
+        label={modal.label}
+        sidebarLabel={modal.label}
+        items={modal.entries.map((e) => ({
+          key: e.id,
+          label: e.data.navLabel,
+        }))}
+      >
+        {modal.panels.map(({ entry, Content }) => (
+          <article class="modal_panel" data-panel={entry.id} hidden>
+            <Heading tag="h2" variant="h1">
+              {entry.data.title}
+            </Heading>
+            <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+              {entry.data.lead}
+            </Paragraph>
+            <RichText maxWidth={72}>
+              <Content />
+            </RichText>
+            {entry.data.images.length > 0 && (
+              <div class="tech_gallery">
+                {entry.data.images.map((name) => (
+                  <Img
+                    src={image(name)}
+                    alt={entry.data.title}
+                    variant="constrained"
+                    width={900}
+                    class="tech_gallery_item"
+                  />
+                ))}
+              </div>
+            )}
+          </article>
+        ))}
+      </Modal>
+    ))
+  }
 
   <RoundCta href="#objednani" />
 
@@ -626,6 +573,7 @@ const techPanels = await Promise.all(
       .value_card:hover,
       .service_card:hover {
         background-color: var(--brand-500);
+        background-image: var(--brand-wash);
       }
     }
 

@@ -1,8 +1,9 @@
 ---
-title: "Protetické ošetření"
+title: Protetické ošetření
+navLabel: Protetické ošetření
 order: 5
-lead: "Pokud je zub natolik oslabený, že běžná výplň již nedokáže zajistit jeho dlouhodobou pevnost, doporučujeme jeho rekonstrukci pomocí částečné korunky, celokeramické korunky nebo můstku."
-description: "To se týká zejména zubů po ošetření kořenových kanálků, které jsou kvůli ztrátě většího množství tvrdých zubních tkání výrazně náchylnější ke."
+lead: Pokud je zub natolik oslabený, že běžná výplň již nedokáže zajistit jeho dlouhodobou pevnost, doporučujeme jeho rekonstrukci pomocí částečné korunky, celokeramické korunky nebo můstku.
+description: Pokud je zub natolik oslabený, že běžná výplň již nedokáže zajistit jeho dlouhodobou pevnost, doporučujeme jeho rekonstrukci pomocí částečné korunky, celokerami
 ---
 
 To se týká zejména zubů po ošetření kořenových kanálků, které jsou kvůli ztrátě většího množství tvrdých zubních tkání výrazně náchylnější ke zlomení.

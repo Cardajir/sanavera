@@ -1,8 +1,9 @@
 ---
-title: "Preventivní péče"
+title: Preventivní péče
+navLabel: Preventivní péče
 order: 1
-lead: "Klademe důraz na důkladnou preventivní prohlídku, která je jednou z nejdůležitějších součástí vaší péče. Na každého pacienta si vyhrazujeme dostatek času, abychom mohly sestavit komplexní diagnózu a jasný léčebný plán."
-description: "Během preventivní prohlídky vyšetřujeme zuby, dásně i ostatní měkké tkáně dutiny ústní, hodnotíme rentgenové snímky, provádíme onkologický screening."
+lead: Klademe důraz na důkladnou preventivní prohlídku, která je jednou z nejdůležitějších součástí vaší péče. Na každého pacienta si vyhrazujeme dostatek času, abychom mohly sestavit komplexní diagnózu a jasný léčebný plán.
+description: Klademe důraz na důkladnou preventivní prohlídku, která je jednou z nejdůležitějších součástí vaší péče.
 ---
 
 Během preventivní prohlídky vyšetřujeme zuby, dásně i ostatní měkké tkáně dutiny ústní, hodnotíme rentgenové snímky, provádíme onkologický screening a následně s vámi podrobně procházíme výsledky vyšetření, navrhujeme možnosti léčby a finanční plán.

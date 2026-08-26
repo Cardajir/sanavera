@@ -1,8 +1,9 @@
 ---
-title: "Záchovná stomatologie"
+title: Záchovná stomatologie
+navLabel: Záchovná stomatologie
 order: 2
-lead: "Zaměřujeme se na léčbu zubního kazu, úrazů a obnovu poškozených tvrdých zubních tkání pomocí moderních, estetických a šetrných výplňových materiálů."
-description: "Hlavním cílem záchovné stomatologie je udržet vaše vlastní zuby zdravé a funkční po celý život. Každý zákrok provádíme s maximální šetrností, abychom."
+lead: Zaměřujeme se na léčbu zubního kazu, úrazů a obnovu poškozených tvrdých zubních tkání pomocí moderních, estetických a šetrných výplňových materiálů.
+description: Zaměřujeme se na léčbu zubního kazu, úrazů a obnovu poškozených tvrdých zubních tkání pomocí moderních, estetických a šetrných výplňových materiálů.
 ---
 
 Hlavním cílem záchovné stomatologie je udržet vaše vlastní zuby zdravé a funkční po celý život. Každý zákrok provádíme s maximální šetrností, abychom zachovali co nejvíce zdravé zubní tkáně.

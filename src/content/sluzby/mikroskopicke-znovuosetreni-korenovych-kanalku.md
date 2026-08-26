@@ -1,8 +1,9 @@
 ---
-title: "Mikroskopické znovuošetření kořenových kanálků"
+title: Mikroskopické znovuošetření kořenových kanálků
+navLabel: Mikroskopické znovuošetření kořenových kanálků
 order: 4
-lead: "Některé zuby již mají kořenové kanálky ošetřené, přesto zánět přetrvává nebo se znovu objeví. Nejčastější příčinou býva laxnost a nedostatečná péče ze strany ošetrujiciho lékaře."
-description: "Často bývají příčinou kořenové kanálky, které jsou bez operačního mikroskopu lehce přehlédnutelné, nedostatečné vyčištění, netěsná kořenová výplň."
+lead: Některé zuby již mají kořenové kanálky ošetřené, přesto zánět přetrvává nebo se znovu objeví. Nejčastější příčinou bývá laxnost a nedostatečná péče ze strany ošetřujícího lékaře.
+description: Některé zuby již mají kořenové kanálky ošetřené, přesto zánět přetrvává nebo se znovu objeví.
 ---
 
 Často bývají příčinou kořenové kanálky, které jsou bez operačního mikroskopu lehce přehlédnutelné, nedostatečné vyčištění, netěsná kořenová výplň nebo nedostatečná izolace pomocí kofferdamu (latexové blány) během předchozího ošetření kanálků.

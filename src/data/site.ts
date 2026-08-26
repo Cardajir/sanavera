@@ -68,7 +68,7 @@ export const values: ValueCard[] = [
   {
     heading: "Nejsme smluvním poskytovatelem zdravotních pojišťoven",
     text: "Léčebný postup volíme podle toho, co považujeme za nejlepší pro konkrétního pacienta – nikoliv podle toho, co a za jakých podmínek hradí zdravotní pojišťovna.",
-    opens: "kdo-jsme:nejsme-smluvnim-poskytovatelem",
+    opens: "pristup:vztah-k-pojistovnam",
   },
   {
     heading: "Plnohodnotná stomatologická péče o dospělé pacienty",

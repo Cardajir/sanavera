@@ -22,16 +22,21 @@ const { id, label, sidebarLabel, items } = Astro.props;
 ---
 
 <dialog class="modal" id={`modal-${id}`} data-modal={id} aria-label={label}>
-  <div class="modal_shell" data-modal-shell>
-    <button
-      class="modal_close"
-      type="button"
-      data-modal-close
-      aria-label="Zavřít"
-    >
-      <Icon src={close} variant="medium" />
-    </button>
+  {
+    /* Outside the shell on purpose: inside it, the disc is absolutely
+       positioned against the scrolling box and slides out of sight as soon as
+       you read down a long panel. */
+  }
+  <button
+    class="modal_close"
+    type="button"
+    data-modal-close
+    aria-label="Zavřít"
+  >
+    <Icon src={close} variant="medium" />
+  </button>
 
+  <div class="modal_shell" data-modal-shell>
     <div class="modal_body">
       {
         items.length > 1 && (
@@ -69,6 +74,13 @@ const { id, label, sidebarLabel, items } = Astro.props;
        it — 77px down at the design width, six pixels clear of the bar — and
        runs off the bottom of the viewport. It slides up from below on open. */
     .modal {
+      /* One source for the disc's metrics: the button uses them to place
+         itself, and the topmost text uses them to keep clear. */
+      --_close-size: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
+      --_close-inset: clamp(2.3125rem, 1.74rem + 2.3314vw, 4.54rem);
+      --_close-clearance: calc(
+        var(--_close-inset) + var(--_close-size) + var(--space-4)
+      );
       position: fixed;
       /* The same 5px strip of page above the sheet at every width, measured
          off the bar's own height so the two can never overlap. */
@@ -113,17 +125,18 @@ const { id, label, sidebarLabel, items } = Astro.props;
     }
 
     /* Cream disc: 50px hard against the sheet's top edge on the mobile
-       board, 75.3px and 7px down on the desktop one. */
+       board, 75.3px and 7px down on the desktop one. Anchored to the sheet so
+       it stays reachable however far the panel is scrolled. */
     .modal_close {
       position: absolute;
-      z-index: 2;
+      z-index: 3;
       inset-block-start: clamp(0rem, -0.1122rem + 0.4585vw, 0.4375rem);
-      inset-inline-end: clamp(2.3125rem, 1.74rem + 2.3314vw, 4.54rem);
+      inset-inline-end: var(--_close-inset);
       display: flex;
       align-items: center;
       justify-content: center;
-      width: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
-      height: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
+      width: var(--_close-size);
+      height: var(--_close-size);
       background-color: var(--cream);
       border: 0;
       border-radius: var(--radius-round);
@@ -169,6 +182,17 @@ const { id, label, sidebarLabel, items } = Astro.props;
 
     .modal_side_label {
       order: 0;
+      padding-inline-end: var(--_close-clearance);
+
+      @media (width >= 64rem) {
+        /* Beside the article the label is far from the disc. */
+        padding-inline-end: 0;
+      }
+    }
+
+    /* The panel's own title is the one line that can run under the disc. */
+    .modal_panel > .heading:first-child {
+      padding-inline-end: var(--_close-clearance);
     }
 
     .modal_panels {
