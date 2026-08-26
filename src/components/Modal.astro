@@ -77,7 +77,10 @@ const { id, label, sidebarLabel, items } = Astro.props;
       /* One source for the disc's metrics: the button uses them to place
          itself, and the topmost text uses them to keep clear. */
       --_close-size: clamp(3.125rem, 2.7231rem + 1.6372vw, 4.70625rem);
-      --_close-inset: clamp(2.3125rem, 1.74rem + 2.3314vw, 4.54rem);
+      /* Matches the shell's own inset on a phone and the design's 72.6px at
+         the desktop width, and the disc sits the same distance from the top
+         as from the side rather than hard against the edge. */
+      --_close-inset: clamp(1.6875rem, 0.9539rem + 2.9862vw, 4.54rem);
       --_close-clearance: calc(
         var(--_close-inset) + var(--_close-size) + var(--space-4)
       );
@@ -124,13 +127,20 @@ const { id, label, sidebarLabel, items } = Astro.props;
       }
     }
 
+    /* The controller moves focus to the panel title so a screen reader
+       announces what opened. That is programmatic, not the visitor reaching
+       for it, so it should not draw a ring. */
+    .modal_panel .heading[tabindex="-1"]:focus {
+      outline: none;
+    }
+
     /* Cream disc: 50px hard against the sheet's top edge on the mobile
        board, 75.3px and 7px down on the desktop one. Anchored to the sheet so
        it stays reachable however far the panel is scrolled. */
     .modal_close {
       position: absolute;
       z-index: 3;
-      inset-block-start: clamp(0rem, -0.1122rem + 0.4585vw, 0.4375rem);
+      inset-block-start: var(--_close-inset);
       inset-inline-end: var(--_close-inset);
       display: flex;
       align-items: center;

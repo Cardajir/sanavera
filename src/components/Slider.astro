@@ -87,6 +87,10 @@ const { label, itemWidth = "24rem", class: className, ...rest } = Astro.props;
         display: none;
       }
 
+      /* Every slide is as tall as the tallest: a card whose content runs
+         short would otherwise sit on a short box of its own. */
+      align-items: stretch;
+
       > * {
         /* 316px at 393, the width the mobile board draws, leaving the next
            slide peeking past the right edge. */

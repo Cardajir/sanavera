@@ -288,6 +288,12 @@ const { bare = false, headingTag = "h2", formId } = Astro.props;
     .booking_submit {
       display: flex;
       justify-content: flex-end;
+      /* Stacked on a phone the button sat straight under the consent line. */
+      margin-block-start: var(--space-5);
+
+      @media (width >= 40rem) {
+        margin-block-start: 0;
+      }
     }
 
     .booking_button {

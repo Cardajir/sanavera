@@ -610,7 +610,6 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       background-color: var(--light-100);
       border-radius: var(--radius-main);
       padding: var(--card-padding) 2.875rem;
-      height: 100%;
 
       > .heading {
         margin-top: 0;
@@ -621,9 +620,15 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
        the row even though their aspect ratios differ, and reserves the space
        before the file arrives. */
     .comfort_card_visual {
-      height: 15.25rem;
-      /* 115px under the title, and the body sits at the card's foot. */
-      margin-block: 5.3125rem auto;
+      /* 115px under the title on the design's 518px card. On a 316px one that
+         drop and that height leave the card mostly empty, so both shrink. */
+      height: 10rem;
+      margin-block: var(--space-5) auto;
+
+      @media (width >= 48rem) {
+        height: 15.25rem;
+        margin-block: 5.3125rem auto;
+      }
       & .image {
         width: 100%;
         height: 100%;
@@ -650,6 +655,20 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       border-radius: var(--radius-main);
       overflow: clip;
 
+      /* A 783 x 624 shot has no good crop in a 316px slot — it cuts the
+         patient in half whichever way it is framed. It is a wide flourish for
+         the desktop row, so on a phone the slider shows the cards alone. */
+      display: none;
+
+      @media (width >= 48rem) {
+        display: block;
+      }
+
+      & .image {
+        height: 100%;
+        object-fit: cover;
+      }
+
       /* 783 x 624 — wider than the cards it sits between. */
       @media (width >= 48rem) {
         flex-basis: 48.9375rem;
@@ -667,9 +686,9 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     .microscope {
       position: relative;
       width: 100%;
-      /* Deep enough on a phone for the label card that sits on it; the wide
-         crop only starts once there is room for it. */
-      aspect-ratio: 4 / 3;
+      /* Square on a phone: the wide crop leaves the label card filling most
+         of the frame, and there is room for a taller photograph. */
+      aspect-ratio: 1 / 1;
       border-radius: var(--radius-small);
       overflow: clip;
 
