@@ -487,7 +487,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     /* The name sits well clear of the copy above it — 608px into the card at
        the design width. */
     .doctor_card > .doctor_name {
-      margin-block-start: clamp(2.5rem, 0.28rem + 9.0373vw, 11.125rem);
+      margin-block-start: clamp(2.5rem, 0.6083rem + 7.7407vw, 7.75rem);
     }
 
     /* 26 design px, in the regular weight — a pull-quote, not a heading. */
@@ -606,6 +606,15 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
     /* Centred on the map, sitting on its point like a real marker. */
     /* ------------------------------------------------------ technologie */
+
+    /* The section gap is one value for all three children. It suits the step
+       down to the microscope; the design draws the head text far closer to
+       the slider than that. */
+    #technologie .slider {
+      @media (width >= 48rem) {
+        margin-block-start: -3.0625rem;
+      }
+    }
 
     .comfort_card {
       display: flex;

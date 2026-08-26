@@ -27,20 +27,19 @@ const socialImage = new URL(image, Astro.site);
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 {
-  /* Both subsets are needed on every page — Czech copy pulls glyphs from
-     latin-ext constantly — so both are preloaded rather than discovered
-     from the stylesheet. */
+  /* The design sets almost everything bold, but both weights appear above the
+     fold, so both are preloaded rather than discovered from the stylesheet. */
 }
 <link
   rel="preload"
-  href="/fonts/outfit-latin.woff2"
+  href="/fonts/youth-bold.woff2"
   as="font"
   type="font/woff2"
   crossorigin
 />
 <link
   rel="preload"
-  href="/fonts/outfit-latin-ext.woff2"
+  href="/fonts/youth-regular.woff2"
   as="font"
   type="font/woff2"
   crossorigin

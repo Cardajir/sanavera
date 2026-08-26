@@ -30,3 +30,8 @@ pnpm-debug.log*
 # per-file limit, and this repository is public. Keep the original in your
 # own storage; everything the site needs has already been extracted from it.
 *.xd
+
+# Font delivery folder from the designer. The licensed Youth files that the
+# site actually uses live in public/fonts; this is the untouched drop.
+WOFF2-*/
+WOFF2-*.zip

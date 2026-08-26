@@ -29,7 +29,7 @@
      metric-compatible stand-in that ships with the site. The design sets
      nearly every label, heading and list item in Bold and keeps Regular for
      running copy only, so `medium` is mapped to Bold on purpose. */
-  --primary-family: "Youth", "Outfit", "Outfit Fallback", system-ui, sans-serif;
+  --primary-family: "Youth", "Youth Fallback", system-ui, sans-serif;
   --primary-regular: 400;
   --primary-medium: 700;
   --primary-bold: 700;
