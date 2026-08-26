@@ -374,6 +374,9 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       width: 100%;
       height: 100%;
       border: 0;
+      /* A frame paints in its own layer and is not clipped by the rounded
+         corner on its parent, so it carries the radius itself. */
+      border-radius: inherit;
     }
 
     /* 611 x 108 in the design, 17px in from the map's edges. */
@@ -619,19 +622,26 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     /* A fixed picture area keeps the product shots optically aligned across
        the row even though their aspect ratios differ, and reserves the space
        before the file arrives. */
+    /* The design gives each product its own footprint rather than a fixed
+       box — the headphones are portrait (660 x 1000) where the rest are
+       landscape, and in a wide box they shrink to a strip in the middle.
+       Letting the area flex means every product is as large as its card
+       allows, whichever way round it is. */
     .comfort_card_visual {
-      /* 115px under the title on the design's 518px card. On a 316px one that
-         drop and that height leave the card mostly empty, so both shrink. */
-      height: 10rem;
-      margin-block: var(--space-5) auto;
+      /* Tall enough that the portrait shot is not a strip down the middle,
+         while the landscape ones still fill the width. */
+      height: 11rem;
+      margin-block: var(--space-4);
 
       @media (width >= 48rem) {
-        height: 15.25rem;
-        margin-block: 5.3125rem auto;
+        height: 19rem;
+        margin-block: var(--space-6);
       }
+
       & .image {
         width: 100%;
         height: 100%;
+        object-fit: contain;
       }
     }
 
@@ -728,13 +738,18 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       /* 550px in the design; narrower screens are bounded by the insets. */
       max-width: 34.375rem;
       margin: 0;
-      padding: 1.1875rem 1.1875rem 1.1875rem 2.125rem;
+      /* Even on all four sides: the design's wider lead read as lopsided
+         against the 19px above and below. */
+      padding: 1.1875rem;
       background-color: var(--light-100);
       border-radius: var(--radius-main);
 
       @media (width >= 48rem) {
         flex-direction: row;
         align-items: center;
+        /* The pill sits on the padding edge, the same 19px the label keeps on
+           the left, rather than trailing the label. */
+        justify-content: space-between;
         gap: 1.4375rem;
       }
     }

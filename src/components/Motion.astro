@@ -56,9 +56,10 @@
     : [];
   const disc = pick(".round_cta");
   const blocks = pick(".doctor, .microscope, .booking--panel");
-  const photos = pick(
-    ".doctor_photo, .microscope_photo, .footer_map_image, .footer_town",
-  );
+  /* Photographs only. The maps are live frames: scaling one pushes its
+     rounded corners outside the clip so they render square, and a scaled
+     frame redraws blurred. */
+  const photos = pick(".doctor_photo, .microscope_photo, .footer_town");
 
   if (reduced) {
     /* Nothing to stage — let the CSS start state go and leave the page be. */
