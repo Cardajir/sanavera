@@ -30,6 +30,40 @@ if (missing.length) {
   import { booking, contact } from "@/data/site.ts";
   import { emailjsConfig as config, emailjsReady } from "@/utils/emailjs.ts";
 
+  /**
+   * Reports a completed registration to the data layer for GTM.
+   *
+   * Deduplicated per address for the life of the tab: EmailJS sends without
+   * navigating, so a reload cannot replay a submission by itself, but a
+   * restored form or a second attempt with the same address would otherwise
+   * push the event again.
+   */
+  const REPORTED = "sanavera:form_submission";
+
+  const reportSubmission = (email: string) => {
+    const key = email.trim().toLowerCase();
+    if (!key) return;
+    let seen: string[] = [];
+    try {
+      seen = JSON.parse(sessionStorage.getItem(REPORTED) ?? "[]");
+    } catch {
+      seen = [];
+    }
+    if (seen.includes(key)) return;
+
+    (window as any).dataLayer = (window as any).dataLayer ?? [];
+    (window as any).dataLayer.push({
+      event: "form_submission",
+      user_email: key,
+    });
+
+    try {
+      sessionStorage.setItem(REPORTED, JSON.stringify([...seen, key]));
+    } catch {
+      /* Private mode with no storage: the in-page guard still holds. */
+    }
+  };
+
   const forms = [
     ...document.querySelectorAll<HTMLFormElement>("[data-booking-form]"),
   ];
@@ -88,8 +122,10 @@ if (missing.length) {
                stops a double-click becoming two enquiries. */
             limitRate: { throttle: 10_000 },
           });
+          const email = new FormData(form).get("email");
           form.reset();
           say(booking.sent, "ok");
+          if (typeof email === "string") reportSubmission(email);
         } catch (error) {
           console.error("[booking] EmailJS send failed", error);
           fallback();
