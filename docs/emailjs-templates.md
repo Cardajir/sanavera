@@ -130,7 +130,7 @@ potom ji v **Šabloně A** na kartě **Auto-Reply** propoj.
   <p style="margin: 24px 0 0;">
     S pozdravem<br />
     <strong>Sanavera, s.r.o.</strong><br />
-    Hněvkovského 238, 665 98 Veselí nad Moravou
+    park Petra Bezruče 1767, 698 01 Veselí nad Moravou
   </p>
 </div>
 ```

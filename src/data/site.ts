@@ -7,11 +7,11 @@ export const contact = {
   emailHref: "mailto:ahoj@sanavera.cz",
   clinic: {
     name: "Sanavera, s.r.o.",
-    street: "Hněvkovského 238",
-    city: "665 98 Veselí nad Moravou",
+    street: "park Petra Bezruče 1767",
+    city: "698 01 Veselí nad Moravou",
   },
   mapHref:
-    "https://www.google.com/maps/search/?api=1&query=Hn%C4%9Bvkovsk%C3%A9ho+238%2C+Vesel%C3%AD+nad+Moravou",
+    "https://www.google.com/maps/search/?api=1&query=park+Petra+Bezru%C4%8De+1767%2C+698+01+Vesel%C3%AD+nad+Moravou",
   hours: [
     { days: "Po – Pá", time: "7:00 – 17:00" },
     { days: "So – Ne", time: "Zavřeno" },
