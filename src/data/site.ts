@@ -71,12 +71,14 @@ export const values: ValueCard[] = [
     opens: "pristup:vztah-k-pojistovnam",
   },
   {
-    heading: "Plnohodnotná stomatologická péče o dospělé pacienty",
-    text: "Naše ordinace se specializuje na komplexní stomatologickou péči o dospělé pacienty. Dětské pacienty do péče neregistrujeme, protože dětská stomatologie vyžaduje specifický přístup a považujeme za správné, aby byla péče o děti vedena pracovištěm, které se na ni cíleně zaměřuje.",
+    heading:
+      "Sanavera není jen název. Je to ústřední myšlenka, která se promítá do všeho, co děláme",
+    text: "Mezi lékařem a pacienty musí panovat naprostá důvěra. Snažíme se proto být ve všem maximálně transparentní. Tuto prvotní důvěru pak prohlubuje kompetence. Precizní, dlouhodobá péče o vaše zdraví.",
+    opens: "pristup:pilire-nasi-praxe",
   },
   {
-    heading: "Empatie, transparentní postupy a důvěra.",
-    text: "Jsme přesvědčeni, že mezi lékařem a pacienty musí panovat naprostá důvěra. Snažíme se proto být ve všem maximálně transparentní. Na základě celostní diagnostiky vám proto vždy dopředu stanovíme léčebný plán, který s vámi diskutujeme a přizpůsobujeme vaší konkrétní situaci, časovým i finančním možnostem.",
+    heading: "Plnohodnotná stomatologická péče o dospělé pacienty",
+    text: "Naše ordinace se specializuje na komplexní stomatologickou péči o dospělé pacienty. Dětské pacienty do péče neregistrujeme, protože dětská stomatologie vyžaduje specifický přístup a považujeme za správné, aby byla péče o děti vedena pracovištěm, které se na ni cíleně zaměřuje.",
   },
 ];
 

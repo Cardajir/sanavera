@@ -14,6 +14,11 @@ interface Props extends Omit<HTMLAttributes<"a">, "href"> {
 }
 
 const { href, variant = "outline", class: className, ...rest } = Astro.props;
+
+/* Leaving the site is worth saying out loud: sighted readers get the new tab
+   and can see what happened, a screen reader user gets neither unless the
+   label says so. */
+const newTab = rest.target === "_blank";
 ---
 
 <a
@@ -21,7 +26,9 @@ const { href, variant = "outline", class: className, ...rest } = Astro.props;
   class:list={["pill", variant === "solid" && "pill--solid", className]}
   {...rest}
 >
-  <span class="pill_text"><slot /></span>
+  <span class="pill_text"
+    ><slot />{newTab && <span class="sr-only"> (otevře se v novém okně)</span>}
+  </span>
   <Icon src={plus} variant="small" />
 </a>
 
@@ -35,7 +42,10 @@ const { href, variant = "outline", class: className, ...rest } = Astro.props;
       /* Every pill in the design is 53.5px tall. */
       min-height: 3.34375rem;
       padding: 0 var(--space-4);
-      border: 0.09375rem solid var(--text);
+      /* The same stroke as the handset button and the slider arrows. The
+         literal 1.5px this used to carry was the design's number unscaled,
+         which on a 2x screen drew three device pixels against their two. */
+      border: var(--border-pill) solid var(--text);
       border-radius: var(--radius-button);
       color: var(--text);
       font-size: var(--text-ui);

@@ -18,17 +18,7 @@ import BookingFormController from "@/components/BookingFormController.astro";
 import SliderController from "@/components/SliderController.astro";
 import { getCollection, render } from "astro:content";
 import { image } from "@/utils/images.ts";
-import {
-  hero,
-  values,
-  doctor,
-  comfort,
-  comfortItems,
-  services,
-  reviews,
-  reviewSource,
-  contact,
-} from "@/data/site.ts";
+import { hero, values, doctor, comfort, comfortItems, services, reviews, reviewSource, contact } from "@/data/site.ts";
 
 /** The four modals are all panel collections with the same shape. */
 const MODALS = [
@@ -62,11 +52,9 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
 <Layout>
   {/* ============================================================== HERO */}
-  {
-    /* paddingTop is left at the default so Section emits no padding utility —
+  {/* paddingTop is left at the default so Section emits no padding utility —
        the hero's own top gap is bespoke and set in site.css, and a utility
-       would outrank it. */
-  }
+       would outrank it. */}
   <Section paddingBottom="medium" gap="8" class="hero_section">
     <div class="hero_media">
       <Img
@@ -85,11 +73,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
           loading="lazy"></iframe>
         <div class="hero_map_card glass">
           <p class="address address--small">
-            {contact.clinic.name}<br />
+            <strong>{contact.clinic.name}</strong><br />
             {contact.clinic.street}<br />
             {contact.clinic.city}
           </p>
-          <PillLink href={contact.mapHref} rel="noopener">mapa</PillLink>
+          <PillLink href={contact.mapHref} target="_blank" rel="noopener"
+            >mapa</PillLink
+          >
         </div>
       </div>
     </div>
@@ -135,7 +125,6 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       <div class="doctor_card">
         <Heading tag="h2" variant="h2">{doctor.heading}</Heading>
         {doctor.bio.map((para) => <Paragraph>{para}</Paragraph>)}
-        <p class="doctor_insurance">{doctor.insuranceLine}</p>
         <p class="doctor_name">{doctor.name}</p>
         <PillButton opens="tym:mddr-veronika-netopilik-kopecna"
           >{doctor.cta}</PillButton
@@ -230,7 +219,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       />
       <div class="microscope_card">
         <p class="microscope_label">{comfort.microscopeLabel}</p>
-        <PillButton opens="vybaveni:mikroskop"> To mě zajímá </PillButton>
+        <PillButton opens="vybaveni:mikroskop">To mě zajímá</PillButton>
       </div>
     </div>
   </Section>
@@ -263,10 +252,8 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   </Section>
 
   {/* ============================================================ MODALS */}
-  {
-    /* Every modal renders the same way now: the sidebar lists the panels and
-       each panel is a title, a lead and the Markdown body. */
-  }
+  {/* Every modal renders the same way now: the sidebar lists the panels and
+       each panel is a title, a lead and the Markdown body. */}
   {
     modals.map((modal) => (
       <Modal

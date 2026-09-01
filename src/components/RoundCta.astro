@@ -34,7 +34,9 @@ const { href } = Astro.props;
         width: 13.9375rem;
         height: 13.9375rem;
         background-color: var(--light-100);
-        border: 0;
+        /* The same stroke as every other outlined control, in the sand the
+           design rings it with — white on cream needs the edge. */
+        border: var(--border-pill) solid var(--sand);
         border-radius: var(--radius-round);
         box-shadow: 0 0.25rem 1.875rem rgb(0 0 0 / 0.1);
         color: var(--text);
@@ -44,15 +46,16 @@ const { href } = Astro.props;
         letter-spacing: var(--letter-spacing-tight);
         text-align: center;
         text-decoration: none;
-        /* No ring and no shadow of its own — .glass carries both. */
         transition:
           background-color 250ms,
+          border-color 250ms,
           color 250ms;
 
         @media (hover: hover) {
           &:hover {
             background-color: var(--brand-500);
             background-image: var(--brand-wash);
+            border-color: var(--brand-500);
             color: var(--brand-text);
           }
         }
