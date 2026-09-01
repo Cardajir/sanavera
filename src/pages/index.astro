@@ -18,7 +18,17 @@ import BookingFormController from "@/components/BookingFormController.astro";
 import SliderController from "@/components/SliderController.astro";
 import { getCollection, render } from "astro:content";
 import { image } from "@/utils/images.ts";
-import { hero, values, doctor, comfort, comfortItems, services, reviews, reviewSource, contact } from "@/data/site.ts";
+import {
+  hero,
+  values,
+  doctor,
+  comfort,
+  comfortItems,
+  services,
+  reviews,
+  reviewSource,
+  contact,
+} from "@/data/site.ts";
 
 /** The four modals are all panel collections with the same shape. */
 const MODALS = [
@@ -52,9 +62,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
 <Layout>
   {/* ============================================================== HERO */}
-  {/* paddingTop is left at the default so Section emits no padding utility —
+  {
+    /* paddingTop is left at the default so Section emits no padding utility —
        the hero's own top gap is bespoke and set in site.css, and a utility
-       would outrank it. */}
+       would outrank it. */
+  }
   <Section paddingBottom="medium" gap="8" class="hero_section">
     <div class="hero_media">
       <Img
@@ -252,8 +264,10 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   </Section>
 
   {/* ============================================================ MODALS */}
-  {/* Every modal renders the same way now: the sidebar lists the panels and
-       each panel is a title, a lead and the Markdown body. */}
+  {
+    /* Every modal renders the same way now: the sidebar lists the panels and
+       each panel is a title, a lead and the Markdown body. */
+  }
   {
     modals.map((modal) => (
       <Modal
@@ -556,6 +570,14 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       background-color: var(--sand);
       border-radius: var(--radius-main);
       transition: background-color 250ms;
+
+      /* The pattern layer gives every heading a top margin sized to its own
+         variant, so the same padding put the value card's title 45px lower
+         than the comfort card's and the service card's lower still. The card
+         padding is the whole inset; whatever opens the card starts on it. */
+      > :first-child {
+        margin-top: 0;
+      }
     }
 
     /* 546px tall at the design width; content-height on narrow screens. */

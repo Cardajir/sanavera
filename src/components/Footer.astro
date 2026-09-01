@@ -174,10 +174,27 @@ import { image } from "@/utils/images.ts";
       }
     }
 
+    /* The design leaves 207px between the last legal line and the top of the
+       registration panel. The row gap alone gives 44 — the trimmed leading on
+       these blocks means their boxes end above their last line, so the gap
+       reads shorter than it measures. */
+    .footer_grid--legal {
+      margin-block-end: 6rem;
+    }
+
     .footer_col {
       display: flex;
       flex-direction: column;
       gap: var(--space-1);
+    }
+
+    /* The design runs every column of these two rows on one 32-design-px
+       pitch, so the opening hours, the addresses and the legal links line up
+       across the row. Three mechanisms were setting three different pitches:
+       the hours inherited 1.5, .address carries 1.33, and the legal list
+       added a gap on top of its own leading. */
+    .footer_grid .footer_col :is(.address, .footer_hours, .footer_legal) {
+      line-height: var(--line-height-huge);
     }
 
     /* The label sits tight above its block, unlike a normal paragraph. */
@@ -195,7 +212,8 @@ import { image } from "@/utils/images.ts";
     .footer_legal {
       display: flex;
       flex-direction: column;
-      gap: var(--space-2);
+      /* No gap: the leading is the pitch, the same as the address block in
+         the column beside it. */
       margin: 0;
       padding: 0;
       list-style: none;
