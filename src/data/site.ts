@@ -123,7 +123,7 @@ export const comfortItems = [
     heading: "Pohodlné polohovací křeslo",
     product: "Dentsply Sirona INTEGO PRO",
     text: "Díky ergonomickému tvarování a prémiovému polstrování dopřeje maximální pohodlí i během delších zákroků.",
-    image: "dental-chair",
+    image: "dental-chair-intego",
   },
 ] as const;
 
