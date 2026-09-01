@@ -168,10 +168,23 @@ import { image } from "@/utils/images.ts";
       }
     }
 
-    .footer_grid--details,
-    .footer_grid--legal {
-      @media (width >= 64rem) {
-        grid-template-columns: repeat(3, 1fr);
+    /* Neither row is three equal columns in the design. Measured across the
+       2448px content: the details row sets its columns at 0, 1056 and 1760,
+       and the legal row at 0, 352 and 1056 — the company number sits close
+       under the operator rather than a third of the way across. The column
+       gap goes because the tracks already carry the offsets. */
+    @media (width >= 64rem) {
+      .footer_grid--details,
+      .footer_grid--legal {
+        column-gap: 0;
+      }
+
+      .footer_grid--details {
+        grid-template-columns: 43.137% 28.758% auto;
+      }
+
+      .footer_grid--legal {
+        grid-template-columns: 14.379% 28.758% auto;
       }
     }
 
@@ -195,7 +208,30 @@ import { image } from "@/utils/images.ts";
        the hours inherited 1.5, .address carries 1.33, and the legal list
        added a gap on top of its own leading. */
     .footer_grid .footer_col :is(.address, .footer_hours, .footer_legal) {
+      font-size: var(--text-ui);
       line-height: var(--line-height-huge);
+    }
+
+    /* The base layer trims the leading off headings and paragraphs, but not
+       off a <dl> or a <ul>, so the hours and the legal links started their
+       first line 6.7px lower than the address beside them — the columns sat
+       at different heights even though their boxes lined up. Same trim, same
+       first baseline. */
+    .footer_hours,
+    .footer_legal {
+      display: flow-root;
+
+      &::before {
+        content: "";
+        display: table;
+        margin-bottom: calc(-0.5lh + var(--_trim-top));
+      }
+
+      &::after {
+        content: "";
+        display: table;
+        margin-bottom: calc(-0.5lh + var(--_trim-bottom));
+      }
     }
 
     /* The label sits tight above its block, unlike a normal paragraph. */
@@ -211,8 +247,6 @@ import { image } from "@/utils/images.ts";
     }
 
     .footer_legal {
-      display: flex;
-      flex-direction: column;
       /* No gap: the leading is the pitch, the same as the address block in
          the column beside it. */
       margin: 0;
