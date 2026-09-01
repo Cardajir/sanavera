@@ -8,10 +8,12 @@ import { contact, legalNav } from "@/data/site.ts";
 import { image } from "@/utils/images.ts";
 import { getImage } from "astro:assets";
 
-/* The mobile board does not crop the wide photograph — it uses a different,
-   square aerial of the town square. Art direction, so only the one that will
-   be shown is fetched. */
-const townSquare = await getImage({ src: image("veseli-square"), width: 540 });
+/* Same photograph as the desktop frame, cropped differently. The desktop
+   519 x 672 is a narrow vertical slice of a landscape original — half its
+   width — which on a phone reads as magnified. The mobile board's near-square
+   frame takes two thirds of it instead. Art directed, so a phone fetches only
+   the wide crop and a desktop only the tall one. */
+const townMobile = await getImage({ src: image("veseli-mobile"), width: 1100 });
 ---
 
 <footer class="footer_wrap" id="kontakt">
@@ -83,7 +85,7 @@ const townSquare = await getImage({ src: image("veseli-square"), width: 540 });
       </div>
 
       <picture class="footer_town_frame">
-        <source media="(max-width: 767px)" srcset={townSquare.src} />
+        <source media="(max-width: 767px)" srcset={townMobile.src} />
         <Img
           src={image("veseli")}
           alt="Veselí nad Moravou"
