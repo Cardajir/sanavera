@@ -191,7 +191,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       {
         comfortItems.map((item, i) => (
           <>
-            <li class="comfort_card">
+            <li class="comfort_card" data-product={item.image}>
               <Heading tag="h3" variant="h3">
                 {item.heading}
               </Heading>
@@ -213,8 +213,8 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
             {i === 0 && (
               <li class="comfort_photo">
                 <Img
-                  src={image("vr-patient")}
-                  alt="Pacientka s VR brýlemi během ošetření"
+                  src={image("headphones-patient")}
+                  alt="Pacient se sluchátky a AR brýlemi během ošetření"
                   variant="constrained"
                   width={1000}
                   class="comfort_photo_image"
@@ -753,6 +753,29 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         width: 100%;
         height: 100%;
         object-fit: contain;
+      }
+    }
+
+    /* The design draws each product smaller than its box — the glasses at
+       324/829 of the card, the headphones at 418/829 — with clear air around
+       them. Padding on the image keeps object-fit's aspect handling while
+       taking that air out of the contain box. */
+    [data-product="xreal-glasses"] .comfort_card_visual .image {
+      padding-block: 1.875rem;
+    }
+
+    [data-product="sony-headphones"] .comfort_card_visual .image {
+      padding-block: 0.75rem;
+    }
+
+    /* The chair runs flush to the card's right edge in the design (its crop
+       already ends mid-armrest), so its visual swallows the card's own right
+       padding and the shot anchors to that edge. */
+    [data-product="dental-chair-intego"] .comfort_card_visual {
+      margin-inline-end: -2.875rem;
+
+      & .image {
+        object-position: right center;
       }
     }
 
