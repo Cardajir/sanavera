@@ -156,23 +156,25 @@ const { label, itemWidth = "24rem", class: className, ...rest } = Astro.props;
     .slider_button .icon {
       width: 1.375rem;
       height: auto;
+      /* Not centred: the design sets the arrow 16.16 design px past the
+         middle of the pill, identically in all seven instances, so it leans
+         the way it travels. Mirrored on the previous button, the same shift
+         carries it left. */
+      --_lead: 0.7606rem;
+      --_nudge: 0rem;
+      transform: translateX(calc(var(--_lead) + var(--_nudge)));
       transition: transform 250ms var(--ease-out);
     }
 
     /* The artwork points right; the previous button mirrors it. */
     [data-slider-prev] .icon {
-      transform: scaleX(-1);
+      transform: scaleX(-1) translateX(calc(var(--_lead) + var(--_nudge)));
     }
 
-    /* The arrow leads the way it will travel. Mirrored on the previous
-       button, so the same shift carries it left. */
+    /* On hover it leans a little further still. */
     @media (hover: hover) {
       .slider_button:not(:disabled):hover .icon {
-        transform: translateX(0.1875rem);
-      }
-
-      [data-slider-prev]:not(:disabled):hover .icon {
-        transform: scaleX(-1) translateX(0.1875rem);
+        --_nudge: 0.1875rem;
       }
     }
 
