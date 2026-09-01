@@ -44,12 +44,12 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
 
     {
       /* Booking stays reachable in the bar at every width — the design keeps
-         it beside the burger on mobile. It jumps to the first registration
-         form rather than opening a dialog. */
+         it beside the burger on mobile. It opens the booking dialog rather
+         than scrolling to the copy of the form further down the page. */
     }
-    <a class="nav_cta" href={resolve("#objednani")}>
+    <button class="nav_cta" type="button" data-modal-open="objednat">
       <span>Objednat se</span>
-    </a>
+    </button>
 
     {
       /* The mobile board keeps the handset in the bar beside booking, so it
@@ -127,7 +127,8 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       setOpen(toggle.getAttribute("aria-expanded") !== "true");
     });
 
-    nav.querySelectorAll("a").forEach((link) => {
+    /* Anything that navigates or opens a dialog also closes the sheet. */
+    nav.querySelectorAll("a, [data-modal-open]").forEach((link) => {
       link.addEventListener("click", () => setOpen(false));
     });
 

@@ -1,21 +1,21 @@
 ---
 interface Props {
-  /** In-page anchor, e.g. "#objednani". */
-  href: string;
+  /** Dialog id to open, e.g. "objednat". */
+  opens: string;
 }
 
-const { href } = Astro.props;
+const { opens } = Astro.props;
 ---
 
-<a class="round_cta" href={href}>
+<button class="round_cta" type="button" data-modal-open={opens}>
   <span>Chci se<br />objednat</span>
-</a>
+</button>
 
 <style is:global>
   @layer components {
     /* The white disc floats over the page rather than sitting in the hero, so
-       booking stays reachable from any scroll position. It jumps to the first
-       registration form. Below the desktop breakpoint the nav already carries
+       booking stays reachable from any scroll position. It opens the booking
+       dialog. Below the desktop breakpoint the nav already carries
        "Objednat se" and the mobile design has no disc, so it stays hidden. */
     .round_cta {
       display: none;

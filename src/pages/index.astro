@@ -344,7 +344,22 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     })
   }
 
-  <RoundCta href="#objednani" />
+  {
+    /* Booking as a dialog, opened from the bar and the floating disc. The
+       artboard for it was left empty, so it carries the same peach panel the
+       page already uses further down rather than a shape of its own. */
+  }
+  <Modal
+    id="objednat"
+    label="Objednat se"
+    items={[{ key: "formular", label: "Objednat se" }]}
+  >
+    <article class="modal_panel modal_panel--cta" data-panel="formular">
+      <BookingForm formId="booking-modal" />
+    </article>
+  </Modal>
+
+  <RoundCta opens="objednat" />
 
   <ModalController />
   <BookingFormController />
@@ -894,6 +909,27 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       margin-block-start: 2.0625rem;
       border-radius: var(--radius-small);
       object-fit: cover;
+    }
+
+    /* The booking dialog carries the panel at its own width — the measure the
+       other panels keep is for running text, and the form is a two-column
+       grid that would be squeezed by it. */
+    #modal-objednat .modal_panels {
+      max-width: none;
+    }
+
+    /* The body reserves a 27.375rem first column for the sidebar. This dialog
+       has no sidebar, so without this the form drops into that column and is
+       laid out at 438px. */
+    @media (width >= 64rem) {
+      #modal-objednat .modal_body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* The panel already brings its own inset. */
+    .modal_panel--cta .booking--panel {
+      margin: 0;
     }
 
     /* The philosophy board closes with the wordmark on a 982 x 334 block:
