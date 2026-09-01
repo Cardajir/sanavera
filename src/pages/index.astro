@@ -580,6 +580,15 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       }
     }
 
+    /* The value cards are the one family the design insets deeper along the
+       block axis than at the sides: the heading's cap starts 72 design px
+       down and the pill leaves 54 below it, against 47 either side. Kept as
+       ratios of that side inset so they hold at every width. */
+    .value_card {
+      padding-block: calc(var(--card-padding) * 1.536)
+        calc(var(--card-padding) * 1.149);
+    }
+
     /* 546px tall at the design width; content-height on narrow screens. */
     @media (width >= 64rem) {
       .value_card,
