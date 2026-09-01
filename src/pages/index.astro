@@ -269,44 +269,59 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
        each panel is a title, a lead and the Markdown body. */
   }
   {
-    modals.map((modal) => (
-      <Modal
-        id={modal.id}
-        label={modal.label}
-        sidebarLabel={modal.label}
-        items={modal.entries.map((e) => ({
-          key: e.id,
-          label: e.data.navLabel,
-        }))}
-      >
-        {modal.panels.map(({ entry, Content }) => (
-          <article class="modal_panel" data-panel={entry.id} hidden>
-            <Heading tag="h2" variant="h1">
-              {entry.data.title}
-            </Heading>
-            <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-              {entry.data.lead}
-            </Paragraph>
-            <RichText maxWidth={72}>
-              <Content />
-            </RichText>
-            {entry.data.images.length > 0 && (
-              <div class="tech_gallery">
-                {entry.data.images.map((name) => (
-                  <Img
-                    src={image(name)}
-                    alt={entry.data.title}
-                    variant="constrained"
-                    width={900}
-                    class="tech_gallery_item"
-                  />
-                ))}
-              </div>
-            )}
-          </article>
-        ))}
-      </Modal>
-    ))
+    modals.map((modal) => {
+      /* The team boards put one wide portrait straight under the name; every
+         other modal keeps its product shots in the square gallery at the
+         foot of the panel. */
+      const portrait = modal.id === "tym";
+      return (
+        <Modal
+          id={modal.id}
+          label={modal.label}
+          sidebarLabel={modal.label}
+          items={modal.entries.map((e) => ({
+            key: e.id,
+            label: e.data.navLabel,
+          }))}
+        >
+          {modal.panels.map(({ entry, Content }) => (
+            <article class="modal_panel" data-panel={entry.id} hidden>
+              <Heading tag="h2" variant="h1">
+                {entry.data.title}
+              </Heading>
+              {portrait && entry.data.images.length > 0 && (
+                <Img
+                  src={image(entry.data.images[0])}
+                  alt={entry.data.title}
+                  variant="constrained"
+                  width={1000}
+                  class="modal_portrait"
+                />
+              )}
+              <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+                {entry.data.lead}
+              </Paragraph>
+              <RichText maxWidth={72}>
+                <Content />
+              </RichText>
+              {!portrait && entry.data.images.length > 0 && (
+                <div class="tech_gallery">
+                  {entry.data.images.map((name) => (
+                    <Img
+                      src={image(name)}
+                      alt={entry.data.title}
+                      variant="constrained"
+                      width={900}
+                      class="tech_gallery_item"
+                    />
+                  ))}
+                </div>
+              )}
+            </article>
+          ))}
+        </Modal>
+      );
+    })
   }
 
   <RoundCta href="#objednani" />
@@ -865,10 +880,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       background-color: var(--light-100);
     }
 
-    .about_portrait_image {
+    /* 982 x 646 at a 20px corner in the design — a wide portrait sitting
+       between the name and the text, not a product shot boxed on white. */
+    .modal_portrait {
       width: 100%;
-      aspect-ratio: 4 / 5;
-      border-radius: var(--radius-main);
+      aspect-ratio: 982 / 646;
+      margin-block-start: var(--space-6);
+      border-radius: var(--radius-small);
       object-fit: cover;
     }
   }

@@ -253,13 +253,16 @@ const { id, label, sidebarLabel, items } = Astro.props;
         max-width: none;
       }
 
+      /* The design marks the open panel in the brand peach itself, not the
+         darkened ink. It is a low-contrast mark on white — the underline and
+         aria-current carry the state for anyone the colour does not reach. */
       &[aria-current="true"] {
-        color: var(--brand-ink);
+        color: var(--brand-500);
       }
 
       @media (hover: hover) {
         &:hover {
-          color: var(--brand-ink);
+          color: var(--brand-500);
         }
       }
     }
