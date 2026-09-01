@@ -540,11 +540,11 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       }
 
       /* Wide: the panel becomes the middle of the bar, ahead of booking. The
-         extra start margin doubles the bar's own 20px gap, so the links stand
+         extra start margin trebles the bar's own 20px gap, so the links stand
          clear of the wordmark rather than reading as part of it. */
       .nav_menu {
         order: 1;
-        margin-inline-start: calc(var(--space-6) / 2);
+        margin-inline-start: var(--space-6);
         flex-basis: auto;
         flex-grow: 1;
         display: block;
