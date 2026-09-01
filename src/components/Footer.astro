@@ -6,6 +6,12 @@ import PillLink from "@/components/PillLink.astro";
 import BookingForm from "@/components/BookingForm.astro";
 import { contact, legalNav } from "@/data/site.ts";
 import { image } from "@/utils/images.ts";
+import { getImage } from "astro:assets";
+
+/* The mobile board does not crop the wide photograph — it uses a different,
+   square aerial of the town square. Art direction, so only the one that will
+   be shown is fetched. */
+const townSquare = await getImage({ src: image("veseli-square"), width: 540 });
 ---
 
 <footer class="footer_wrap" id="kontakt">
@@ -76,13 +82,16 @@ import { image } from "@/utils/images.ts";
         </div>
       </div>
 
-      <Img
-        src={image("veseli")}
-        alt="Veselí nad Moravou"
-        variant="constrained"
-        width={700}
-        class="footer_town"
-      />
+      <picture class="footer_town_frame">
+        <source media="(max-width: 767px)" srcset={townSquare.src} />
+        <Img
+          src={image("veseli")}
+          alt="Veselí nad Moravou"
+          variant="constrained"
+          width={700}
+          class="footer_town"
+        />
+      </picture>
     </div>
 
     <div class="footer_grid footer_grid--legal">
@@ -294,16 +303,29 @@ import { image } from "@/utils/images.ts";
 
     /* 519 x 672 in the design. Beside the map it stretches to the map's
        height instead of keeping its own, which rounds a few pixels taller. */
-    .footer_town {
+    /* The <picture> carries the frame, so it is the grid item and the image
+       just fills it. 367 x 362 on the mobile board — near enough square. The
+       desktop frame's 519 x 672 is a narrow vertical slice of a landscape
+       original, and forcing that on a phone was what made the photograph
+       look magnified. */
+    .footer_town_frame {
+      display: block;
       width: 100%;
       height: 100%;
-      aspect-ratio: 519 / 672;
+      aspect-ratio: 367 / 362;
       border-radius: var(--radius-main);
-      object-fit: cover;
+      overflow: clip;
 
       @media (width >= 48rem) {
         aspect-ratio: auto;
       }
+    }
+
+    .footer_town {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
     }
 
     /* The map is a rounded panel with the address card floating over its
