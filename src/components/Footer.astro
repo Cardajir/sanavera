@@ -64,8 +64,9 @@ import { image } from "@/utils/images.ts";
           title={`Mapa – ${contact.clinic.street}, ${contact.clinic.city}`}
           loading="lazy"></iframe>
         <div class="footer_map_card glass">
-          <Heading tag="h2" variant="h5">Kde nás najdete?</Heading>
-          <p class="address address--small">
+          <Heading tag="h2" variant="h3">Kde nás najdete?</Heading>
+          <p class="address address--bold">
+            {contact.clinic.name}<br />
             {contact.clinic.street}<br />
             {contact.clinic.city}
           </p>
@@ -305,18 +306,37 @@ import { image } from "@/utils/images.ts";
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-2);
+      /* The design leaves 43 design px between the title and the address and
+         46 between the address and the button — far more than the tight
+         stack this used to carry. */
+      gap: clamp(1.25rem, 1.0875rem + 0.8125vw, 2.0625rem);
       /* Over the map at every width, not just from 40rem — below that the
          card used to drop out of the corner and sit under the map as its own
-         block. 14px in on a phone, 22 at the design width. */
+         block. 14px in on a phone, 22 at the design width. The design hangs
+         it off the foot of the map; it sits at the head by request. */
       position: absolute;
-      inset-block-end: clamp(0.875rem, 0.7464rem + 0.5239vw, 1.375rem);
+      inset-block-start: clamp(0.875rem, 0.7464rem + 0.5239vw, 1.375rem);
       inset-inline: clamp(0.875rem, 0.7464rem + 0.5239vw, 1.375rem);
       /* 364 x 247 in the design; on a phone the insets decide the width. */
       max-width: 22.75rem;
       margin: 0;
       padding: var(--panel-inset);
+      /* The design sets the title's cap 37.9 design px down against the 30 it
+         keeps elsewhere, so the panel is deeper above the title than below
+         the button. */
+      padding-block-start: calc(var(--panel-inset) * 1.263);
       border-radius: var(--radius-small);
+
+      /* The inset is the whole gap above the title; the pattern layer's own
+         heading margin was adding 32px to it. */
+      > .heading {
+        margin-top: 0;
+      }
+
+      /* 24 design px on a 30px pitch. */
+      > .address {
+        line-height: 1.25;
+      }
     }
 
     .footer_map_card .pill {
