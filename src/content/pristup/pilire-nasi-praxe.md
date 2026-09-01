@@ -4,6 +4,7 @@ navLabel: Pilíře naší praxe
 order: 2
 lead: Profesionální a kompetentní přístup k vašemu zdraví (sana) a upřímný vztah mezi pacientem a lékařem (vera) považujeme za základní pilíře naší odborné praxe, které jsme propsali do názvů ordinace i loga, monogramu SV.
 description: Profesionální a kompetentní přístup k vašemu zdraví (sana) a upřímný vztah mezi pacientem a lékařem (vera) považujeme za základní pilíře naší odborné praxe, kte
+logo: true
 ---
 
 Písmeno „S“, zastupující zdraví, je ztvárněním Asklépiovy hole. V tradičním zdravotnictví symbolizuje plynulá linie (často ve tvaru hada) omotaná kolem pevného středu proces uzdravování, regeneraci a ochranu lidského života. V kontextu naší ordinace představuje „S“ nejvyšší standardy moderní stomatologie, klinickou preciznost a hluboké lékařské vědění.

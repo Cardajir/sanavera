@@ -8,9 +8,10 @@ images:
   - primescan-a
 ---
 
-- **Blesková rychlost (Skenování do 60 sekund):** díky pokročilým technologiím a umělé inteligenci zvládne Primescan 2 nasnímat celé vaše zubní pořadí za méně než 1 minutu. Zkracuje se tak čas, který strávíte v kresle.
-- **Konec otiskovací hmoty a dávicího reflexu:** místo velkých lžic s chladnou pastou prohlížíme vaše ústa pouze malou, ergonomicky tvarovanou hlavicí skeneru. Skenování je čisté, bez zápachu a zcela bezbolestné.
+**Blesková rychlost (Skenování do 60 sekund):** díky pokročilým technologiím a umělé inteligenci zvládne Primescan 2 nasnímat celé vaše zubní pořadí za méně než 1 minutu. Zkracuje se tak čas, který strávíte v kresle.
 
-Sledování stavu chrupu v přímém přenosu: během skenování vidíte detailní barevný 3D model svých zubů na obrazovce v reálném čase. Lékař vám tak může srozumitelně ukázat stav vašich zubů, dásní i skusu a vysvětlit navrhovaný postup léčby.
+**Konec otiskovací hmoty a dávicího reflexu:** místo velkých lžic s chladnou pastou prohlížíme vaše ústa pouze malou, ergonomicky tvarovanou hlavicí skeneru. Skenování je čisté, bez zápachu a zcela bezbolestné.
 
-- **Maximální hygiena a bezpečnost:** Skener využívá nejnovější hygienický koncept se speciálními ochrannými kryty. Získáváte tak jistotu 100% sterilního a bezpečného ošetření.
+**Sledování stavu chrupu v přímém přenosu:** během skenování vidíte detailní barevný 3D model svých zubů na obrazovce v reálném čase. Lékař vám tak může srozumitelně ukázat stav vašich zubů, dásní i skusu a vysvětlit navrhovaný postup léčby.
+
+**Maximální hygiena a bezpečnost:** Skener využívá nejnovější hygienický koncept se speciálními ochrannými kryty. Získáváte tak jistotu 100% sterilního a bezpečného ošetření.

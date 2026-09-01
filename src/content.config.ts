@@ -14,6 +14,8 @@ const panel = z.object({
   lead: z.string(),
   description: z.string().optional(),
   images: z.array(z.string()).default([]),
+  /** Closes the panel with the wordmark, as the philosophy board does. */
+  logo: z.boolean().default(false),
 });
 
 const collection = (dir: string) =>

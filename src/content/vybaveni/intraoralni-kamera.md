@@ -10,7 +10,10 @@ images:
 
 Pro vás jako pacienta to znamená okamžitý přehled – stav svých zubů, dásní či skrytých kazů uvidíte společně s lékařem na obrazovce v reálném čase.
 
-- **Perfektní přehled v HD kvalitě:** sledujte průběh i výsledky ošetření přímo na obrazovce v reálném čase.
-- **Snadné odhalení skrytých problémů:** kamera zachytí i mikroskopické praskliny, začínající kazy nebo netěsné výplně.
-- **Maximální komfort bez tlaku:** štíhlý a ergonomický design kamery nezpůsobuje nepříjemné pocity v ústech.
-- **Srozumitelná konzultace:** přesně vidíte, co se v ústech děje, což nám pomáhá společně navrhnout ten nejlepší léčebný plán.
+**Perfektní přehled v HD kvalitě:** sledujte průběh i výsledky ošetření přímo na obrazovce v reálném čase.
+
+**Snadné odhalení skrytých problémů:** kamera zachytí i mikroskopické praskliny, začínající kazy nebo netěsné výplně.
+
+**Maximální komfort bez tlaku:** štíhlý a ergonomický design kamery nezpůsobuje nepříjemné pocity v ústech.
+
+**Srozumitelná konzultace:** přesně vidíte, co se v ústech děje, což nám pomáhá společně navrhnout ten nejlepší léčebný plán.

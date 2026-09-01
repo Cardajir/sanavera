@@ -5,6 +5,8 @@ import Heading from "@/components/Heading.astro";
 import Paragraph from "@/components/Paragraph.astro";
 import RichText from "@/components/RichText.astro";
 import Img from "@/components/Img.astro";
+import Icon from "@/components/Icon.astro";
+import logo from "@/assets/logo.svg";
 import SectionLabel from "@/components/SectionLabel.astro";
 import PillLink from "@/components/PillLink.astro";
 import PillButton from "@/components/PillButton.astro";
@@ -320,19 +322,21 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
               <RichText>
                 <Content />
               </RichText>
-              {!portrait && entry.data.images.length > 0 && (
-                <div class="tech_gallery">
-                  {entry.data.images.map((name) => (
-                    <Img
-                      src={image(name)}
-                      alt={entry.data.title}
-                      variant="constrained"
-                      width={900}
-                      class="tech_gallery_item"
-                    />
-                  ))}
+              {entry.data.logo && (
+                <div class="modal_logo">
+                  <Icon src={logo} variant="full-width" />
                 </div>
               )}
+              {!portrait &&
+                entry.data.images.map((name) => (
+                  <Img
+                    src={image(name)}
+                    alt={entry.data.title}
+                    variant="constrained"
+                    width={1000}
+                    class="modal_photo"
+                  />
+                ))}
             </article>
           ))}
         </Modal>
@@ -875,25 +879,31 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
     /* ----------------------------------------------------- modal extras */
 
-    .tech_gallery {
-      display: grid;
-      gap: var(--site-gutter);
-      grid-template-columns: 1fr;
-      margin-top: var(--space-7);
-
-      @media (width >= 40rem) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    /* 937 x 693 at a 20px corner, closing the panel. These are photographs
+       of the room, not product cut-outs, so they are not boxed on white the
+       way the slider's product shots are. All three equipment boards leave
+       the last 45px of the 982px column clear rather than running the
+       photograph to its edge. */
+    .modal_photo {
+      width: 95.42%;
+      aspect-ratio: 937 / 693;
+      margin-block-start: 2.0625rem;
+      border-radius: var(--radius-small);
+      object-fit: cover;
     }
 
-    .tech_gallery_item {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      padding: var(--space-5);
-      border-radius: var(--radius-main);
-      /* Wins over Img's own `transparent` rule, which is what clears the
-         skeleton tint these product shots would otherwise sit on. */
-      background-color: var(--light-100);
+    /* The philosophy board closes with the wordmark on a 982 x 334 block:
+       114 design px of air above it, 119 below, and the mark itself 785 of
+       the 982 across. Percentages so the proportion holds at any width. */
+    .modal_logo {
+      display: flex;
+      justify-content: center;
+      padding-block: 11.6% 12.1%;
+      color: var(--text);
+    }
+
+    .modal_logo > .icon {
+      width: 80%;
     }
 
     /* 982 x 646 at a 20px corner in the design — a wide portrait sitting

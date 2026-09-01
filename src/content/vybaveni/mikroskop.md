@@ -10,7 +10,10 @@ images:
 
 Díky několikanásobnému zvětšení, plynulému zaostřování a vestavěnému filtru přirozeného světla provádíme i velmi složité zákroky s nekompromisní precizností, šetrností k vašim zubům a v plném pohodlí.
 
-- **Křištálově čistý obraz:** apochromatické čočky odhalí i ty nejmenší detaily, praskliny či skryté kořenové kanálky.
-- **Šetrnost ke tkáním:** zvětšení nám umožňuje odstraňovat pouze poškozenou část zubu a zachovat co nejvíce zdravé tkáně.
-- **Dokonalé osvětlení:** výkonný systém duálních LED světel zajišťuje perfektní viditelnost bez nepříjemného oslňování.
-- **Pohodlí během zákroku:** plynulé zaostřování a ergonomický design zkracují dobu ošetření na minimum.
+**Křištálově čistý obraz:** apochromatické čočky odhalí i ty nejmenší detaily, praskliny či skryté kořenové kanálky.
+
+**Šetrnost ke tkáním:** zvětšení nám umožňuje odstraňovat pouze poškozenou část zubu a zachovat co nejvíce zdravé tkáně.
+
+**Dokonalé osvětlení:** výkonný systém duálních LED světel zajišťuje perfektní viditelnost bez nepříjemného oslňování.
+
+**Pohodlí během zákroku:** plynulé zaostřování a ergonomický design zkracují dobu ošetření na minimum.
