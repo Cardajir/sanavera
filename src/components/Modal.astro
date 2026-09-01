@@ -307,17 +307,12 @@ const { id, label, sidebarLabel, items } = Astro.props;
       margin-top: var(--space-8);
     }
 
-    /* 947 design px on the services board, which is the narrower of the two
-       column widths the design uses. */
-    .modal_lead,
-    .modal_panel .rich-text {
+    /* The design uses two column widths. The services board sets its copy on
+       947 design px; every other board runs the full 981 of the content
+       column, which on the team boards is the width of the portrait above
+       the text. */
+    .modal_panel--narrow :is(.modal_lead, .rich-text) {
       max-width: 44.5625rem;
-    }
-
-    /* The team boards use the wider one — 981 design px, the full width of
-       the portrait above the text — so the measure comes off there. */
-    .modal_panel--portrait :is(.text, .rich-text) {
-      max-width: none;
     }
   }
 </style>

@@ -274,6 +274,10 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
          other modal keeps its product shots in the square gallery at the
          foot of the panel. */
       const portrait = modal.id === "tym";
+      /* Only the services board opens with a bold lead over the narrower of
+         the design's two columns. The team, approach and equipment boards
+         run straight into the body copy at the full column width. */
+      const narrow = modal.id === "sluzby";
       return (
         <Modal
           id={modal.id}
@@ -286,7 +290,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         >
           {modal.panels.map(({ entry, Content }) => (
             <article
-              class:list={["modal_panel", portrait && "modal_panel--portrait"]}
+              class:list={[
+                "modal_panel",
+                portrait && "modal_panel--portrait",
+                narrow && "modal_panel--narrow",
+              ]}
               data-panel={entry.id}
               hidden
             >
@@ -302,14 +310,14 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
                   class="modal_portrait"
                 />
               )}
-              {portrait ? (
-                <Paragraph>{entry.data.lead}</Paragraph>
-              ) : (
-                <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+              {narrow ? (
+                <Paragraph variant="h2" class="modal_lead">
                   {entry.data.lead}
                 </Paragraph>
+              ) : (
+                <Paragraph>{entry.data.lead}</Paragraph>
               )}
-              <RichText maxWidth={portrait ? undefined : 72}>
+              <RichText>
                 <Content />
               </RichText>
               {!portrait && entry.data.images.length > 0 && (
