@@ -125,12 +125,6 @@ export const comfortItems = [
     text: "Díky ergonomickému tvarování a prémiovému polstrování dopřeje maximální pohodlí i během delších zákroků.",
     image: "dental-chair",
   },
-  {
-    heading: "3D sken, o kterém ani nevíte",
-    product: "Dentsply Sirona Primescan 2",
-    text: "Zapomeňte na nepříjemné otiskovací hmoty v ústech. Digitální otisk vašich zubů získáme bezbolestně z křesla během necelé minuty.",
-    image: "primescan",
-  },
 ] as const;
 
 export const services = {
