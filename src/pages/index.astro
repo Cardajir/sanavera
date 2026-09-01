@@ -690,14 +690,18 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
     /* Below the desktop layout a card is only as tall as its text, so the
        button's `margin-top: auto` has nothing left to absorb and the gap
-       above it falls to the card's own row gap — 14px on a service card.
-       A floor on the text below holds it open at 40. The value cards already
-       carry 67 to 100 there, since they sit in a strip that levels their
-       heights, so the floor would only push them further apart. */
-    @media (width < 64rem) {
-      .service_card > .text:last-of-type {
-        margin-block-end: calc(2.5rem - var(--space-3));
-      }
+       above it falls to the card's own row gap — 14px — and the button reads
+       as stuck to the copy. A floor on the paragraph holds it at 40.
+
+       It has to cover both families. Only the longest card in a row runs out
+       of slack, so measuring the first one says everything is fine while the
+       tallest is the one that looks wrong. Cards that do have slack are
+       carried with it: the row levels their heights either way. Not bounded
+       to the phone — at 1024 the min-height takes over but the longest card
+       already exceeds it, so the gap collapsed there too. */
+    .value_card > .text:last-of-type,
+    .service_card > .text:last-of-type {
+      margin-block-end: calc(2.5rem - var(--space-3));
     }
 
     /* Centred on the map, sitting on its point like a real marker. */
