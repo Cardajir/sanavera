@@ -1,7 +1,6 @@
 ---
 import Icon from "@/components/Icon.astro";
 import logo from "@/assets/logo.svg";
-import plus from "@/assets/icons/plus.svg";
 import phoneIcon from "@/assets/icon-phone.svg";
 import { SITE_NAME } from "@/consts.ts";
 import { mainNav, contact } from "@/data/site.ts";
@@ -50,7 +49,6 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
     }
     <a class="nav_cta" href={resolve("#objednani")}>
       <span>Objednat se</span>
-      <Icon src={plus} variant="small" />
     </a>
 
     {
@@ -266,18 +264,18 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
     .nav_logo {
       display: flex;
       align-items: center;
-      width: 6rem;
+      /* A quarter up on the design's sizes. Below the 393px board the bar
+         carries the handset as well, which the design never had to fit at
+         that width, so the wordmark takes what the row can spare: 13.75rem is
+         what the margins, handset, booking pill and burger measure together,
+         and without the cap the pill drops onto a second line at 320px. */
+      width: min(9.375rem, calc(100vw - 13.75rem));
       margin-right: auto;
       color: inherit;
       transition: opacity 250ms;
 
-      /* Steps up as soon as the bar has room, so the smallest phones still
-         fit logo · booking · burger on one row. */
-      @media (width >= 22.5rem) {
-        width: 7.5rem;
-      }
       @media (width >= 30rem) {
-        width: 9.5rem;
+        width: 11.875rem;
       }
 
       @media (hover: hover) {
@@ -417,15 +415,15 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
 
     /* The number reads as plain text with the handset in its own outlined
        box beside it, the way the design draws it. */
-    /* Number then handset, as the design lays it out. The number is set in
-       the medium weight, a step lighter than the navigation links. */
+    /* Number then handset, as the design lays it out, set bold to match the
+       navigation links. */
     .nav_phone {
       display: inline-flex;
       align-items: center;
       gap: var(--space-3);
       color: inherit;
       font-size: var(--text-ui);
-      font-weight: 500;
+      font-weight: var(--primary-bold);
       text-decoration: none;
       white-space: nowrap;
     }
@@ -460,7 +458,6 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: var(--space-3);
       height: var(--control-height);
       /* Roomier only from the desktop bar; at 320px the wider pill pushes the
          row onto a second line. */
@@ -477,17 +474,6 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       font-size: var(--text-nav-cta);
       font-weight: var(--primary-bold);
       text-decoration: none;
-
-      /* The mobile board draws the pill as a bare label — 114x29 leaves no
-         room for the plus, so it only joins from the desktop bar. */
-      .icon {
-        display: none;
-      }
-      @media (width >= 64rem) {
-        .icon {
-          display: block;
-        }
-      }
       transition:
         background-color 275ms var(--ease-out),
         color 275ms var(--ease-out);
@@ -553,9 +539,12 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
         display: none;
       }
 
-      /* Wide: the panel becomes the middle of the bar, ahead of booking. */
+      /* Wide: the panel becomes the middle of the bar, ahead of booking. The
+         extra start margin doubles the bar's own 20px gap, so the links stand
+         clear of the wordmark rather than reading as part of it. */
       .nav_menu {
         order: 1;
+        margin-inline-start: calc(var(--space-6) / 2);
         flex-basis: auto;
         flex-grow: 1;
         display: block;
