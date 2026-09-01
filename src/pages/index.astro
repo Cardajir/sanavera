@@ -639,6 +639,16 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         calc(var(--card-padding) * 1.149);
     }
 
+    /* The mobile board keeps 30px under the button against the 24 it keeps at
+       the sides, where the shared padding was giving 23 on a service card and
+       26 on a value one — the button read as sitting on the card's edge. */
+    @media (width < 48rem) {
+      .value_card,
+      .service_card {
+        padding-block-end: 1.875rem;
+      }
+    }
+
     /* 546px tall at the design width; content-height on narrow screens. */
     @media (width >= 64rem) {
       .value_card,
