@@ -641,11 +641,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
 
     /* The mobile board keeps 30px under the button against the 24 it keeps at
        the sides, where the shared padding was giving 23 on a service card and
-       26 on a value one — the button read as sitting on the card's edge. */
+       26 on a value one — the button read as sitting on the card's edge. The
+       board's own 30 still sat tight, so it opens out to 40 as the cards grow
+       toward the desktop layout. */
     @media (width < 48rem) {
       .value_card,
       .service_card {
-        padding-block-end: 1.875rem;
+        padding-block-end: clamp(1.875rem, 1.279rem + 2.545vw, 2.5rem);
       }
     }
 
@@ -937,9 +939,24 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       }
     }
 
-    /* The panel already brings its own inset. */
+    /* The panel is the sheet here rather than something sitting inside it, so
+       the shell's reading inset comes off and the sheet's own corners do the
+       rounding. The panel keeps its inner padding — that is what holds the
+       form off the edges. */
+    #modal-objednat .modal_shell {
+      padding: 0;
+    }
+
+    .modal_panel--cta {
+      height: 100%;
+    }
+
     .modal_panel--cta .booking--panel {
       margin: 0;
+      border-radius: 0;
+      min-height: 100%;
+      /* Clear of the close disc, which now floats over the panel itself. */
+      padding-block-start: max(var(--_close-clearance), var(--card-padding));
     }
 
     /* The philosophy board closes with the wordmark on a 982 x 334 block:
