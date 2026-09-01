@@ -637,10 +637,14 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       }
     }
 
-    /* Both components ship a peach hover state in the design. */
+    /* Both components ship a peach hover state in the design, but only the
+       cards that open something should offer it — the third value card has
+       no button and lighting it up promises a click that does nothing.
+       Keyed off the trigger itself, so a card gains the state by gaining a
+       button rather than by someone remembering to add a class. */
     @media (hover: hover) {
-      .value_card:hover,
-      .service_card:hover {
+      .value_card:has([data-modal-open]):hover,
+      .service_card:has([data-modal-open]):hover {
         background-color: var(--brand-500);
         background-image: var(--brand-wash);
       }
