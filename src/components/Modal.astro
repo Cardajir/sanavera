@@ -209,6 +209,13 @@ const { id, label, sidebarLabel, items } = Astro.props;
       order: 1;
       /* The outgoing panel is positioned against this while topics cross. */
       position: relative;
+
+      /* Every board sets the content column at 982 of its 2550 design px and
+         leaves the rest of the sheet empty, so the copy keeps a measure
+         rather than running the width of the viewport. */
+      @media (width >= 64rem) {
+        max-width: 46.2125rem;
+      }
     }
 
     /* On a phone the list is not a sidebar at all — it follows the article as
@@ -300,10 +307,17 @@ const { id, label, sidebarLabel, items } = Astro.props;
       margin-top: var(--space-8);
     }
 
-    /* The design's measure for both is 713px. */
+    /* 947 design px on the services board, which is the narrower of the two
+       column widths the design uses. */
     .modal_lead,
     .modal_panel .rich-text {
       max-width: 44.5625rem;
+    }
+
+    /* The team boards use the wider one — 981 design px, the full width of
+       the portrait above the text — so the measure comes off there. */
+    .modal_panel--portrait :is(.text, .rich-text) {
+      max-width: none;
     }
   }
 </style>

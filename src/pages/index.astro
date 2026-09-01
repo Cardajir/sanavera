@@ -285,7 +285,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
           }))}
         >
           {modal.panels.map(({ entry, Content }) => (
-            <article class="modal_panel" data-panel={entry.id} hidden>
+            <article
+              class:list={["modal_panel", portrait && "modal_panel--portrait"]}
+              data-panel={entry.id}
+              hidden
+            >
               <Heading tag="h2" variant="h1">
                 {entry.data.title}
               </Heading>
@@ -298,10 +302,14 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
                   class="modal_portrait"
                 />
               )}
-              <Paragraph variant="h2" maxWidth={44} class="modal_lead">
-                {entry.data.lead}
-              </Paragraph>
-              <RichText maxWidth={72}>
+              {portrait ? (
+                <Paragraph>{entry.data.lead}</Paragraph>
+              ) : (
+                <Paragraph variant="h2" maxWidth={44} class="modal_lead">
+                  {entry.data.lead}
+                </Paragraph>
+              )}
+              <RichText maxWidth={portrait ? undefined : 72}>
                 <Content />
               </RichText>
               {!portrait && entry.data.images.length > 0 && (
