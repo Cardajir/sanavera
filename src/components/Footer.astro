@@ -68,9 +68,11 @@ const townMobile = await getImage({ src: image("veseli-mobile"), width: 1100 });
       <div class="footer_map">
         <iframe
           class="footer_map_image"
-          src="https://snazzymaps.com/embed/808711"
+          data-map-src="https://snazzymaps.com/embed/808711"
           title={`Mapa – ${contact.clinic.street}, ${contact.clinic.city}`}
-          loading="lazy"></iframe>
+          loading="lazy"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        ></iframe>
         <div class="footer_map_card glass">
           <Heading tag="h2" variant="h3">Kde nás najdete?</Heading>
           <p class="address address--bold">

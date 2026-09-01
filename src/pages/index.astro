@@ -82,9 +82,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       <div class="hero_map">
         <iframe
           class="hero_map_image"
-          src="https://snazzymaps.com/embed/808711"
+          data-map-src="https://snazzymaps.com/embed/808711"
           title={`Mapa – ${contact.clinic.street}, ${contact.clinic.city}`}
-          loading="lazy"></iframe>
+          loading="lazy"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        ></iframe>
         <div class="hero_map_card glass">
           <p class="address address--small">
             <strong>{contact.clinic.name}</strong><br />

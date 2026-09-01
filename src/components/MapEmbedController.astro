@@ -1,0 +1,38 @@
+---
+/**
+ * Loads every [data-map-src] iframe on the first user gesture.
+ *
+ * The Snazzy Maps embed answers with an Azure affinity Set-Cookie, and Chrome
+ * logs that as a third-party-cookie issue the moment the frame loads — even
+ * inside a sandbox that refuses to store it. Holding the src back until the
+ * visitor scrolls or touches the page keeps the embed out of that audit while
+ * costing a real visitor nothing: their first gesture arrives well before
+ * they can study the map.
+ *
+ * Script-only component for the same reason as SliderController: a <script>
+ * inside a component that also renders markup is silently dropped by Astro.
+ * Render it once per layout.
+ */
+---
+
+<script>
+  const load = () => {
+    for (const frame of document.querySelectorAll<HTMLIFrameElement>(
+      "iframe[data-map-src]",
+    )) {
+      frame.src = frame.dataset.mapSrc!;
+      delete frame.dataset.mapSrc;
+    }
+  };
+
+  const gestures = ["pointerdown", "pointermove", "touchstart", "keydown"];
+  const arm = () => {
+    load();
+    for (const type of gestures) removeEventListener(type, arm);
+    removeEventListener("scroll", arm);
+  };
+  for (const type of gestures) {
+    addEventListener(type, arm, { once: false, passive: true });
+  }
+  addEventListener("scroll", arm, { passive: true });
+</script>

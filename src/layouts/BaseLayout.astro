@@ -5,6 +5,7 @@ import SkipLink from "@/components/SkipLink.astro";
 import Nav from "@/components/Nav.astro";
 import { GTM_ID } from "@/consts.ts";
 import Footer from "@/components/Footer.astro";
+import MapEmbedController from "@/components/MapEmbedController.astro";
 import Motion from "@/components/Motion.astro";
 import type { SeoProps } from "@/types.ts";
 
@@ -89,6 +90,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <slot />
     </main>
     <Footer />
+    <MapEmbedController />
     <Motion />
   </body>
 </html>
