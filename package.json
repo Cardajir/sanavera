@@ -10,6 +10,7 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro build",
+    "build:active24": "astro build && node -e \"require('fs').copyFileSync('deploy/active24/.htaccess', 'dist/.htaccess')\"",
     "preview": "astro preview",
     "astro": "astro",
     "format": "prettier --write ."

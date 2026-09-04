@@ -1,0 +1,44 @@
+name: Deploy to Active24
+
+# Manual for now: Vercel still deploys main on its own. Once the domain points
+# at Active24, add `push: branches: [main]` under `on` and every merge goes
+# live there too. See deploy/active24/README.md for the secrets this needs.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-active24
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build:active24
+        env:
+          PUBLIC_EMAILJS_SERVICE_ID: ${{ vars.PUBLIC_EMAILJS_SERVICE_ID }}
+          PUBLIC_EMAILJS_TEMPLATE_ID: ${{ vars.PUBLIC_EMAILJS_TEMPLATE_ID }}
+          PUBLIC_EMAILJS_PUBLIC_KEY: ${{ vars.PUBLIC_EMAILJS_PUBLIC_KEY }}
+
+      - name: Upload dist/ over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.ACTIVE24_FTP_HOST }}
+          username: ${{ secrets.ACTIVE24_FTP_USER }}
+          password: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
+          protocol: ${{ vars.ACTIVE24_FTP_PROTOCOL || 'ftps' }}
+          port: ${{ vars.ACTIVE24_FTP_PORT || 21 }}
+          local-dir: ./dist/
+          server-dir: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
+          # Only changed files travel; the sync state lives on the server.
+          dangerous-clean-slate: false
