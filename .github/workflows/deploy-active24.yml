@@ -30,31 +30,30 @@ jobs:
           PUBLIC_EMAILJS_TEMPLATE_ID: ${{ vars.PUBLIC_EMAILJS_TEMPLATE_ID }}
           PUBLIC_EMAILJS_PUBLIC_KEY: ${{ vars.PUBLIC_EMAILJS_PUBLIC_KEY }}
 
-      # lftp rather than an FTP action: Active24 offers SFTP on port 22 and the
-      # common actions speak only FTP/FTPS. `mirror --reverse --delete` makes
-      # the web root match dist/ exactly, which also clears the hosting's
-      # placeholder page on the first run.
-      - name: Upload dist/ over SFTP
+      # lftp over explicit FTPS. The hosting's SFTP (ProFTPD mod_sftp) drops
+      # the connection right after the key exchange with a current OpenSSH
+      # client, and its TLS certificate is issued to the shared FTP host, not
+      # to the site's domain — so the upload goes to that host, where the
+      # certificate verifies. `mirror --reverse --delete` makes the web root
+      # match dist/ exactly, which also clears the hosting's placeholder page.
+      - name: Upload dist/ over FTPS
         env:
-          SFTP_HOST: ${{ secrets.ACTIVE24_FTP_HOST }}
-          SFTP_USER: ${{ secrets.ACTIVE24_FTP_USER }}
-          SFTP_PASSWORD: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
-          SFTP_PORT: ${{ vars.ACTIVE24_FTP_PORT || 22 }}
-          SFTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
+          FTP_HOST: ${{ vars.ACTIVE24_FTPS_HOST || 'ftp.websupport.sk' }}
+          FTP_USER: ${{ secrets.ACTIVE24_FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
-          # Diagnostics first: a plain FTPS login says whether the credentials
-          # are accepted at all (curl exit 67 = login denied), and a debug
-          # listing over SFTP shows where that handshake stops.
-          curl -sS --max-time 30 --ssl-reqd -u "$SFTP_USER:$SFTP_PASSWORD" "ftp://$SFTP_HOST/" -o /dev/null \
-            && echo "FTPS login OK" || echo "FTPS login failed, curl exit $?"
-          lftp -d -u "$SFTP_USER","$SFTP_PASSWORD" -p "$SFTP_PORT" "sftp://$SFTP_HOST" \
-            -e "set sftp:auto-confirm yes; set net:max-retries 1; set net:timeout 30; ls; bye" 2>&1 \
-            | grep -v -i "password" | tail -40 || true
-          lftp -u "$SFTP_USER","$SFTP_PASSWORD" -p "$SFTP_PORT" "sftp://$SFTP_HOST" -e "
-            set sftp:auto-confirm yes;
+          # Login check first, so a refused password reads as "530" here rather
+          # than as a mirror failure further down.
+          curl -sS --max-time 30 --ssl-reqd -u "$FTP_USER:$FTP_PASSWORD" "ftp://$FTP_HOST/" -o /dev/null \
+            && echo "FTPS login OK" || { echo "FTPS login failed, curl exit $?"; exit 1; }
+          lftp -u "$FTP_USER","$FTP_PASSWORD" "ftp://$FTP_HOST" -e "
+            set ftp:ssl-force yes;
+            set ftp:ssl-protect-data yes;
+            set ssl:verify-certificate yes;
             set net:max-retries 3;
             set net:timeout 30;
-            mirror --reverse --delete --verbose --parallel=4 ./dist/ $SFTP_DIR;
+            mirror --reverse --delete --verbose --parallel=4 ./dist/ $FTP_DIR;
             bye"
