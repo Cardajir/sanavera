@@ -44,6 +44,14 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
+          # Diagnostics first: a plain FTPS login says whether the credentials
+          # are accepted at all (curl exit 67 = login denied), and a debug
+          # listing over SFTP shows where that handshake stops.
+          curl -sS --max-time 30 --ssl-reqd -u "$SFTP_USER:$SFTP_PASSWORD" "ftp://$SFTP_HOST/" -o /dev/null \
+            && echo "FTPS login OK" || echo "FTPS login failed, curl exit $?"
+          lftp -d -u "$SFTP_USER","$SFTP_PASSWORD" -p "$SFTP_PORT" "sftp://$SFTP_HOST" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 1; set net:timeout 30; ls; bye" 2>&1 \
+            | grep -v -i "password" | tail -40 || true
           lftp -u "$SFTP_USER","$SFTP_PASSWORD" -p "$SFTP_PORT" "sftp://$SFTP_HOST" -e "
             set sftp:auto-confirm yes;
             set net:max-retries 3;
