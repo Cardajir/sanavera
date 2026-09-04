@@ -32,28 +32,31 @@ jobs:
 
       # lftp over explicit FTPS. The hosting's SFTP (ProFTPD mod_sftp) drops
       # the connection right after the key exchange with a current OpenSSH
-      # client, and its TLS certificate is issued to the shared FTP host, not
-      # to the site's domain — so the upload goes to that host, where the
-      # certificate verifies. `mirror --reverse --delete` makes the web root
-      # match dist/ exactly, which also clears the hosting's placeholder page.
+      # client, so FTPS it is. Its TLS certificate is issued to the provider's
+      # shared FTP name rather than to the site's domain, and that name has no
+      # public DNS record — so the chain is verified against the CA store but
+      # the host-name check is waived. `mirror --reverse --delete` makes the
+      # web root match dist/ exactly, which also clears the hosting's
+      # placeholder page on the first run.
       - name: Upload dist/ over FTPS
         env:
-          FTP_HOST: ${{ vars.ACTIVE24_FTPS_HOST || 'ftp.websupport.sk' }}
+          FTP_HOST: ${{ secrets.ACTIVE24_FTP_HOST }}
           FTP_USER: ${{ secrets.ACTIVE24_FTP_USER }}
           FTP_PASSWORD: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
           FTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
-          # Login check first, so a refused password reads as "530" here rather
-          # than as a mirror failure further down.
-          curl -sS --max-time 30 --ssl-reqd -u "$FTP_USER:$FTP_PASSWORD" "ftp://$FTP_HOST/" -o /dev/null \
-            && echo "FTPS login OK" || { echo "FTPS login failed, curl exit $?"; exit 1; }
           lftp -u "$FTP_USER","$FTP_PASSWORD" "ftp://$FTP_HOST" -e "
             set ftp:ssl-force yes;
             set ftp:ssl-protect-data yes;
             set ssl:verify-certificate yes;
-            set net:max-retries 3;
+            set ssl:check-hostname no;
+            set net:max-retries 2;
             set net:timeout 30;
+            echo '--- web root before:';
+            ls $FTP_DIR;
             mirror --reverse --delete --verbose --parallel=4 ./dist/ $FTP_DIR;
+            echo '--- web root after:';
+            ls $FTP_DIR;
             bye"
