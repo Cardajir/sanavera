@@ -102,7 +102,7 @@ export const comfort = {
   eyebrow: "TECHNOLOGIE",
   heading:
     "Maximální komfort pro nás není jen prázdná fráze. Máme hned několik důvodů, proč se k nám klienti doopravdy těší.",
-  microscopeLabel: "VYUŽÍVÁME ŠPIČKOVÝ MIKROSKOP Flexion twin lite",
+  microscopeLabel: "VYUŽÍVÁME ŠPIČKOVÝ MIKROSKOP CJ-Optik Flexion Twin Lite",
 } as const;
 
 /** The comfort-technology carousel on the homepage. */
