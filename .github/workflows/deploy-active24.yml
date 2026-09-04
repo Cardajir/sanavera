@@ -30,15 +30,23 @@ jobs:
           PUBLIC_EMAILJS_TEMPLATE_ID: ${{ vars.PUBLIC_EMAILJS_TEMPLATE_ID }}
           PUBLIC_EMAILJS_PUBLIC_KEY: ${{ vars.PUBLIC_EMAILJS_PUBLIC_KEY }}
 
-      - name: Upload dist/ over FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.ACTIVE24_FTP_HOST }}
-          username: ${{ secrets.ACTIVE24_FTP_USER }}
-          password: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
-          protocol: ${{ vars.ACTIVE24_FTP_PROTOCOL || 'ftps' }}
-          port: ${{ vars.ACTIVE24_FTP_PORT || 21 }}
-          local-dir: ./dist/
-          server-dir: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
-          # Only changed files travel; the sync state lives on the server.
-          dangerous-clean-slate: false
+      # lftp rather than an FTP action: Active24 offers SFTP on port 22 and the
+      # common actions speak only FTP/FTPS. `mirror --reverse --delete` makes
+      # the web root match dist/ exactly, which also clears the hosting's
+      # placeholder page on the first run.
+      - name: Upload dist/ over SFTP
+        env:
+          SFTP_HOST: ${{ secrets.ACTIVE24_FTP_HOST }}
+          SFTP_USER: ${{ secrets.ACTIVE24_FTP_USER }}
+          SFTP_PASSWORD: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
+          SFTP_PORT: ${{ vars.ACTIVE24_FTP_PORT || 22 }}
+          SFTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+          lftp -u "$SFTP_USER","$SFTP_PASSWORD" -p "$SFTP_PORT" "sftp://$SFTP_HOST" -e "
+            set sftp:auto-confirm yes;
+            set net:max-retries 3;
+            set net:timeout 30;
+            mirror --reverse --delete --verbose --parallel=4 ./dist/ $SFTP_DIR;
+            bye"

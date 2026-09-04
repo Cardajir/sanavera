@@ -11,12 +11,15 @@ V administraci hostingu (Webhosting → FTP účty) zjistit:
 
 | co               | kam v GitHubu                          | poznámka                                   |
 | ---------------- | -------------------------------------- | ------------------------------------------ |
-| FTP server       | secret `ACTIVE24_FTP_HOST`             | hostname bez `ftp://`                      |
-| FTP uživatel     | secret `ACTIVE24_FTP_USER`             |                                            |
+| FTP server       | secret `ACTIVE24_FTP_HOST`             | hostname bez `ftp://` (`sanavera.cz`)      |
+| FTP uživatel     | secret `ACTIVE24_FTP_USER`             | `info.sanavera.cz`                         |
 | FTP heslo        | secret `ACTIVE24_FTP_PASSWORD`         |                                            |
 | kořen webu       | variable `ACTIVE24_FTP_DIR`            | výchozí `/www/`; podle administrace        |
-| protokol         | variable `ACTIVE24_FTP_PROTOCOL`       | výchozí `ftps`; `ftp` jen když FTPS nejede |
-| port             | variable `ACTIVE24_FTP_PORT`           | výchozí `21`                               |
+| SFTP port        | variable `ACTIVE24_FTP_PORT`           | výchozí `22`                               |
+
+Nahrává se přes **SFTP** (`lftp mirror --reverse --delete`): kořen webu na
+serveru pak přesně odpovídá `dist/`, tedy první nasazení smaže i placeholder
+stránku hostingu.
 
 Secrets: repo → Settings → Secrets and variables → Actions → **Secrets**.
 Variables (nejsou tajné): tamtéž, záložka **Variables**. Z příkazové řádky:
@@ -35,9 +38,8 @@ záměrně, viz `.env.example`).
 ## 2. Spuštění
 
 GitHub → Actions → **Deploy to Active24** → Run workflow. Workflow sestaví web,
-přikopíruje `deploy/active24/.htaccess` do `dist/` a nahraje jen změněné
-soubory (stav synchronizace drží soubor `.ftp-deploy-sync-state.json` na
-serveru; `.htaccess` ho pro veřejnost zakazuje).
+přikopíruje `deploy/active24/.htaccess` do `dist/` a zrcadlí `dist/` do kořene
+webu (přenáší jen změněné soubory, přebytečné na serveru maže).
 
 Až doména `sanavera.cz` míří na Active24, odkomentovat v workflow `push` na
 `main`, aby se každý merge nasadil sám.
