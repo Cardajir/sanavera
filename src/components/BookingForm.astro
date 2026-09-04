@@ -1,8 +1,6 @@
 ---
 import Heading from "@/components/Heading.astro";
 import Paragraph from "@/components/Paragraph.astro";
-import Icon from "@/components/Icon.astro";
-import plus from "@/assets/icons/plus.svg";
 import { booking, contact } from "@/data/site.ts";
 
 interface Props {
@@ -108,7 +106,6 @@ const { bare = false, headingTag = "h2", formId } = Astro.props;
     <div class="booking_submit">
       <button class="booking_button" type="submit">
         <span>{booking.submit}</span>
-        <Icon src={plus} variant="small" />
       </button>
     </div>
 

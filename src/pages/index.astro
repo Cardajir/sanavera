@@ -913,18 +913,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       border-radius: var(--radius-main);
       overflow: clip;
 
-      /* A 783 x 624 shot has no good crop in a 316px slot — it cuts the
-         patient in half whichever way it is framed. It is a wide flourish for
-         the desktop row, so on a phone the slider shows the cards alone. */
-      display: none;
-
-      @media (width >= 48rem) {
-        display: block;
-      }
-
+      /* On a phone the slide is a 316px portrait cut from a landscape shot,
+         so the crop is anchored on the patient's face rather than centred —
+         centred, the frame lands on the chair and the headphones alone. */
       & .image {
         height: 100%;
         object-fit: cover;
+        object-position: 58% 45%;
       }
 
       /* 783 x 624 — wider than the cards it sits between. */
