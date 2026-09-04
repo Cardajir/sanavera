@@ -51,12 +51,26 @@ Až doména `sanavera.cz` míří na Active24, odkomentovat v workflow `push` na
 tedy `sanavera.cz` (A) i `www.sanavera.cz` (CNAME/A) na hosting; certifikát
 Let's Encrypt zapnout v administraci hostingu.
 
-## 4. Ruční nasazení bez GitHubu
+## 4. Nasazení z vlastního počítače (aktuálně jediná funkční cesta)
 
-```bash
-npm run build:active24
+FTP server hostingu zavírá spojení z GitHub Actions hned po `PASS` (z české
+adresy vrátí na špatné heslo normální `530`, runner dostane zavřený socket) —
+adresy GitHubu jsou zjevně blokované. Workflow zůstává pro případ, že se to
+změní; do té doby se nasazuje odsud:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File deploy/active24/deploy.ps1
 ```
 
-a obsah `dist/` (včetně skrytého `.htaccess`) nahrát do kořene webu. Před
-buildem musí být v `.env` vyplněné EmailJS proměnné, jinak se formuláře
-nasadí bez odesílání (build to hlásí varováním).
+Skript sestaví web (`npm run build:active24`), zeptá se na FTP heslo a nahraje
+`dist/` přes FTPS jedním spojením. Heslo se nikam neukládá. Před buildem musí
+být v `.env` vyplněné EmailJS proměnné, jinak se formuláře nasadí bez
+odesílání (build to hlásí varováním).
+
+Přepínače: `-ListOnly` vypíše kořen FTP účtu (ověření, že web patří do
+`/www/`), `-RemoteDir /jina/cesta/` změní cíl, `-SkipBuild` nahraje poslední
+build znovu.
+
+Skript soubory jen přidává a přepisuje; zbylé soubory hostingu (placeholder)
+smaž ručně — `.htaccess` sice nastavuje `DirectoryIndex index.html`, ale
+pořádek je pořádek.
