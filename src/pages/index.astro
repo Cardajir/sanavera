@@ -27,6 +27,7 @@ import {
   comfort,
   comfortItems,
   services,
+  pricing,
   reviews,
   reviewSource,
   contact,
@@ -241,7 +242,11 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   </Section>
 
   {/* ============================================================ SLUŽBY */}
-  <Section paddingTop="large" paddingBottom="medium" gap="large" id="sluzby">
+  {
+    /* 143 design px from the last card to the CENÍK label — split with the
+       price list's own top padding so both sections keep a step of the scale. */
+  }
+  <Section paddingTop="large" paddingBottom="6" gap="large" id="sluzby">
     <div class="hero_head_text">
       <SectionLabel>{services.eyebrow}</SectionLabel>
       <Heading tag="h2" variant="display">
@@ -265,6 +270,34 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         ))
       }
     </ul>
+  </Section>
+
+  {/* ============================================================= CENÍK */}
+  {
+    /* No padding props on purpose: those emit utilities, which would outrank
+       the exact paddings site.css gives this section. */
+  }
+  <Section gap="0" id="cenik">
+    <div class="hero_head_text">
+      <SectionLabel>{pricing.eyebrow}</SectionLabel>
+      <Heading tag="h2" variant="display">
+        {pricing.heading}
+      </Heading>
+    </div>
+
+    <div class="pricing">
+      <dl class="pricing_list">
+        {
+          pricing.items.map((item) => (
+            <div class="pricing_row">
+              <dt>{item.name}</dt>
+              <dd>{item.price}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="pricing_note">{pricing.note}</p>
+    </div>
   </Section>
 
   {/* ============================================================ MODALS */}
@@ -374,6 +407,7 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     [id="kdo-jsme"],
     [id="technologie"],
     [id="sluzby"],
+    [id="cenik"],
     [id="objednani"] {
       scroll-margin-top: calc(var(--nav-height) + var(--space-4));
     }
@@ -704,6 +738,86 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     .value_card > .text:last-of-type,
     .service_card > .text:last-of-type {
       margin-block-end: calc(2.5rem - var(--space-3));
+    }
+
+    /* ------------------------------------------------------------ ceník */
+
+    /* The design draws this pair 69 design px apart, cap to cap — a shade
+       more than the shared header's gap. */
+    [id="cenik"] .hero_head_text {
+      gap: 2.625rem;
+    }
+
+    /* The design frame wraps greedily: "…navrhneme na míru / na základě
+       komplexního vstupního / vyšetření". Balancing would even the lines out
+       and lose that shape. */
+    [id="cenik"] .heading {
+      text-wrap: wrap;
+    }
+
+    /* The list sits on the inner column like the cards above it, 141 design
+       px from the heading's last baseline to the first rule at the design
+       width, easing down to 48px on a phone. */
+    .pricing {
+      align-self: stretch;
+      margin-inline: var(--narrow-inset);
+      margin-block-start: clamp(3rem, 2.1375rem + 3.69vw, 6.5625rem);
+    }
+
+    .pricing_list {
+      margin: 0;
+      /* The design closes the list with the same hairline it opens with. */
+      border-bottom: var(--border-pill) solid var(--text);
+    }
+
+    /* Each row is 117 design px between 1.5px rules, the name and the price
+       in the 33px bold, optically centred: 47px of air above the cap height
+       and below the baseline. `text-box` on the cells trims their line boxes
+       to exactly that cap-to-baseline span so the padding can carry the
+       design's figure; a browser without it centres the full line box, a hair
+       taller. */
+    .pricing_row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: clamp(1.375rem, 1.2rem + 1vw, 2.1625rem) 0.9rem
+        clamp(1.375rem, 1.2rem + 1vw, 2.1625rem) 1rem;
+      border-top: var(--border-pill) solid var(--text);
+      font-size: var(--h3);
+      font-weight: var(--primary-bold);
+      /* Only felt where a name wraps on a phone: the trim takes the leading
+         off a single line, so the desktop rows measure the same. */
+      line-height: 1.15;
+      letter-spacing: var(--letter-spacing-normal);
+
+      > dt,
+      > dd {
+        text-box: trim-both cap alphabetic;
+      }
+
+      > dt {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      > dd {
+        flex: none;
+        margin: 0;
+        text-align: right;
+      }
+    }
+
+    /* 21 design px bold, its cap height 44px under the last rule. */
+    .pricing_note {
+      margin: 0;
+      padding-block-start: 2.0625rem;
+      padding-inline-start: 1rem;
+      font-size: var(--text-ui);
+      font-weight: var(--primary-bold);
+      line-height: 1;
+      letter-spacing: var(--letter-spacing-normal);
+      text-box: trim-both cap alphabetic;
     }
 
     /* Centred on the map, sitting on its point like a real marker. */

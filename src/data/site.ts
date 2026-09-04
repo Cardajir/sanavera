@@ -133,6 +133,24 @@ export const services = {
     "Pacient je u nás vždy na prvním místě. Díky rozhodnutí nespolupracovat s pojišťovnami vám můžeme poskytnout tolik času, kolik váš případ vyžaduje.",
 } as const;
 
+/** The price list under the services, added on the landingpage-2 board. */
+export const pricing = {
+  eyebrow: "CENÍK",
+  heading:
+    "Individuální plán vám navrhneme na míru na základě komplexního vstupního vyšetření",
+  note: "Uvedené ceny jsou pouze orientační",
+  /* Non-breaking spaces keep each price on one line at every width. */
+  items: [
+    { name: "Komplexní vstupní vyšetření (45 min)", price: "1 500 Kč" },
+    { name: "Preventivní prohlídka", price: "1 300 Kč" },
+    { name: "Fotokompozitní výplň", price: "od 2 500 Kč" },
+    {
+      name: "Ošetření kořenových kanálků (pod mikroskopem)",
+      price: "od 6 200 Kč",
+    },
+  ],
+} as const;
+
 /** Patient reviews, transcribed from the pasteboard in sanavera_web.xd. */
 export const reviews = [
   {
