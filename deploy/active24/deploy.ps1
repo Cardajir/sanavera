@@ -26,7 +26,8 @@
 param(
   [string] $FtpHost = "sanavera.cz",
   [string] $User = "info.sanavera.cz",
-  [string] $RemoteDir = "/www/",
+  # The account's tree is /<domain>/web/, not the usual /www/.
+  [string] $RemoteDir = "/sanavera.cz/web/",
   [switch] $ListOnly,
   [switch] $SkipBuild
 )
@@ -77,9 +78,15 @@ try {
   Write-Host ("Uploading {0} files to {1}{2} ..." -f $files.Count, $FtpHost, $RemoteDir)
 
   $remoteBase = $RemoteDir.TrimEnd("/")
+  # The hosting's placeholder would otherwise sit next to index.html for
+  # ever. The asterisk tells curl to carry on when the file is already gone.
+  $lines += "quote = `"*DELE $remoteBase/index.php`""
   foreach ($file in $files) {
     $relative = $file.FullName.Substring($dist.Length + 1).Replace("\", "/")
-    $lines += "upload-file = `"$($file.FullName)`""
+    # Forward slashes: inside a quoted curl config value a backslash escapes
+    # the next character, so a Windows path would lose all its separators.
+    $local = $file.FullName.Replace("\", "/")
+    $lines += "upload-file = `"$local`""
     $lines += "url = `"ftp://$FtpHost$remoteBase/$relative`""
   }
   [System.IO.File]::WriteAllLines($config, $lines, [System.Text.UTF8Encoding]::new($false))
@@ -89,7 +96,7 @@ try {
   & $curl.Source -K $config
   if ($LASTEXITCODE -ne 0) { throw "Upload failed (curl exit $LASTEXITCODE)." }
 
-  Write-Host "Done. Check https://$FtpHost/ - a stale page means the hosting's placeholder index.php is still there; delete it over FTP."
+  Write-Host "Done. Check https://$FtpHost/"
 }
 finally {
   Remove-Item $config -Force -ErrorAction SilentlyContinue

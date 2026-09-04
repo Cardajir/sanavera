@@ -14,7 +14,7 @@ V administraci hostingu (Webhosting → FTP účty) zjistit:
 | FTP server       | secret `ACTIVE24_FTP_HOST`             | hostname bez `ftp://` (`sanavera.cz`)      |
 | FTP uživatel     | secret `ACTIVE24_FTP_USER`             | `info.sanavera.cz`                         |
 | FTP heslo        | secret `ACTIVE24_FTP_PASSWORD`         |                                            |
-| kořen webu       | variable `ACTIVE24_FTP_DIR`            | výchozí `/www/`; podle administrace        |
+| kořen webu       | variable `ACTIVE24_FTP_DIR`            | `/sanavera.cz/web/` (strom účtu je `/<doména>/web/`) |
 | SFTP port        | variable `ACTIVE24_FTP_PORT`           | výchozí `22`                               |
 
 Nahrává se přes **SFTP** (`lftp mirror --reverse --delete`): kořen webu na
@@ -67,10 +67,9 @@ Skript sestaví web (`npm run build:active24`), zeptá se na FTP heslo a nahraje
 být v `.env` vyplněné EmailJS proměnné, jinak se formuláře nasadí bez
 odesílání (build to hlásí varováním).
 
-Přepínače: `-ListOnly` vypíše kořen FTP účtu (ověření, že web patří do
-`/www/`), `-RemoteDir /jina/cesta/` změní cíl, `-SkipBuild` nahraje poslední
-build znovu.
+Přepínače: `-ListOnly` vypíše kořen FTP účtu, `-RemoteDir /jina/cesta/` změní
+cíl (výchozí `/sanavera.cz/web/`), `-SkipBuild` nahraje poslední build znovu.
 
-Skript soubory jen přidává a přepisuje; zbylé soubory hostingu (placeholder)
-smaž ručně — `.htaccess` sice nastavuje `DirectoryIndex index.html`, ale
-pořádek je pořádek.
+Skript soubory přidává a přepisuje a smaže placeholder `index.php` hostingu;
+soubory, které z buildu zmizely, na serveru zůstávají — občas stojí za to
+kořen webu vyčistit ručně.
