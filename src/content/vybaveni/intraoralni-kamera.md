@@ -8,11 +8,11 @@ images:
   - intraoral-camera
 ---
 
-Pro vás jako pacienta to znamená okamžitý přehled – stav svých zubů, dásní či skrytých kazů uvidíte společně s lékařem na obrazovce v reálném čase.
+Kameru používáme při každém ošetření. Hned po zákroku si tak společně můžete prohlédnout snímky celého průběhu ošetření a na přání vám je zašleme e-mailem.
 
-**Perfektní přehled v HD kvalitě:** sledujte průběh i výsledky ošetření přímo na obrazovce v reálném čase.
+**Perfektní přehled v HD kvalitě:** průběh i výsledek ošetření uvidíte na detailních snímcích hned po zákroku.
 
-**Snadné odhalení skrytých problémů:** kamera zachytí i mikroskopické praskliny, začínající kazy nebo netěsné výplně.
+**Snadné odhalení skrytých problémů:** kamera zachytí i drobné praskliny, začínající kazy nebo netěsné výplně.
 
 **Maximální komfort bez tlaku:** štíhlý a ergonomický design kamery nezpůsobuje nepříjemné pocity v ústech.
 

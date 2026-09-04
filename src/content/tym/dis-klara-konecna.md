@@ -1,11 +1,17 @@
 ---
-title: DiS. Klára Konečná
-navLabel: DiS. Klára Konečná
+title: Klára Toncerová
+navLabel: Klára Toncerová
 order: 2
-lead: Stomatologie pro mě není jen a pouze „opravování“ zubů. Jde mi o to pochopit příčinu každého problémů a navrhnout dlouhodobé řešení. Každého pacienta posuzuji komplexně a léčebný plán vytvářím tak, aby jednotlivé kroky dávaly smysl jako celek. Navrhuji více variant léčby, takže se můžete rozhodnout pro variantu, která je pro vás nejlepší - jak finančně, tak časově. Péče probíhá s velkým důrazem na bezbolestný průběh ošetření a váš maximální komfort.
-description: Stomatologie pro mě není jen a pouze „opravování“ zubů.
+lead: Práce zubní sestřičky pro mě není jen zaměstnání, ale práce, která mě baví a dává mi smysl. K tomuto oboru mě přivedl zájem o zdravotnictví, práce s lidmi a především možnost být součástí týmu, který pomáhá pacientům pečovat o jejich zdraví a úsměv.
+description: Práce zubní sestřičky pro mě není jen zaměstnání, ale práce, která mě baví a dává mi smysl.
 images: 
   - klara
 ---
 
-Pokud je pro dosažení nejlepšího výsledku potřeba péče, kterou sama neposkytuji (například chirurgické zákroky, ortodoncie nebo implantologie), doporučím vám vhodného specialistu a koordinuji léčbu tak, aby jednotlivé kroky správně navazovaly.
+Na své práci mám nejraději její rozmanitost. Každý den přináší něco nového a vyžaduje nejen pečlivost a zodpovědnost, ale také empatii, trpělivost a schopnost zachovat klid i v náročnějších situacích.
+
+Věřím, že důležitou součástí dobře fungující ordinace je vzájemná spolupráce a respekt mezi lékařem a sestrou. Když si tým dokáže dobře rozumět, komunikovat a vzájemně se podporovat, odráží se to nejen na kvalitě práce, ale také na celkové atmosféře v ordinaci. A právě tu pacient velmi dobře vnímá.
+
+Snažím se proto, aby se pacienti cítili příjemně, bezpečně a v dobrých rukou. Věřím, že milý přístup, úsměv a klidná atmosféra dokážou odbourat alespoň část obav, které si někteří pacienti k zubaři přinášejí.
+
+Mým cílem je být spolehlivou součástí týmu, na kterou se může lékař i pacient vždy spolehnout.
