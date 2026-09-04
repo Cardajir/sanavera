@@ -47,6 +47,13 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp
+          # Debug handshake first: lftp's own error is only "max-retries
+          # exceeded", the protocol trace says why (530 login, TLS, PASV).
+          lftp -d -u "$FTP_USER","$FTP_PASSWORD" "ftp://$FTP_HOST" -e "
+            set ftp:ssl-force yes; set ftp:ssl-protect-data yes;
+            set ssl:verify-certificate yes; set ssl:check-hostname no;
+            set net:max-retries 1; set net:timeout 20;
+            ls $FTP_DIR; bye" 2>&1 | grep -vi "PASS " | tail -60 || true
           lftp -u "$FTP_USER","$FTP_PASSWORD" "ftp://$FTP_HOST" -e "
             set ftp:ssl-force yes;
             set ftp:ssl-protect-data yes;
