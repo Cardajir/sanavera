@@ -26,8 +26,8 @@
 param(
   [string] $FtpHost = "sanavera.cz",
   [string] $User = "info.sanavera.cz",
-  # The account's tree is /<domain>/web/, not the usual /www/.
-  [string] $RemoteDir = "/sanavera.cz/web/",
+  # The FTP account logs straight into the web root; nothing sits above it.
+  [string] $RemoteDir = "/",
   [switch] $ListOnly,
   [switch] $SkipBuild
 )

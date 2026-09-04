@@ -43,7 +43,7 @@ jobs:
           FTP_HOST: ${{ secrets.ACTIVE24_FTP_HOST }}
           FTP_USER: ${{ secrets.ACTIVE24_FTP_USER }}
           FTP_PASSWORD: ${{ secrets.ACTIVE24_FTP_PASSWORD }}
-          FTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/www/' }}
+          FTP_DIR: ${{ vars.ACTIVE24_FTP_DIR || '/' }}
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq lftp

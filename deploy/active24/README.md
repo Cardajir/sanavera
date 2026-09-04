@@ -14,7 +14,7 @@ V administraci hostingu (Webhosting → FTP účty) zjistit:
 | FTP server       | secret `ACTIVE24_FTP_HOST`             | hostname bez `ftp://` (`sanavera.cz`)      |
 | FTP uživatel     | secret `ACTIVE24_FTP_USER`             | `info.sanavera.cz`                         |
 | FTP heslo        | secret `ACTIVE24_FTP_PASSWORD`         |                                            |
-| kořen webu       | variable `ACTIVE24_FTP_DIR`            | `/sanavera.cz/web/` (strom účtu je `/<doména>/web/`) |
+| kořen webu       | variable `ACTIVE24_FTP_DIR`            | `/` — FTP účet se přihlašuje rovnou do kořene webu |
 | SFTP port        | variable `ACTIVE24_FTP_PORT`           | výchozí `22`                               |
 
 Nahrává se přes **SFTP** (`lftp mirror --reverse --delete`): kořen webu na
@@ -68,7 +68,7 @@ být v `.env` vyplněné EmailJS proměnné, jinak se formuláře nasadí bez
 odesílání (build to hlásí varováním).
 
 Přepínače: `-ListOnly` vypíše kořen FTP účtu, `-RemoteDir /jina/cesta/` změní
-cíl (výchozí `/sanavera.cz/web/`), `-SkipBuild` nahraje poslední build znovu.
+cíl (výchozí `/`), `-SkipBuild` nahraje poslední build znovu.
 
 Skript soubory přidává a přepisuje a smaže placeholder `index.php` hostingu;
 soubory, které z buildu zmizely, na serveru zůstávají — občas stojí za to
