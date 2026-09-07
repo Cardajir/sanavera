@@ -13,8 +13,9 @@ export const contact = {
   mapHref:
     "https://www.google.com/maps/search/?api=1&query=park+Petra+Bezru%C4%8De+1767%2C+698+01+Vesel%C3%AD+nad+Moravou",
   hours: [
-    { days: "Po – Pá", time: "7:00 – 17:00" },
-    { days: "So – Ne", time: "Zavřeno" },
+    { days: "Po", time: "12:00 – 18:00" },
+    { days: "Út – Pá", time: "7:30 – 13:30" },
+    { days: "So – Ne", time: "zavřeno" },
   ],
   parking: ["Parkování autem je možné", "Přímo před ordinací"],
   social: {
