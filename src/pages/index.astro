@@ -909,9 +909,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       align-self: flex-start;
     }
 
-    /* Whatever the copy's length, the pill keeps this much air over it. */
+    /* The same 2.5rem the service and value cards keep between their copy
+       and the pill (there it is split with the card's own gap; this body has
+       none). On a phone the body has no minimum height, so this alone holds
+       the pill off the text; on wide screens the pill's auto margin adds
+       whatever is left. */
     .tech_card_body > .text:last-of-type {
-      margin-block-end: var(--space-2);
+      margin-block-end: 2.5rem;
     }
 
     @media (hover: hover) {
