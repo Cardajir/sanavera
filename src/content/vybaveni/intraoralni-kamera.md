@@ -2,13 +2,13 @@
 title: Intraorální kamera MyRay C-U2
 navLabel: Intraorální kamera
 order: 2
-lead: Intraorální kamera MyRay C-U2 představuje špičku v oblasti přímého zobrazování ústní dutiny. Díky HD rozlišení, automatickému zaostřování (Autofocus) a integrovanému LED osvětlení nám umožňuje do detailu prozkoumat i ty nejhůře přístupné části chrupu.
+lead: Intraorální kamera MyRay C-U2 představuje špičku v oblasti přímého zobrazování ústní dutiny. Díky HD rozlišení, automatickému zaostřování a integrovanému LED osvětlení nám umožňuje do detailu prozkoumat i ty nejhůře přístupné části chrupu.
 description: Intraorální kamera MyRay C-U2 představuje špičku v oblasti přímého zobrazování ústní dutiny.
 images: 
   - intraoral-camera
 ---
 
-Kameru používáme při každém ošetření. Hned po zákroku si tak společně můžete prohlédnout snímky celého průběhu ošetření a na přání vám je zašleme e-mailem.
+Kameru používáme při každém ošetření. Hned po zákroku si tak můžete prohlédnout snímky celého průběhu ošetření a na přání vám je zašleme e-mailem.
 
 **Perfektní přehled v HD kvalitě:** průběh i výsledek ošetření uvidíte na detailních snímcích hned po zákroku.
 

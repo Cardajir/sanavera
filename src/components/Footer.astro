@@ -299,9 +299,12 @@ const townMobile = await getImage({ src: image("veseli-mobile"), width: 1100 });
       /* Same as .doctor: the town photograph eases down from scale 1.06. */
       overflow: clip;
 
-      /* The design's own 1313 : 519 split rather than a rounded 5 : 2. */
+      /* The design split this 1313 : 519; the client asked for more house
+         and less map, so the photograph takes 42% of the row instead of 28%.
+         The row stays 672px tall — the map's ratio below follows the new
+         track — so the section's height does not move. */
       @media (width >= 48rem) {
-        grid-template-columns: minmax(0, 1313fr) minmax(0, 519fr);
+        grid-template-columns: minmax(0, 1060fr) minmax(0, 772fr);
       }
     }
 
@@ -320,8 +323,12 @@ const townMobile = await getImage({ src: image("veseli-mobile"), width: 1100 });
       border-radius: var(--radius-main);
       overflow: clip;
 
+      /* Same height as the map beside it: both tracks resolve to 672px at
+         the design width when each carries its own share of that ratio.
+         Left to the photograph's own proportions the frame ran taller than
+         the map and the row broke. */
       @media (width >= 48rem) {
-        aspect-ratio: auto;
+        aspect-ratio: 772 / 672;
       }
     }
 
@@ -345,7 +352,7 @@ const townMobile = await getImage({ src: image("veseli-mobile"), width: 1100 });
       aspect-ratio: 368 / 520;
 
       @media (width >= 48rem) {
-        aspect-ratio: 1313 / 672;
+        aspect-ratio: 1060 / 672;
       }
       border-radius: var(--radius-main);
       overflow: clip;

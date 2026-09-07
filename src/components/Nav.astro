@@ -55,8 +55,13 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       /* The mobile board keeps the handset in the bar beside booking, so it
          lives here rather than inside the panel that the burger opens. */
     }
+    {
+      /* Two renderings of the same thing: a tel: link for the phone, where
+         a tap dials, and plain text for the desktop bar, where a click did
+         nothing and the hover promised otherwise. CSS shows one at a time. */
+    }
     <a
-      class="nav_phone"
+      class="nav_phone nav_phone--link"
       href={contact.phoneHref}
       aria-label={`Zavolat na ${contact.phone}`}
     >
@@ -65,6 +70,12 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
         <Icon src={phoneIcon} variant="small" />
       </span>
     </a>
+    <span class="nav_phone nav_phone--static">
+      <span class="nav_phone_number">{contact.phone}</span>
+      <span class="nav_phone_icon" aria-hidden="true">
+        <Icon src={phoneIcon} variant="small" />
+      </span>
+    </span>
 
     {
       LANGUAGE_SWITCH && (
@@ -438,6 +449,20 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       white-space: nowrap;
     }
 
+    /* The link below the desktop breakpoint, the static copy from it on. */
+    .nav_phone--static {
+      display: none;
+    }
+
+    @media (width >= 64rem) {
+      .nav_phone--link {
+        display: none;
+      }
+      .nav_phone--static {
+        display: inline-flex;
+      }
+    }
+
     /* 39.9 x 39.9 with a 9px radius in the design. */
     .nav_phone_icon {
       display: inline-flex;
@@ -454,8 +479,8 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
     }
 
     @media (hover: hover) {
-      .nav_phone:hover .nav_phone_icon,
-      .nav_phone:focus-visible .nav_phone_icon {
+      .nav_phone--link:hover .nav_phone_icon,
+      .nav_phone--link:focus-visible .nav_phone_icon {
         background-color: var(--text);
         color: var(--cream);
       }

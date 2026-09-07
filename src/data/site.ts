@@ -110,7 +110,7 @@ export const comfortItems = [
   {
     heading: "VR brýle, Netflix & chill",
     product: "XREAL One Pro-M AR",
-    text: "Podívejte se na svou oblíbenou show nebo film přímo na zubařském kresle. Popcorn u nás ale nečekejte :)",
+    text: "Podívejte se na svou oblíbenou show nebo film přímo na zubařském křesle. Popcorn u nás ale nečekejte :)",
     image: "xreal-glasses",
   },
   {
@@ -122,7 +122,7 @@ export const comfortItems = [
   {
     heading: "Pohodlné polohovací křeslo",
     product: "Dentsply Sirona INTEGO PRO",
-    text: "Díky ergonomickému tvarování a prémiovému polstrování dopřeje maximální pohodlí i během delších zákroků.",
+    text: "Díky ergonomickému tvarování a prémiovému polstrování dopřeje maximální pohodlí i během delších zákroků. A pokud by ani toto nestačilo, máme pro vás nachystaný polštářek :)",
     image: "dental-chair-intego",
   },
 ] as const;

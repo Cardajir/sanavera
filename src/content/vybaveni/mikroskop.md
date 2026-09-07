@@ -16,4 +16,4 @@ Díky několikanásobnému zvětšení, plynulému zaostřování a vestavěném
 
 **Dokonalé osvětlení:** výkonný systém duálních LED světel zajišťuje perfektní viditelnost.
 
-**Pohodlí během zákroku:** plynulé zaostřování a ergonomický design zpříjemňují i delší ošetření.
+**Pohodlí během zákroku:** Plynulé zaostřování a ergonomický design zkracují dobu ošetření.
