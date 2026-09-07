@@ -1,10 +1,10 @@
 /** Practice details, navigation and homepage content, transcribed from sanavera_web.xd. */
 
 export const contact = {
-  phone: "(+420) 746 765 948",
-  phoneHref: "tel:+420746765948",
-  email: "ahoj@sanavera.cz",
-  emailHref: "mailto:ahoj@sanavera.cz",
+  phone: "(+420) 775 803 702",
+  phoneHref: "tel:+420775803702",
+  email: "info@sanavera.cz",
+  emailHref: "mailto:info@sanavera.cz",
   clinic: {
     name: "Sanavera, s.r.o.",
     street: "park Petra Bezruče 1767",
@@ -104,6 +104,36 @@ export const comfort = {
   heading:
     "Maximální komfort pro nás není jen prázdná fráze. Máme hned několik důvodů, proč se k nám klienti doopravdy těší.",
   microscopeLabel: "VYUŽÍVÁME ŠPIČKOVÝ MIKROSKOP CJ-Optik Flexion Twin Lite",
+} as const;
+
+/**
+ * The three technology cards that open the Technologie section, each leading
+ * into its equipment panel. Added on the 07092026 board.
+ */
+export const technology = {
+  eyebrow: "TECHNOLOGIE",
+  heading:
+    "Špičkové technologie posouvají kvalitu, rychlost a přesnost péče o vaše zuby na zcela jinou úroveň.",
+  items: [
+    {
+      product: "Mikroskop CJ-Optik Flexion Twin Lite",
+      text: "Využíváme k dosažení maximální přesnosti při ošetření těch nejhlubších kořenových kanálků.",
+      image: "tech-microscope",
+      opens: "vybaveni:mikroskop",
+    },
+    {
+      product: "3D skener Dentsply Sirona Primescan 2",
+      text: "Zapomeňte na otiskovací hmoty. Během skenování vidíte detailní barevný 3D model svých zubů přímo na obrazovce.",
+      image: "tech-scanner",
+      opens: "vybaveni:3d-skener",
+    },
+    {
+      product: "Intraorální kamera MyRay C-U2",
+      text: "Představuje špičku v oblasti přímého zobrazování ústní dutiny. Umožňuje do detailu prozkoumat i ty nejhůře přístupné části chrupu.",
+      image: "tech-camera",
+      opens: "vybaveni:intraoralni-kamera",
+    },
+  ],
 } as const;
 
 /** The comfort-technology carousel on the homepage. */

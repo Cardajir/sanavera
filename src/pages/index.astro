@@ -26,6 +26,7 @@ import {
   doctor,
   comfort,
   comfortItems,
+  technology,
   services,
   pricing,
   reviews,
@@ -191,11 +192,40 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
   {/* ======================================================= TECHNOLOGIE */}
   <Section paddingTop="medium" paddingBottom="7" gap="large" id="technologie">
     <div class="hero_head_text">
-      <SectionLabel>{comfort.eyebrow}</SectionLabel>
+      <SectionLabel>{technology.eyebrow}</SectionLabel>
       <Heading tag="h2" variant="display">
-        {comfort.heading}
+        {technology.heading}
       </Heading>
     </div>
+
+    {/* Three photo cards, each opening its equipment panel. */}
+    <ul class="tech">
+      {
+        technology.items.map((item) => (
+          <li class="tech_card">
+            <Img
+              src={image(item.image)}
+              alt={item.product}
+              variant="constrained"
+              width={700}
+              class="tech_card_photo"
+            />
+            <div class="tech_card_body">
+              <p class="tech_card_product">{item.product}</p>
+              <Paragraph>{item.text}</Paragraph>
+              <PillButton opens={item.opens} class="tech_card_link">
+                To mě zajímá
+              </PillButton>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    {/* The comfort headline stands on its own — no eyebrow — on the board. */}
+    <Heading tag="h2" variant="display" class="comfort_heading">
+      {comfort.heading}
+    </Heading>
 
     <Slider label="Vybavení pro váš komfort" itemWidth="32.375rem">
       {
@@ -235,19 +265,6 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         ))
       }
     </Slider>
-
-    <div class="microscope">
-      <Img
-        src={image("microscope-room")}
-        alt="Ošetření pod chirurgickým mikroskopem"
-        variant="full-width"
-        class="microscope_photo"
-      />
-      <div class="microscope_card">
-        <p class="microscope_label">{comfort.microscopeLabel}</p>
-        <PillButton opens="vybaveni:mikroskop">To mě zajímá</PillButton>
-      </div>
-    </div>
   </Section>
 
   {/* ============================================================ SLUŽBY */}
@@ -832,12 +849,90 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     /* Centred on the map, sitting on its point like a real marker. */
     /* ------------------------------------------------------ technologie */
 
-    /* The section gap is one value for all three children. It suits the step
-       down to the microscope; the design draws the head text far closer to
-       the slider than that. */
+    /* Three photo cards on the inner column, laid out like the service
+       cards: 688 x 707 photograph over a 688 x 359 white body, both at the
+       20px corner, with the design's 16px gutter between cards. */
+    .tech {
+      align-self: stretch;
+      display: grid;
+      gap: var(--site-gutter);
+      grid-template-columns: 1fr;
+      margin: 0;
+      margin-inline: var(--narrow-inset);
+      /* 186 design px from the heading's last baseline to the cards — less
+         than the section gap, so the grid pulls back up. */
+      margin-block-start: -3.5625rem;
+      padding: 0;
+      list-style: none;
+
+      @media (width >= 40rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (width >= 64rem) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .tech_card {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--light-100);
+      border-radius: var(--radius-small);
+      overflow: clip;
+      transition: background-color 250ms;
+    }
+
+    .tech_card_photo {
+      width: 100%;
+      aspect-ratio: 688 / 707;
+      object-fit: cover;
+    }
+
+    /* 37 / 45 / 40 design px of inset; the body is 359 tall at the design
+       width, and the button sits on its floor whatever the copy's length. */
+    .tech_card_body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      /* The label's own line box already holds the design's 44px from its
+         top to the copy's. */
+      gap: 0;
+      padding: 1.75rem var(--card-padding) 1.875rem;
+
+      @media (width >= 64rem) {
+        min-height: 16.875rem;
+      }
+    }
+
+    .tech_card_link {
+      margin-top: auto;
+      align-self: flex-start;
+    }
+
+    /* Whatever the copy's length, the pill keeps this much air over it. */
+    .tech_card_body > .text:last-of-type {
+      margin-block-end: var(--space-2);
+    }
+
+    @media (hover: hover) {
+      .tech_card:has([data-modal-open]):hover {
+        background-color: var(--brand-500);
+        background-image: var(--brand-wash);
+      }
+    }
+
+    /* Same measure as the section headings above it (1529 design px). Its
+       cap sits 223 design px under the cards and its last baseline 169 over
+       the slider — both tighter than the section's gap, so the heading and
+       the slider pull back by the difference. */
+    .comfort_heading {
+      max-width: clamp(20.75rem, 7.576rem + 53.635vw, 71.9375rem);
+      margin-block: -1.6875rem 0;
+    }
+
     #technologie .slider {
       @media (width >= 48rem) {
-        margin-block-start: -3.0625rem;
+        margin-block-start: -4.375rem;
       }
     }
 
@@ -909,10 +1004,13 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     }
 
     /* The model name, in the label weight but keeping its own casing. */
-    .comfort_card_product {
+    .comfort_card_product,
+    .tech_card_product {
       font-size: var(--text-small);
       font-weight: var(--primary-bold);
       letter-spacing: var(--letter-spacing-label);
+      /* Product names read as labels: SONY NOISE CANCELLING WH-1000XM6. */
+      text-transform: uppercase;
     }
 
     /* The photo slide is wider than a card, as in the design. */
@@ -941,79 +1039,6 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    /* 1843 x 1028 at a 15px corner in the design — the smaller of the two
-       radii, with the card on top carrying the larger. */
-    .microscope {
-      position: relative;
-      width: 100%;
-      /* Square on a phone: the wide crop leaves the label card filling most
-         of the frame, and there is room for a taller photograph. */
-      aspect-ratio: 1 / 1;
-      border-radius: var(--radius-small);
-      overflow: clip;
-
-      /* 247px under the comfort cards in the design. The slider box carries
-         its own trailing padding on top of the section gap, so the photograph
-         is pulled back up to land on the design's figure. */
-      @media (width >= 48rem) {
-        margin-block-start: -2.25rem;
-        aspect-ratio: auto;
-      }
-    }
-
-    .microscope_photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-
-      /* 1843 x 1028 in the design, once the block is no longer ratio-bound. */
-      @media (width >= 48rem) {
-        aspect-ratio: 1843 / 1028;
-      }
-    }
-
-    /* 550 x 92 in the design: the label ranged left, the pill beside it,
-       19px of inset all round bar a wider 34px lead. */
-    .microscope_card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space-3);
-      /* Over the photograph at every width. 39px in from its left edge and
-         43px up from its foot at the design width, tapering to 14 on a phone. */
-      position: absolute;
-      inset-block-end: clamp(0.875rem, 0.4086rem + 1.8992vw, 2.6875rem);
-      inset-inline-start: clamp(0.875rem, 0.4731rem + 1.6372vw, 2.4375rem);
-      inset-inline-end: clamp(0.875rem, 0.4731rem + 1.6372vw, 2.4375rem);
-      /* 550px in the design; narrower screens are bounded by the insets. */
-      max-width: 34.375rem;
-      margin: 0;
-      /* Even on all four sides: the design's wider lead read as lopsided
-         against the 19px above and below. */
-      padding: 1.1875rem;
-      background-color: var(--light-100);
-      border-radius: var(--radius-main);
-
-      @media (width >= 48rem) {
-        flex-direction: row;
-        align-items: center;
-        /* The pill sits on the padding edge, the same 19px the label keeps on
-           the left, rather than trailing the label. */
-        justify-content: space-between;
-        gap: 1.4375rem;
-      }
-    }
-
-    .microscope_label {
-      @media (width >= 48rem) {
-        width: 17.1875rem;
-      }
-      font-size: var(--text-small);
-      font-weight: var(--primary-bold);
-      letter-spacing: var(--letter-spacing-label);
-      text-transform: uppercase;
     }
 
     /* ---------------------------------------------------------- recenze */

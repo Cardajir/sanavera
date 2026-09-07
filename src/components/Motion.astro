@@ -35,13 +35,14 @@
     "main :is(.section_label, .heading, .booking_intro)",
   ).filter(
     (el) =>
-      !el.closest("dialog, [data-slider], .values, .services") &&
+      !el.closest("dialog, [data-slider], .values, .services, .tech") &&
       !(heroSection && heroSection.contains(el)),
   );
 
   const groups = [
     ".values",
     ".services",
+    ".tech",
     ".pricing_list",
     "[data-slider-track]",
     ".footer_grid",

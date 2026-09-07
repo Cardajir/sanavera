@@ -100,7 +100,7 @@
    motion, and removed by a failsafe timeout if the script never arrives. */
 .motion .round_cta,
 .motion main :is(.section_label, .heading, .booking_intro),
-.motion :is(.values, .services, .pricing_list, [data-slider-track], .footer_grid, .footer_place) > *,
+.motion :is(.values, .services, .tech, .pricing_list, [data-slider-track], .footer_grid, .footer_place) > *,
 .motion :is(.doctor, .microscope, .booking--panel) {
   opacity: 0;
 }
