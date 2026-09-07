@@ -77,7 +77,11 @@ const { label, itemWidth = "24rem", class: className, ...rest } = Astro.props;
       padding: 0 var(--site-margin) var(--space-2) var(--narrow-lead);
       scroll-padding-inline-start: var(--narrow-lead);
       list-style: none;
-      overflow-x: auto;
+      /* Horizontal only. `overflow-x: auto` alone makes the other axis auto
+         too, and while the reveal still holds the slides 44px down the track
+         is 32px scrollable vertically — so a wheel over a card scrolled the
+         card, not the page, until the animation had finished. */
+      overflow: auto hidden;
       overscroll-behavior-x: contain;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
