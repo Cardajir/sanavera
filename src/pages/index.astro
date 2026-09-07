@@ -122,7 +122,16 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
             <blockquote class="review_card_quote">
               <p>{review.text}</p>
             </blockquote>
-            <p class="review_card_source">{reviewSource}</p>
+            <p class="review_card_source">
+              {reviewSource.label}{" "}
+              <a
+                href={reviewSource.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {reviewSource.linkText}
+              </a>
+            </p>
           </li>
         ))
       }
@@ -1018,9 +1027,19 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
       /* The mobile board draws these white; the desktop board sand. */
       background-color: var(--light-100);
       border-radius: var(--radius-main);
+      transition: background-color 250ms;
 
       @media (width >= 64rem) {
         background-color: var(--sand);
+      }
+    }
+
+    /* The source link is the card's one destination, so the whole card
+       lights up in the peach wash the service cards use. */
+    @media (hover: hover) {
+      .review_card:hover {
+        background-color: var(--brand-500);
+        background-image: var(--brand-wash);
       }
     }
 
@@ -1049,6 +1068,15 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     .review_card_source {
       font-size: var(--text-main);
       font-weight: var(--primary-bold);
+
+      /* Underlined at rest — the card gives no other hint that it leads
+         anywhere. Opens the profile in a new tab. */
+      & a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: from-font;
+        text-underline-offset: 0.15em;
+      }
     }
 
     /* ----------------------------------------------------------- služby */

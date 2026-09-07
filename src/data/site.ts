@@ -21,7 +21,7 @@ export const contact = {
     instagram: "https://www.instagram.com/sanavera.cz/",
     facebook: "https://www.facebook.com/sanavera.cz/",
     handle: "@sanavera.cz",
-    znamylekar: "https://www.znamylekar.cz/",
+    znamylekar: "https://www.znamylekar.cz/profil/veronika-netopilik-kopecna",
   },
   operator: {
     name: "Sanavera s.r.o.",
@@ -195,7 +195,12 @@ export const reviews = [
   },
 ] as const;
 
-export const reviewSource = "Zdroj recenze: znamylekar.cz";
+/** The source line under every review; the link opens the doctor's profile. */
+export const reviewSource = {
+  label: "Zdroj recenze:",
+  linkText: "znamylekar.cz",
+  href: "https://www.znamylekar.cz/profil/veronika-netopilik-kopecna",
+} as const;
 
 export const booking = {
   heading: "Přijímáme nové pacienty!",
