@@ -107,6 +107,27 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     </div>
   </Section>
 
+  {/* ========================================================== KDO JSME */}
+  <Section paddingTop="small" paddingBottom="small" id="kdo-jsme">
+    <div class="doctor">
+      <Img
+        src={image("doctor")}
+        alt={doctor.name}
+        variant="constrained"
+        width={900}
+        class="doctor_photo"
+      />
+      <div class="doctor_card">
+        <Heading tag="h2" variant="h2">{doctor.heading}</Heading>
+        {doctor.bio.map((para) => <Paragraph>{para}</Paragraph>)}
+        <p class="doctor_name">{doctor.name}</p>
+        <PillButton opens="tym:mddr-veronika-netopilik-kopecna"
+          >{doctor.cta}</PillButton
+        >
+      </div>
+    </div>
+  </Section>
+
   {/* =========================================================== RECENZE */}
   <Section paddingTop="small" paddingBottom="8">
     <Slider label="Recenze pacientů" itemWidth="32.375rem">
@@ -136,27 +157,6 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
         ))
       }
     </Slider>
-  </Section>
-
-  {/* ========================================================== KDO JSME */}
-  <Section paddingTop="small" paddingBottom="small" id="kdo-jsme">
-    <div class="doctor">
-      <Img
-        src={image("doctor")}
-        alt={doctor.name}
-        variant="constrained"
-        width={900}
-        class="doctor_photo"
-      />
-      <div class="doctor_card">
-        <Heading tag="h2" variant="h2">{doctor.heading}</Heading>
-        {doctor.bio.map((para) => <Paragraph>{para}</Paragraph>)}
-        <p class="doctor_name">{doctor.name}</p>
-        <PillButton opens="tym:mddr-veronika-netopilik-kopecna"
-          >{doctor.cta}</PillButton
-        >
-      </div>
-    </div>
   </Section>
 
   <Section paddingTop="small" paddingBottom="medium">

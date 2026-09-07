@@ -36,6 +36,7 @@ export const mainNav = [
   { label: "Kdo jsme", href: "#kdo-jsme" },
   { label: "Technologie", href: "#technologie" },
   { label: "Služby", href: "#sluzby" },
+  { label: "Ceník", href: "#cenik" },
   { label: "Kontakt", href: "#kontakt" },
 ] as const;
 
