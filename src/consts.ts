@@ -1,6 +1,13 @@
 export const SITE_NAME = "Sanavera";
+/** The home page's full title tag, as the client specified it. */
+export const SITE_TITLE =
+  "Zubař Veselí nad Moravou | MDDr. Veronika Netopilík Kopečná – Sanavera";
+/** What every other page's title ends with: `{page} | SITE_TITLE_SUFFIX`. */
+export const SITE_TITLE_SUFFIX = "Sanavera – zubař Veselí nad Moravou";
 export const SITE_DESCRIPTION =
-  "Moderní stomatologie ve Veselí nad Moravou. Špičková péče o vaše zuby v maximálním pohodlí, bez bolesti a bez stresu.";
+  "Moderní zubní ordinace ve Veselí n. Moravou. Vedoucí lékařka MDDr. Veronika Netopilík Kopečná. Kompletní péče i prevence. Přijímáme nové pacienty.";
+export const SITE_KEYWORDS =
+  "zubař Veselí nad Moravou, zubní ordinace Veselí nad Moravou, MUDr. Veronika Netopilík Kopečná, stomatologie Veselí, Sanavera, zubní péče, prevence";
 export const SITE_URL = "https://sanavera.cz";
 export const SITE_LOCALE = "cs-CZ";
 export const NOINDEX_ROUTES: string[] = ["/404"];

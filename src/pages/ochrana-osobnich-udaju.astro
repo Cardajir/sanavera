@@ -4,19 +4,109 @@ import { contact } from "@/data/site.ts";
 ---
 
 <LegalLayout
-  title="Informace o ochranně osobních údajů"
-  description="Informace o zpracování osobních údajů pacientů Sanavera s.r.o."
+  title="Informace o ochraně osobních údajů"
+  description="Jak zubní ordinace Sanavera ve Veselí nad Moravou (MDDr. Veronika Netopilík Kopečná) zpracovává osobní údaje pacientů a návštěvníků webu."
 >
   <p>
     <strong>Správce osobních údajů:</strong><br />
     {contact.operator.name}, {contact.operator.lines.join(" ")}<br />
     {contact.operator.ico}<br />
-    Kontaktní e-mail: <a href={contact.emailHref}>{contact.email}</a>
+    Místo poskytování péče: {contact.clinic.street}, {contact.clinic.city}<br />
+    Kontaktní e-mail: <a href={contact.emailHref}>{contact.email}</a><br />
+    Telefon: <a href={contact.phoneHref}>{contact.phone}</a>
   </p>
 
   <p>
-    Úplné znění informace o zpracování osobních údajů podle nařízení GDPR doplní
-    provozovatel. Text musí schválit odpovědná osoba – nelze jej generovat
-    automaticky.
+    Tato informace popisuje, jaké osobní údaje zpracováváme, proč a jak dlouho,
+    a jaká práva vám v souvislosti s tím náleží podle nařízení Evropského
+    parlamentu a Rady (EU) 2016/679 (GDPR) a zákona č. 110/2019 Sb., o
+    zpracování osobních údajů.
+  </p>
+
+  <h2>Jaké údaje zpracováváme a proč</h2>
+
+  <p>
+    <strong>Poskytování zdravotní péče.</strong> Jako poskytovatel
+    zdravotních služeb vedeme o každém pacientovi zdravotnickou dokumentaci:
+    identifikační a kontaktní údaje (jméno, datum narození, rodné číslo,
+    adresa, telefon, e-mail), údaje o zdravotním stavu, anamnézu, záznamy o
+    provedených výkonech, rentgenové a fotografické snímky a údaje o úhradách.
+    Právním základem je plnění právní povinnosti (zákon č. 372/2011 Sb., o
+    zdravotních službách, a vyhláška č. 98/2012 Sb., o zdravotnické
+    dokumentaci) a poskytování zdravotní péče podle čl. 9 odst. 2 písm. h)
+    GDPR. Bez těchto údajů vám péči poskytnout nemůžeme.
+  </p>
+
+  <p>
+    <strong>Objednání a komunikace.</strong> Když vyplníte registrační
+    formulář na tomto webu, zpracujeme jméno, příjmení, e-mail, telefon a
+    text vašeho požadavku, abychom vás mohli kontaktovat a domluvit termín.
+    Právním základem je plnění smlouvy, resp. jednání o ní (čl. 6 odst. 1
+    písm. b) GDPR). Stejně nakládáme s údaji, které nám sdělíte telefonicky
+    nebo e-mailem.
+  </p>
+
+  <p>
+    <strong>Účetnictví a daně.</strong> Údaje na dokladech o úhradě
+    uchováváme po dobu stanovenou účetními a daňovými předpisy (plnění právní
+    povinnosti, čl. 6 odst. 1 písm. c) GDPR).
+  </p>
+
+  <p>
+    <strong>Web.</strong> Při návštěvě webu zpracovává hosting technické údaje
+    nutné k jeho zobrazení (IP adresa, typ prohlížeče) v běžných serverových
+    záznamech. Web nepoužívá analytické ani marketingové cookies; podrobnosti
+    najdete v <a href="/cookies">Informaci o cookies</a>.
+  </p>
+
+  <h2>Jak dlouho údaje uchováváme</h2>
+
+  <ul>
+    <li>
+      zdravotnickou dokumentaci po dobu stanovenou vyhláškou č. 98/2012 Sb.
+      (u praktického zubního lékaře zpravidla 5 let od posledního poskytnutí
+      zdravotní služby, u některých záznamů déle);
+    </li>
+    <li>
+      údaje z registračního formuláře do vyřízení požadavku; pokud se stanete
+      pacientem, stávají se součástí dokumentace, jinak je do 6 měsíců smažeme;
+    </li>
+    <li>účetní doklady po dobu vyžadovanou zákonem (zpravidla 10 let).</li>
+  </ul>
+
+  <h2>Komu údaje předáváme</h2>
+
+  <p>
+    Údaje předáváme pouze tam, kde nám to ukládá zákon nebo kde je to nutné k
+    poskytnutí péče: zdravotním pojišťovnám v rozsahu daném předpisy
+    (nejsme jejich smluvním partnerem, předání se týká jen zákonem
+    vyžadovaných hlášení), spolupracujícím specialistům a laboratořím, k nimž
+    vás odesíláme, orgánům veřejné moci na základě zákona a našim
+    zpracovatelům – poskytovateli ambulantního software, účetní a
+    provozovateli e-mailu a hostingu. Formulář na webu odesílá služba
+    EmailJS do naší e-mailové schránky; se všemi zpracovateli máme uzavřenou
+    smlouvu o zpracování. Údaje nepředáváme do zemí mimo Evropský hospodářský
+    prostor, s výjimkou případů, kdy takový přenos zajišťuje zpracovatel na
+    základě standardních smluvních doložek.
+  </p>
+
+  <h2>Vaše práva</h2>
+
+  <p>
+    Máte právo na přístup ke svým údajům a na kopii zdravotnické dokumentace,
+    na opravu nepřesných údajů, na výmaz tam, kde nám zákon neukládá údaje
+    uchovat, na omezení zpracování, na přenositelnost údajů zpracovávaných na
+    základě smlouvy a právo vznést námitku. Právo nahlížet do zdravotnické
+    dokumentace a pořizovat si její kopie upravuje zákon o zdravotních
+    službách. Se svými požadavky se obracejte na
+    <a href={contact.emailHref}>{contact.email}</a>; odpovíme nejpozději do
+    jednoho měsíce. Pokud se domníváte, že vaše údaje zpracováváme v rozporu s
+    předpisy, můžete podat stížnost u Úřadu pro ochranu osobních údajů,
+    Pplk. Sochora 27, 170 00 Praha 7, <a href="https://www.uoou.gov.cz" rel="noopener" target="_blank">www.uoou.gov.cz</a>.
+  </p>
+
+  <p>
+    Tato informace je účinná od 1. 9. 2026. Aktuální znění je vždy k dispozici
+    na této stránce a v ordinaci.
   </p>
 </LegalLayout>

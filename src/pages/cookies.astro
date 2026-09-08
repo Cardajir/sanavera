@@ -1,43 +1,62 @@
 ---
 import LegalLayout from "@/layouts/LegalLayout.astro";
+import { contact } from "@/data/site.ts";
 ---
 
 <LegalLayout
-  title="Informace o Cookies"
-  description="Jaké soubory cookies web sanavera.cz používá."
+  title="Informace o cookies"
+  description="Jaké soubory cookies a služby třetích stran používá web zubní ordinace Sanavera ve Veselí nad Moravou."
 >
   <p>
-    Web používá správce měřicích kódů Google Tag Manager. Jaké konkrétní
-    nástroje jsou přes něj spuštěné a jaké soubory cookies ukládají, závisí na
-    jeho nastavení – aktuální seznam vám na vyžádání poskytne provozovatel.
+    Soubory cookies jsou malé textové soubory, které si web ukládá do vašeho
+    prohlížeče. Web sanavera.cz sám žádné cookies neukládá: nepoužívá
+    analytiku, reklamní ani personalizační nástroje a nevyžaduje přihlášení.
+    Proto nezobrazuje lištu se souhlasem.
   </p>
 
+  <h2>Služby třetích stran</h2>
+
   <p>
-    Písma, obrázky i skripty webu jsou hostovány přímo na tomto webu. Ze třetích
-    stran se načítají dvě služby:
+    Písma, obrázky i skripty webu jsou hostovány přímo na tomto webu. Ze
+    třetích stran se načítají tři služby, které do vašeho prohlížeče mohou
+    uložit vlastní soubory cookies nebo zpracovat vaši IP adresu:
   </p>
 
   <ul>
     <li>
-      <strong>Google Tag Manager</strong> – správce měřicích kódů. Sám o sobě neukládá
-      soubory cookies, ale načítá další nástroje, které je ukládat mohou. Při odeslání
-      registračního formuláře mu předáváme informaci o odeslání včetně vyplněné e-mailové
-      adresy.
+      <strong>Google Tag Manager</strong> – správce měřicích kódů. Sám o sobě
+      cookies neukládá a v současnosti přes něj neběží žádný měřicí nástroj;
+      slouží k jejich případnému budoucímu nasazení. Při odeslání
+      registračního formuláře mu předáváme informaci o odeslání.
     </li>
     <li>
-      <strong>Google Maps</strong> – mapa u kontaktních údajů. Načtením mapy dojde
-      ke spojení se servery společnosti Google, která může do vašeho prohlížeče uložit
-      vlastní soubory cookies.
+      <strong>Google Maps</strong> (přes službu Snazzy Maps) – mapa u
+      kontaktních údajů. Mapa se načte až při vašem prvním pohybu po stránce;
+      načtením dojde ke spojení se servery společností Google a Snazzy Maps,
+      které mohou uložit technické cookies nutné pro provoz mapy.
     </li>
     <li>
-      <strong>EmailJS</strong> – odeslání registračního formuláře. Vyplněné údaje
-      putují přes servery této služby do e-mailové schránky ordinace. Ke spojení dochází
-      až ve chvíli, kdy formulář odešlete.
+      <strong>EmailJS</strong> – odeslání registračního formuláře. Vyplněné
+      údaje putují přes servery této služby do e-mailové schránky ordinace. Ke
+      spojení dochází až ve chvíli, kdy formulář odešlete. Podrobnosti o
+      nakládání s údaji z formuláře najdete v
+      <a href="/ochrana-osobnich-udaju">Informaci o ochraně osobních údajů</a>.
     </li>
   </ul>
 
+  <h2>Jak cookies spravovat</h2>
+
+  <p>
+    Cookies třetích stran můžete kdykoli smazat nebo zablokovat v nastavení
+    svého prohlížeče. Zablokování cookies společnosti Google může omezit
+    zobrazení mapy; ostatní části webu fungují beze změny.
+  </p>
+
   <p>
     Jakmile na web přidáme analytiku nebo jiné nástroje využívající cookies,
-    doplníme sem jejich seznam a účel a web dostane lištu se souhlasem.
+    doplníme sem jejich seznam a účel a web dostane lištu se souhlasem. S
+    dotazy se obracejte na <a href={contact.emailHref}>{contact.email}</a>.
   </p>
+
+  <p>Tato informace je účinná od 1. 9. 2026.</p>
 </LegalLayout>

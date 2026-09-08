@@ -43,11 +43,11 @@ export const mainNav = [
 
 export const legalNav = [
   {
-    label: "Informace o ochranně osobních údajů",
+    label: "Informace o ochraně osobních údajů",
     href: "/ochrana-osobnich-udaju",
   },
   { label: "Provozní řád", href: "/provozni-rad" },
-  { label: "Informace o Cookies", href: "/cookies" },
+  { label: "Informace o cookies", href: "/cookies" },
 ] as const;
 
 export const hero = {

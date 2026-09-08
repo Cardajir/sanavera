@@ -1,5 +1,11 @@
 ---
-import { SITE_NAME, SITE_DESCRIPTION } from "@/consts.ts";
+import {
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_TITLE_SUFFIX,
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+} from "@/consts.ts";
 import { isNoindexRoute } from "@/utils/seo.ts";
 import type { SeoProps } from "@/types.ts";
 
@@ -15,7 +21,9 @@ const {
 
 const isNoindex = noindex ?? isNoindexRoute(Astro.url.pathname);
 
-const pageTitle = title ? `${title} | ${SITE_NAME}` : SITE_NAME;
+/* The home page carries the client's full title; every other page hangs its
+   own name in front of the shorter practice-plus-town suffix. */
+const pageTitle = title ? `${title} | ${SITE_TITLE_SUFFIX}` : SITE_TITLE;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const socialImage = new URL(image, Astro.site);
 ---
@@ -47,6 +55,7 @@ const socialImage = new URL(image, Astro.site);
 
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
+<meta name="keywords" content={SITE_KEYWORDS} />
 <link rel="canonical" href={canonical} />
 {isNoindex && <meta name="robots" content="noindex, nofollow" />}
 

@@ -1,21 +1,106 @@
 ---
 import LegalLayout from "@/layouts/LegalLayout.astro";
-import { contact } from "@/data/site.ts";
+import { contact, doctor } from "@/data/site.ts";
 ---
 
 <LegalLayout
   title="Provozní řád"
-  description="Provozní řád stomatologické ordinace Sanavera ve Veselí nad Moravou."
+  description="Provozní řád zubní ordinace Sanavera ve Veselí nad Moravou: ordinační doba, objednávání, práva a povinnosti pacientů."
 >
   <p>
     <strong>Provozovatel:</strong><br />
-    {contact.operator.name}, {contact.operator.lines.join(" ")}<br />
+    {contact.operator.name}, {contact.operator.lines.join(" ")}, {contact.operator.ico}<br />
     <strong>Místo poskytování péče:</strong><br />
-    {contact.clinic.street}, {contact.clinic.city}
+    {contact.clinic.street}, {contact.clinic.city}<br />
+    <strong>Vedoucí lékařka:</strong> {doctor.name}<br />
+    <strong>Kontakt:</strong>
+    <a href={contact.phoneHref}>{contact.phone}</a>,
+    <a href={contact.emailHref}>{contact.email}</a>
   </p>
 
+  <h2>Rozsah péče</h2>
+
   <p>
-    Znění provozního řádu schváleného orgánem ochrany veřejného zdraví doplní
-    provozovatel.
+    Ordinace poskytuje ambulantní stomatologickou péči dospělým pacientům:
+    preventivní prohlídky, záchovnou stomatologii, mikroskopické ošetření a
+    znovuošetření kořenových kanálků, protetiku a estetické rekonstrukce.
+    Dětské pacienty do péče neregistrujeme. Nejsme smluvním poskytovatelem
+    zdravotních pojišťoven; péče je hrazena přímo pacientem podle ceníku, se
+    kterým je pacient seznámen před zahájením léčby.
   </p>
+
+  <h2>Ordinační doba</h2>
+
+  <ul>
+    {
+      contact.hours.map((row) => (
+        <li>
+          <strong>{row.days}:</strong> {row.time}
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Objednávání</h2>
+
+  <p>
+    Ošetřujeme výhradně na objednání, telefonicky, e-mailem nebo přes
+    formulář na tomto webu. Na každého pacienta vyhrazujeme tolik času, kolik
+    jeho ošetření vyžaduje; dodržujte proto prosím sjednaný čas. Nemůžete-li
+    se dostavit, dejte nám vědět co nejdříve, aby termín mohl využít jiný
+    pacient. Akutní stavy našich registrovaných pacientů řešíme přednostně po
+    telefonické domluvě.
+  </p>
+
+  <h2>Průběh ošetření</h2>
+
+  <p>
+    Před zahájením léčby vás lékařka seznámí s nálezem, navrhovaným postupem,
+    jeho alternativami, riziky a cenou. Ošetření provádíme po vašem
+    informovaném souhlasu. O poskytnuté péči vedeme zdravotnickou dokumentaci
+    v souladu se zákonem č. 372/2011 Sb., o zdravotních službách; nakládání s
+    osobními údaji popisuje
+    <a href="/ochrana-osobnich-udaju">Informace o ochraně osobních údajů</a>.
+  </p>
+
+  <h2>Práva a povinnosti pacienta</h2>
+
+  <ul>
+    <li>
+      Máte právo na srozumitelné informace o svém zdravotním stavu a
+      navrhované léčbě, na její odmítnutí a na nahlížení do své dokumentace.
+    </li>
+    <li>
+      Prosíme, informujte nás pravdivě o svém zdravotním stavu, užívaných
+      lécích a alergiích a o jejich změnách; ovlivňují bezpečnost ošetření.
+    </li>
+    <li>
+      Dodržujte prosím doporučení lékařky k domácí péči a termíny kontrol.
+    </li>
+    <li>
+      V prostorách ordinace není dovoleno kouřit; do ordinace vstupujte bez
+      doprovodu, není-li domluveno jinak.
+    </li>
+  </ul>
+
+  <h2>Hygiena a bezpečnost</h2>
+
+  <p>
+    Ordinace je provozována v souladu s hygienickými předpisy a provozním
+    řádem schváleným orgánem ochrany veřejného zdraví. Nástroje sterilizujeme
+    a používáme jednorázové pomůcky; ochranné brýle a další pomůcky pro
+    pacienty jsou k dispozici v ordinaci.
+  </p>
+
+  <h2>Stížnosti</h2>
+
+  <p>
+    Případnou stížnost můžete podat přímo provozovateli na
+    <a href={contact.emailHref}>{contact.email}</a>; vyřídíme ji do 30 dnů.
+    Nebudete-li s vyřízením spokojeni, můžete se obrátit na Krajský úřad
+    Jihomoravského kraje, který ordinaci udělil oprávnění k poskytování
+    zdravotních služeb, nebo na Českou stomatologickou komoru.
+  </p>
+
+  <p>Tento provozní řád je platný od 1. 9. 2026.</p>
 </LegalLayout>
