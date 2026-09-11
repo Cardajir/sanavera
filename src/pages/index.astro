@@ -276,7 +276,12 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     <div class="hero_head_text">
       <SectionLabel>{services.eyebrow}</SectionLabel>
       <Heading tag="h2" variant="display">
-        {services.heading}
+        {services.headingBefore}<button
+          type="button"
+          class="heading_link"
+          data-modal-open={services.headingLinkOpens}
+          >{services.headingLink}</button
+        >{services.headingAfter}
       </Heading>
     </div>
 
@@ -1109,6 +1114,31 @@ const sluzby = modals.find((m) => m.id === "sluzby")!.entries;
     }
 
     /* ----------------------------------------------------------- služby */
+
+    /* A phrase inside the display heading that opens the insurance panel:
+       set in the brand peach like the modal's active tab, and a button so
+       the modal controller picks it up like any other trigger. Inherits the
+       heading's type so it stays a word in the sentence, not a widget. */
+    .heading_link {
+      display: inline;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      letter-spacing: inherit;
+      color: var(--brand-500);
+      cursor: pointer;
+      text-decoration: underline;
+      text-decoration-thickness: 0.06em;
+      text-underline-offset: 0.12em;
+      transition: color 250ms;
+
+      @media (hover: hover) {
+        &:hover {
+          color: var(--heading-accent);
+        }
+      }
+    }
 
     .service_card_link {
       margin-top: auto;

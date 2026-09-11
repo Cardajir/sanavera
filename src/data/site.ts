@@ -161,8 +161,13 @@ export const comfortItems = [
 
 export const services = {
   eyebrow: "POSKYTOVANÉ SLUŽBY",
-  heading:
-    "Pacient je u nás vždy na prvním místě. Díky rozhodnutí nespolupracovat s pojišťovnami vám můžeme poskytnout tolik času, kolik váš případ vyžaduje.",
+  /* Split around the phrase that opens the insurance panel. */
+  headingBefore:
+    "Pacient je u nás vždy na prvním místě. Díky rozhodnutí ",
+  headingLink: "nespolupracovat s pojišťovnami",
+  headingLinkOpens: "pristup:vztah-k-pojistovnam",
+  headingAfter:
+    " vám můžeme poskytnout tolik času, kolik váš případ vyžaduje.",
 } as const;
 
 /** The price list under the services, added on the landingpage-2 board. */
