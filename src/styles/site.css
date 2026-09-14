@@ -89,7 +89,7 @@
    here rather than on each page's first section: one place to be right, and
    a new page cannot forget it. */
 .under-nav {
-  padding-block-start: var(--nav-height);
+  padding-block-start: var(--nav-offset);
 }
 
 /* ------------------------------------------------------------- motion ---

@@ -87,6 +87,12 @@
   /* Nav — 43px on the mobile board, 72 on the desktop one, with the phone,
      booking and burger controls scaling 29 -> 39.9 inside it. */
   --nav-height: clamp(2.6875rem, 2.221rem + 1.8991vw, 4.5rem);
+  /* The insurance note strip that sits on top of the bar: 28px on a phone,
+     34 at the design width. */
+  --info-bar-height: clamp(1.75rem, 1.6528rem + 0.3889vw, 2.125rem);
+  /* What the fixed header covers in total — the figure the page, the modal
+     sheet and every scroll margin have to clear. */
+  --nav-offset: calc(var(--nav-height) + var(--info-bar-height));
   --control-height: clamp(1.8125rem, 1.6372rem + 0.7138vw, 2.4941rem);
 
   /* Heading & text styles */
@@ -505,7 +511,7 @@ select:has(option[value=""]:checked) {
 
 :target {
   /* Clear the fixed bar, or an in-page anchor lands underneath it. */
-  scroll-margin-block: calc(var(--nav-height) + 2rem) 2rem;
+  scroll-margin-block: calc(var(--nav-offset) + 2rem) 2rem;
 }
 
 :focus-visible {

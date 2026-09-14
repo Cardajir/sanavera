@@ -3,7 +3,7 @@ import Icon from "@/components/Icon.astro";
 import logo from "@/assets/logo.svg";
 import phoneIcon from "@/assets/icon-phone.svg";
 import { SITE_NAME, LANGUAGE_SWITCH } from "@/consts.ts";
-import { mainNav, contact } from "@/data/site.ts";
+import { mainNav, contact, insuranceNote } from "@/data/site.ts";
 
 interface Props {
   /**
@@ -27,6 +27,17 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
 ---
 
 <header class:list={["nav_wrap", overlap && "overlap"]} data-nav>
+  {
+    /* The whole strip is the trigger: one tap target the height of the band
+       rather than a few words of small type. */
+  }
+  <button
+    type="button"
+    class="nav_note"
+    data-modal-open={insuranceNote.opens}
+  >
+    <span class="nav_note_text">{insuranceNote.text}</span>
+  </button>
   <div class="nav_inner">
     <a class="nav_logo" href="/" aria-label={SITE_NAME}>
       <Icon src={logo} variant="full-width" />
@@ -227,7 +238,9 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
       top: 0;
       z-index: 50;
       display: flex;
-      justify-content: center;
+      /* The note strip stacks over the bar; both centre on the page. */
+      flex-direction: column;
+      align-items: center;
       padding-inline: var(--site-margin);
       /* The design's bar rect is fully transparent — the cream page shows
          through. Painting it cream keeps that appearance while still masking
@@ -249,6 +262,53 @@ const resolve = (href: string) => (onHome ? href : `/${href}`);
         position: fixed;
         inset-inline: 0;
       }
+    }
+
+    /* The insurance note: a full-bleed band in the brand wash with navy
+       type, running edge to edge past the header's own side padding. The
+       copy is one line at every width — nowrap, and a font size that scales
+       with the viewport so the sentence never runs out of room: at 320px it
+       leaves a clear margin either side, and it stops growing at the design
+       width. */
+    .nav_note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: stretch;
+      height: var(--info-bar-height);
+      margin-inline: calc(var(--site-margin) * -1);
+      padding: 0 var(--site-margin);
+      border: 0;
+      background-color: var(--brand-500);
+      background-image: var(--brand-wash);
+      color: var(--dark-900);
+      font-family: var(--primary-family);
+      /* 10.5px at 320 (the sentence then measures ~255px, leaving 32px a
+         side), 14px from about 800px up. */
+      font-size: clamp(0.65625rem, 0.3646rem + 1.4583vw, 0.875rem);
+      font-weight: var(--primary-bold);
+      letter-spacing: var(--letter-spacing-label);
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .nav_note_text {
+      text-decoration: underline transparent;
+      text-decoration-thickness: from-font;
+      text-underline-offset: 0.18em;
+      transition: text-decoration-color 200ms var(--ease-out);
+    }
+
+    @media (hover: hover) {
+      .nav_note:hover .nav_note_text,
+      .nav_note:focus-visible .nav_note_text {
+        text-decoration-color: currentColor;
+      }
+    }
+
+    .nav_note:focus-visible {
+      outline-offset: var(--focus-offset-inner);
     }
 
     .nav_inner {

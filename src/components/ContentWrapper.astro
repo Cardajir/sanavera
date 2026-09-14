@@ -228,7 +228,7 @@ const column2 = await slotContent(Astro.slots, "column2");
           & > :first-child {
             align-self: start;
             position: sticky;
-            top: calc(var(--site-margin) + var(--nav-height));
+            top: calc(var(--site-margin) + var(--nav-offset));
           }
         }
       }
@@ -243,9 +243,9 @@ const column2 = await slotContent(Astro.slots, "column2");
           & > :last-child {
             align-self: start;
             position: sticky;
-            top: calc(var(--site-margin) + var(--nav-height));
+            top: calc(var(--site-margin) + var(--nav-offset));
             max-height: calc(
-              100svh - var(--nav-height) - var(--site-margin) * 2
+              100svh - var(--nav-offset) - var(--site-margin) * 2
             );
           }
         }

@@ -32,6 +32,12 @@ export const contact = {
   },
 } as const;
 
+/** The strip above the bar. Opens the insurance panel of Náš přístup. */
+export const insuranceNote = {
+  text: "Nespolupracujeme s pojišťovnami. Zjistěte proč",
+  opens: "pristup:vztah-k-pojistovnam",
+} as const;
+
 /** In-page anchors — every detail view on this site is a modal, not a route. */
 export const mainNav = [
   { label: "Kdo jsme", href: "#kdo-jsme" },
