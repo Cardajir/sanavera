@@ -247,7 +247,7 @@ export const reviewSource = {
 
 export const booking = {
   heading: "Přijímáme nové pacienty!",
-  text: "Zaregistrujte se do péče moderní stomatologie ve Veselí nad Moravou. Vyplňte krátký formulář a do 24 hodin se vám ozveme s nabídkou termínu.",
+  text: "Zaregistrujte se do péče moderní stomatologie ve Veselí nad Moravou. Vyplňte krátký formulář a do jednoho pracovního dne se vám ozveme s nabídkou termínu.",
   submit: "Odeslat žádost o termín",
   consentBefore: "Odesláním formuláře souhlasím se",
   consentLink: "Zpracováním osobních údajů",
@@ -255,6 +255,6 @@ export const booking = {
     "Máte konkrétní požadavek? (např. preventivní prohlídka, bolest zubu,…)",
   /** Shown while the request is in flight, and after it settles. */
   sending: "Odesíláme…",
-  sent: "Děkujeme, žádost dorazila. Ozveme se vám do 24 hodin.",
+  sent: "Děkujeme, žádost dorazila. Ozveme se vám do jednoho pracovního dne.",
   failed: "Odeslání se nezdařilo. Zavolejte nám prosím na",
 } as const;
