@@ -185,7 +185,7 @@ export const pricing = {
   /* Non-breaking spaces keep each price on one line at every width. */
   items: [
     { name: "Komplexní vstupní vyšetření (45 min)", price: "2 200 Kč" },
-    { name: "Preventivní prohlídka", price: "1 300 Kč" },
+    { name: "Preventivní prohlídka", price: "1 800 Kč" },
     { name: "Fotokompozitní výplň", price: "od 2 500 Kč" },
     {
       name: "Ošetření kořenových kanálků (pod mikroskopem)",
